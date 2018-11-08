@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="py4j0.10.7">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/anaconda3/envs/InstantPol3.6/share/py4j/py4j0.10.7.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
