@@ -7,9 +7,6 @@ package mmEventHandler;
 
 import org.micromanager.Studio;
 import org.micromanager.display.DisplayWindow;
-import org.micromanager.display.DisplayManager;
-import org.micromanager.data.Datastore;
-import org.micromanager.SnapLiveManager;
 
 import javax.swing.JTextArea;
 import UI.reports;
@@ -29,12 +26,8 @@ import org.micromanager.events.DisplayAboutToShowEvent;
 public class globalEvents {
     private final Studio mm;
     private final reports reports;
-    private displayEvents display_events;
-    private datastoreEvents datastore_events;
-    private final DisplayManager dm;
-    private DisplayWindow dw;
-    private Datastore ds;
-    private static int old_window_count;
+//    private final DisplayManager dm;
+
     private final ExecutorService mmExecutor;
     
     
@@ -42,7 +35,7 @@ public class globalEvents {
     
     public globalEvents(Studio mm_, JTextArea UI_textArea) {
         mm = mm_;
-        dm = mm.getDisplayManager();
+        //dm = mm.getDisplayManager();
         reports = new reports(UI_textArea);
         mmExecutor = main_executor.getExecutor();
         System.out.println("global events filename = "+constants.RAMDiskName);
@@ -62,8 +55,8 @@ public class globalEvents {
     @Subscribe
     public void monitor_aboutToShow(DisplayAboutToShowEvent event) {
         reports.set_report_area("DisplayAboutToShowEvent event detected");
-        
-        dw = event.getDisplay();
+
+        DisplayWindow dw = event.getDisplay();
 
         //new Thread(new globalEventsThread(mm, dw, reports)).start();
         

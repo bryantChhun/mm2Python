@@ -11,7 +11,8 @@
  * @author bryant.chhun
  */
 
-import UI.pythonBridgeUI;
+import UI.pythonBridgeUI_dialog;
+
 import mmcorej.CMMCore;
 import org.micromanager.Studio;
 import org.scijava.plugin.SciJavaPlugin;
@@ -33,7 +34,8 @@ public class pythonBridgePluginInterface implements MenuPlugin, SciJavaPlugin{
     // level functions).
     private Studio mm_;
 
-    private pythonBridgeUI myFrame_;
+    private pythonBridgeUI_dialog myFrame_;
+
 
     @Override
     public String getSubMenu() {
@@ -44,12 +46,13 @@ public class pythonBridgePluginInterface implements MenuPlugin, SciJavaPlugin{
     public void onPluginSelected() {
         if (myFrame_ == null) {
             try {
-               myFrame_ = new pythonBridgeUI(mm_);
-               mm_.events().registerForEvents(myFrame_);
+                myFrame_ = new pythonBridgeUI_dialog(mm_);
+                mm_.events().registerForEvents(myFrame_);
             } catch (Exception e) {
-               mm_.logs().showError(e);
+                mm_.logs().showError(e);
             }
         }
+        myFrame_.pack();
         myFrame_.setVisible(true);
     }
 

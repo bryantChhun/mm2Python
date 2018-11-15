@@ -11,14 +11,28 @@ package mmDataHandler;
  */
 public interface dataInterface {
 
-    public String popData();
+//    public String popData();
+//
+//    public String popMetaData();
+//
+//    public String viewData();
+//
+//    public String viewMetaData();
+
+//    public boolean doesStoreExist(MetaDataStore store_);
+//
+//    public String retrieveStorePath(MetaDataStore store_);
+
+    public String retrieveFileByChannelName(String channel_name);
+
+//    public boolean storeByIndexExists(int time, int stage, int z);
+//
+//    public boolean removeByIndex();
+
+    public boolean storeByChannelNameExists(String channel_name);
+
+//    public boolean removeByChannelName(String channel_name);
     
-    public String popMetaData();
-    
-    public String viewData();
-    
-    public String viewMetaData();
-    
-    public Boolean isEmpty();
+//    public Boolean isEmpty();
     
 }

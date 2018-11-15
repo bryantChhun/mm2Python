@@ -16,10 +16,15 @@ import messenger.Py4J.Exceptions.Py4JListenerException;
 public class Py4JListener {
     
     private static List<Py4JListenerInterface> listeners = new ArrayList<Py4JListenerInterface>();
+
+    public Py4JListener() {
+        System.out.println("constructing the listener");
+    }
     
     //================ Listener methods =================================//
     
-    public void registerListener(Py4JListenerInterface listener) throws Py4JListenerException {
+    public static void registerListener(Py4JListenerInterface listener) throws Py4JListenerException {
+        System.out.println("adding listener requested");
         try{
             listeners.add(listener);
         } catch (Exception ex) {
@@ -28,6 +33,7 @@ public class Py4JListener {
     }
 
     public void notifyAllListeners() throws Py4JListenerException {
+        System.out.println("notifying listeners requested");
         try{
             listeners.stream().forEach((listener) -> {
                 Object returnValue = listener.notify(this);

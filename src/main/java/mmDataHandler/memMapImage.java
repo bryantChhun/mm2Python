@@ -14,8 +14,10 @@ import java.nio.ByteOrder;
 import java.nio.MappedByteBuffer;
 import java.nio.ShortBuffer;
 import java.nio.channels.FileChannel;
+
 import Constants.constants;
 import mmDataHandler.Exceptions.NoImageException;
+import org.micromanager.Studio;
 import org.micromanager.data.Coords;
 import org.micromanager.data.Image;
 
@@ -27,15 +29,21 @@ public class memMapImage {
     private final Image temp_img;
     private final String filename;
     private final Coords coord;
+    private final String prefix;
+    private final String window_name;
+    private final Studio mm;
     
-    public memMapImage(Image temp_img_, Coords coord_, String filename_) throws NoImageException {
+    public memMapImage(Studio mm_, Image temp_img_, Coords coord_, String filename_, String prefix_, String window_name_) {
         temp_img = temp_img_;
         filename = filename_;
+        prefix = prefix_;
         coord = coord_;
+        window_name = window_name_;
+        mm = mm_;
         System.out.println("memMapImage constructor filename = "+filename);
     }
     
-    public boolean writeToMemMap() {
+    public boolean writeToMemMap() throws NoImageException {
         byte[] byteimg= null;
                 
         File file = new File(filename);
@@ -59,22 +67,37 @@ public class memMapImage {
         // write data record to class constants.
         // This is what Py4J uses to fetch the data from RAMdisk.
         try {
-            constants.LBQ_data_queue.put(filename);
+            MetaDataStore meta = new MetaDataStore(prefix, window_name,
+                    coord.getTime(),
+                    coord.getStagePosition(),
+                    coord.getZ(),
+                    coord.getChannel(),
+                    mm.getAcquisitionManager().getAcquisitionSettings().channelGroup);
+
+            constants.putMetaDataMap(meta, filename);
+
+            constants.putChanStoreMap(mm.getAcquisitionManager().getAcquisitionSettings().channelGroup, meta);
+
+            constants.putChanToFileMap(mm.getAcquisitionManager().getAcquisitionSettings().channelGroup, filename);
+
+//            constants.LBQ_data_queue.put(filename);
             //constants.writeCoordToHashMap(coord, filename);
             //constants.data_list.add(filename);
-            if(byteimg != null) {constants.LBQ_metadata_queue.put(""+byteimg.length);}
+//            if(byteimg != null) {constants.LBQ_metadata_queue.put(""+byteimg.length);}
+
             return true;
         } catch (NullPointerException ex) {
             System.out.println("null ptr exception in lbq data queue");
-        } catch (InterruptedException ex) {
-            System.out.println("interrupted exception: queue interrupted while waiting for put");
-        } catch (Exception ex) {
+        }  catch (Exception ex) {
             System.out.println(ex);
         }
+//        catch (InterruptedException ex) {
+//            System.out.println("interrupted exception: queue interrupted while waiting for put");
+//        }
         return false;
     }
     
-    private byte[] convertToByte(Image tempImg_) {
+    private byte[] convertToByte(Image tempImg_) throws UnsupportedOperationException {
         try
         {
             byte[] bytes;

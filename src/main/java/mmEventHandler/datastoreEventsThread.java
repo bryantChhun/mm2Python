@@ -7,7 +7,6 @@ package mmEventHandler;
 
 import Constants.constants;
 import mmDataHandler.Exceptions.NoImageException;
-import UI.reports;
 import messenger.Py4J.Exceptions.Py4JListenerException;
 import messenger.Py4J.Py4JListener;
 import mmDataHandler.memMapImage;
@@ -26,24 +25,24 @@ public class datastoreEventsThread implements Runnable {
     private final Image temp_img;
     private final Coords temp_coord;
     private final String prefix;
-    private final boolean snaplive;
+//    private final boolean snaplive;
     private String filename;
-    private final Py4JListener notifylistener;
-    
-    public datastoreEventsThread(Studio mm_, Datastore data_, Coords c_, String prefix_, Boolean snaplive_, reports report) {
+    private final String window_name;
+
+    public datastoreEventsThread(Studio mm_, Datastore data_, Coords c_, String prefix_, String window_name_) {
         mm = mm_;
         temp_img = data_.getImage(c_);
         temp_coord = c_;
         prefix = prefix_;
-        snaplive = snaplive_;
-        notifylistener = new Py4JListener();
+        window_name = window_name_;
+//        snaplive = snaplive_;
     }
     
     @Override
     public void run() {
         
         //Check for live vs MDA image
-        if(snaplive) {
+        if(window_name.equals("Snap/Live View")) {
             filename = constants.RAMDiskName+"Snap-Live-Stream.dat";
         } else {
             filename = String.format(constants.RAMDiskName+"/%s_t%03d_p%03d_z%02d_c%02d.dat", 
@@ -53,8 +52,7 @@ public class datastoreEventsThread implements Runnable {
         // write memory mapped image 
         try {
             System.out.println("FILENAME = "+filename);
-            //filename = "/Users/bryant.chhun/Desktop/untitled_folder/Snap-Live-Stream.dat";
-            memMapImage out = new memMapImage(temp_img, temp_coord, filename);
+            memMapImage out = new memMapImage(mm, temp_img, temp_coord, filename, prefix, window_name);
             out.writeToMemMap();
         } catch (NullPointerException ex) {
             System.out.println("null ptr exception in datastoreEvents Thread");
@@ -62,10 +60,14 @@ public class datastoreEventsThread implements Runnable {
             System.out.println(ex);
         }
         
-        // notify Py4J listeners
+        // notify Listeners
+        //TODO: generalize this to broadcast regardless of messaging system type.
         try {
             System.out.println("notifying py4j listeners");
-            notifylistener.notifyAllListeners();
+            if (constants.py4JRadioButton) {
+                Py4JListener notifyListener = new Py4JListener();
+                notifyListener.notifyAllListeners();
+            }
         } catch (Py4JListenerException ex) {
             System.out.println("Exception in datastore events thread while notifying Py4J listeners: "+ex.toString());
         } catch (Exception ex) {

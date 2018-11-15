@@ -5,13 +5,11 @@
  */
 package Constants;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import org.micromanager.data.Coords;
+
+import mmDataHandler.MetaDataStore;
 
 /**
  *
@@ -24,40 +22,90 @@ public class constants {
     public static String PythonScriptPath;
     
     public static List<Integer> ports;
+    
 
-    public static ArrayDeque<String> data_queue;
-    public static ArrayDeque<String> metadata_queue;
+
+    public static HashMap<MetaDataStore, String> MetaDataToFileMap;
+
+    public static HashMap<String, MetaDataStore> chanToStoreMap;
+
+    public static HashMap<String, String> chanToFileMap;
     
-    public static BlockingQueue<String> BQ_data_queue;
-    
-    public static LinkedBlockingQueue<String> LBQ_data_queue;
-    public static LinkedBlockingQueue<String> LBQ_metadata_queue;
-    
-    public static HashMap<List<Integer>,String> HM_data;
-    
-    public static ArrayList<String> data_list;
+//    private static HashMap<List<Integer>,String> HM_data;
+//    private static ArrayList<String> data_list;
+    //    public static ArrayDeque<String> data_queue;
+//    public static ArrayDeque<String> metadata_queue;
+
+//    public static BlockingQueue<String> BQ_data_queue;
+//public static LinkedBlockingQueue<String> LBQ_data_queue;
+//    public static LinkedBlockingQueue<String> LBQ_metadata_queue;
+
+
+    //TODO: replace radio buttons with enums
+    public static boolean py4JRadioButton;
     
     
     public constants() {
-        LBQ_data_queue = new LinkedBlockingQueue<>();
-        LBQ_metadata_queue = new LinkedBlockingQueue<>();
-        HM_data = new HashMap<>();
-        data_list = new ArrayList<>();
-        ports = new ArrayList<>();
+//        LBQ_data_queue = new LinkedBlockingQueue<>();
+//        LBQ_metadata_queue = new LinkedBlockingQueue<>();
+//        HM_data = new HashMap<>();
+//        data_list = new ArrayList<>();
+        if(ports == null) {
+            ports = new ArrayList<>();
+        }
+        if(MetaDataToFileMap == null) {
+            MetaDataToFileMap = new HashMap<>();
+        }
+        if(chanToStoreMap == null) {
+            chanToStoreMap = new HashMap<>();
+        }
+        if(chanToFileMap == null) {
+            chanToFileMap = new HashMap<>();
+        }
+
+        py4JRadioButton = false;
     }
     
     public static void resetAll() {
-        LBQ_data_queue = new LinkedBlockingQueue<>();
-        LBQ_metadata_queue = new LinkedBlockingQueue<>();
+//        LBQ_data_queue = new LinkedBlockingQueue<>();
+//        LBQ_metadata_queue = new LinkedBlockingQueue<>();
+        ports = new ArrayList<>();
+        py4JRadioButton = false;
+        MetaDataToFileMap = new HashMap<>();
+        chanToStoreMap = new HashMap<>();
     }
-    
-    public static void writeCoordToHashMap(Coords coord, String path){
-        List<Integer> meta = new ArrayList<>(4);
-        meta.add(coord.getTime());
-        meta.add(coord.getStagePosition());
-        meta.add(coord.getZ());
-        meta.add(coord.getChannel());
-        HM_data.put(meta, path);
+
+    public static void putMetaDataMap(MetaDataStore store_, String filename) {
+        MetaDataToFileMap.put(store_, filename);
     }
+
+    public static void putChanStoreMap(String channel, MetaDataStore store_) {
+        chanToStoreMap.put(channel, store_);
+    }
+
+    public static void removeChanStoreMap(String channel) {
+        chanToStoreMap.remove(channel);
+    }
+
+    public static void putChanToFileMap(String channel, String filename) {
+        chanToFileMap.put(channel, filename);
+    }
+
+    public static void removeChanToFileMap(String channel) {
+        chanToFileMap.remove(channel);
+    }
+
+
+
+    // wont' work as we need to hash each of the indexes
+    // this simply stores a list of each index in the hash
+//    public static void writeCoordToHashMap(Coords coord, String path){
+//        List<Integer> meta = new ArrayList<>(4);
+//        meta.add(coord.getTime());
+//        meta.add(coord.getStagePosition());
+//        meta.add(coord.getZ());
+//        meta.add(coord.getChannel());
+//        HM_data.put(meta, path);
+//    }
     
 }

@@ -13,15 +13,10 @@ import org.micromanager.data.Coords;
 import org.micromanager.data.NewImageEvent;
 import org.micromanager.data.DatastoreFrozenEvent;
 import org.micromanager.data.DatastoreSavePathEvent;
-import org.micromanager.data.NewSummaryMetadataEvent;
-import org.micromanager.data.Image;
 
 import com.google.common.eventbus.Subscribe;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import mmEventHandler.Executor.main_executor;
-import org.micromanager.acquisition.AcquisitionManager;
 import org.micromanager.acquisition.SequenceSettings;
 
 
@@ -35,8 +30,6 @@ public class datastoreEvents {
     private final reports report;
     private final Datastore data;
     private final String window_name;
-    private Image temp_img;
-    private Coords temp_coord;
     private String prefix;
     private final ExecutorService mmExecutor;
     
@@ -55,9 +48,7 @@ public class datastoreEvents {
             
             SequenceSettings seq = mm.acquisitions().getAcquisitionSettings();
             prefix = seq.prefix;
-            //System.out.println("FILE NAME PREFIX = "+prefix);
-            
-            //System.out.println("registering this datastore");
+
             // Normal datastore
             data.registerForEvents(this);
             
@@ -65,9 +56,7 @@ public class datastoreEvents {
             if(data.getNumImages() > 0){
                 Iterable<Coords> itercoords = data.getUnorderedImageCoords();
                 for (Coords c: itercoords) {
-//                    Thread det = new Thread(new datastoreEventsThread(mm, data, c, prefix, false, report));
-//                    det.start();
-                    mmExecutor.execute(new datastoreEventsThread(mm, data, c, prefix, false, report) );
+                    mmExecutor.execute(new datastoreEventsThread(mm, data, c, prefix, window_name) );
                 }
             }
             
@@ -96,15 +85,13 @@ public class datastoreEvents {
     public void monitor_NewImageEvent(NewImageEvent event){
         //get coordinates
         try {
-            //System.out.println("Datastore new image event");
-            //report.set_report_area("Datastore new image event");
-            if(window_name.equals("Snap/Live View")){
-                //new Thread(new datastoreEventsThread(mm, event.getDatastore(), event.getCoords(), prefix, true, report)).start();
-                mmExecutor.execute(new datastoreEventsThread(mm, event.getDatastore(), event.getCoords(), prefix, true, report));
-            } else {
-                //new Thread(new datastoreEventsThread(mm, event.getDatastore(), event.getCoords(), prefix, false, report)).start();
-                mmExecutor.execute(new datastoreEventsThread(mm, event.getDatastore(), event.getCoords(), prefix, false, report));
-            }
+            mmExecutor.execute(new datastoreEventsThread(mm, event.getDatastore(), event.getCoords(), prefix, window_name));
+
+//            if(window_name.equals("Snap/Live View")){
+//                mmExecutor.execute(new datastoreEventsThread(mm, event.getDatastore(), event.getCoords(), prefix, true));
+//            } else {
+//                mmExecutor.execute(new datastoreEventsThread(mm, event.getDatastore(), event.getCoords(), prefix, false));
+//            }
 
         } catch (NullPointerException ex) {
             System.out.println("null ptr exception in newImageeventMonitor");

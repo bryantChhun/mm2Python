@@ -27,12 +27,13 @@ public class Py4J implements messengerInterface {
         mm = mm_;
         reports = new reports(UI_textArea);
     }
+    //TODO: write port management methods
     
     @Override
     public void startConnection(int port) {
         gatewayServer = new GatewayServer(new Py4jEntryPoint(mm), port);
         gatewayServer.start();
-        reports.set_report_area("Gateway Started at port = "+port);
+        reports.set_report_area("Gateway Started at IP:port = "+gatewayServer.getAddress()+":"+gatewayServer.getPort());
         mm.logs().logMessage("Gateway Started at port = "+port);
     }
     
@@ -42,12 +43,14 @@ public class Py4J implements messengerInterface {
         gatewayServer.start();
         int port = gatewayServer.getPort();
         constants.ports.add(port);
-        reports.set_report_area("Gateway Started at port: "+port);
+        reports.set_report_area("Gateway Started at IP:port = "+gatewayServer.getAddress()+":"+gatewayServer.getPort());
         mm.logs().logMessage("Gateway Started at port: "+port);
     }
     
     @Override
     public void stopConnection(int port) {
+        //TODO: clean up the shutdown and restart of connection
+        //TODO: write tests that probe whether this is properly shut down
         gatewayServer.shutdown();
         reports.set_report_area(String.format("Gateway at port %04d shut down", port));
         mm.logs().logMessage(String.format("Gateway at port %04d shut down", port));
