@@ -23,21 +23,23 @@ sourceSets
                     {
                         java
                                 { srcDir 'src/main/java' }
-                        resources
-                                {srcDir 'src/main/resources'}
+//                        resources
+//                                {srcDir 'src/main/resources'}
                     }
             test
                     {
                         java
                                 { srcDir 'src/test/java' }
-                        resources
-                                { srcDir 'src/test/resources' }
+//                        resources
+//                                { srcDir 'src/test/resources' }
                     }
         }
 
-//configurations {
-//    extraLibs
-//}
+configurations {
+    core_libs
+    plugin_libs
+    complete_libs
+}
 
 dependencies {
     // This dependency is exported to consumers, that is to say found on their compile classpath.
@@ -50,20 +52,29 @@ dependencies {
     compile group: 'org.junit.platform', name: 'junit-platform-commons', version: '1.2.0'
     compile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.2.0'
     compile group: 'org.junit.vintage', name: 'junit-vintage-engine', version: '5.2.0'
+//    ['compile', 'plugin_libs'].each{ conf -> compile group: 'org.junit.vintage', name: 'junit-vintage-engine', version: '5.2.0', configuration: conf }
 
     // Micromanager core jars
     compile fileTree(include: ['*.jar'], dir: '/Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager')
+    plugin_libs fileTree(include: ['*.jar'], dir: '/Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager')
+    complete_libs fileTree(include: ['*.jar'], dir: '/Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager')
 
     // ImageJ
     compile fileTree(include: ['*.jar'], dir: '/Applications/Micro-Manager-2.0.0-beta3-20181001/ij.jar')
+    plugin_libs fileTree(include: ['*.jar'], dir: '/Applications/Micro-Manager-2.0.0-beta3-20181001/ij.jar')
+    complete_libs fileTree(include: ['*.jar'], dir: '/Applications/Micro-Manager-2.0.0-beta3-20181001/ij.jar')
+
 
     //Py4J
     compile group: 'net.sf.py4j', name: 'py4j', version: '0.10.8.1'
+    core_libs group: 'net.sf.py4j', name: 'py4j', version: '0.10.8.1'
+    complete_libs group: 'net.sf.py4j', name: 'py4j', version: '0.10.8.1'
+
 
     // IntelliJ UI Designer
     compile group: 'com.intellij', name: 'forms_rt', version: '7.0.3'
-
-//    extraLibs group:
+    core_libs group: 'com.intellij', name: 'forms_rt', version: '7.0.3'
+    complete_libs group: 'com.intellij', name: 'forms_rt', version: '7.0.3'
 
 }
 
@@ -72,33 +83,99 @@ repositories {
     mavenCentral()
 }
 
-task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-
-task fatJar(type: Jar) {
-    manifest {
-        attributes 'Implementation-Title': 'micromanager 2.0 bridge to python example',
-                'Implementation-Version': version
+jar {
+    archiveName = "mm2Python_core.jar"
+//    from sourceSets.main.output
+    exclude '/mm2PythonPlugin.class'
+    from {
+        configurations.core_libs.collect {it.isDirectory() ? it : zipTree(it) }
     }
-    baseName = project.name +'-all'
-    //from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    from { configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
+    project.logger.lifecycle("creating Core Jar with dependencies")
 }
 
-task movejar() {
-    apply plugin: 'java'
-    tasks.withType(Jar) {
-        destinationDir = file("/Applications/Micro-Manager-2.0.0-beta3-20181001/mmplugins")
-    }
+// Include ONLY Py4J and IntelliJ designer in this jar
+//task coreJar(type: Jar) {
+//    archiveName = "mm2Python_core.jar"
+//    from sourceSets.main.output
+//    exclude '/mm2PythonPlugin/mm2PythonPlugin.class'
+//    exclude '/mm2PythonPlugin/*.*'
+//    from {
+//        configurations.core_libs.collect {it.isDirectory() ? it : zipTree(it) }
+//    }
+//    project.logger.lifecycle("creating Core Jar with dependencies")
+//}
+
+//// Include ONLY ImageJ and mmCore in this Jar
+//task pluginJar(type: Jar) {
+//    archiveName = "mm2Python_plugin.jar"
+//    from sourceSets.main.output
+//    include '/mm2PythonPlugin/mm2PythonPlugin.class'
+//    from {
+//        configurations.plugin_libs.collect {it.isDirectory() ? it : zipTree(it) }
+//    }
+//    project.logger.lifecycle("creating Plugin Jar with dependencies")
+//}
+//
+//// Complete package
+//task completeJar(type: Jar) {
+//    archiveName = "mm2Python_complete.jar"
+//    from {
+//        configurations.complete_libs.collect {it.isDirectory() ? it : zipTree(it) }
+//    }
+//    project.logger.lifecycle("creating Complete Jar with dependencies")
+//}
+
+
+task copyCoreToMM(type: Copy) {
+    from 'build/libs/mm2Python_core.jar'
+    into "/Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager"
+    project.logger.lifecycle("moving CORE jar to micro-manager root")
 }
 
-//subprojects {
-//        apply plugin: 'java'
-//        tasks.withType(Jar) {
-//            destinationDir = file("/Applications/Micro-Manager-2.0.0-beta3-20181001/mmplugins")
-//        }
+//task copyPluginToMM(type: Copy) {
+//    from 'build/libs/mm2Python_plugin.jar'
+//    into "/Applications/Micro-Manager-2.0.0-beta3-20181001/mmplugins"
+//    project.logger.lifecycle("moving PLUGIN jar to mmplugins folder")
+//}
+
+
+
+//task pluginJar(type: Jar) {
+//    archiveName = "mm2Python_plugin.jar"
+////    dependsOn compileJava
+//    from sourceSets.main.output
+////    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+//    include('*.class')
+////    jar.includeEmptyDirs = false
+//}
+
+//task fatJar(type: Jar) {
+//    manifest {
+//        attributes 'Implementation-Title': 'micromanager 2.0 bridge to python example',
+//                'Implementation-Version': version
+//    }
+////    baseName = project.name +'-all'
+//    archiveName = "mm2Python_core_fat.jar"
+////    exclude 'pythonBridgePluginInterface.class'
+//
+//    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+////    from { configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) } }
+//    with jar
+//}
+
+//task copyPluginToMM(type: Copy) {
+//    from 'build/libs/mm2Python_plugin.jar'
+//    into "/Applications/Micro-Manager-2.0.0-beta3-20181001/mmplugins"
+//}
+
+
+
+//task movejar() {
+//    apply plugin: 'java'
+//    tasks.withType() {
+//        destinationDir = file("/Applications/Micro-Manager-2.0.0-beta3-20181001/mmplugins")
+//    }
+//    tasks.fatJar.execute() {
+//        destinationDir = file("/Applications/Micro-Manager-2.0.0-beta3-20181001/plugins")
+//    }
 //}

@@ -87,12 +87,6 @@ public class datastoreEvents {
         try {
             mmExecutor.execute(new datastoreEventsThread(mm, event.getDatastore(), event.getCoords(), prefix, window_name));
 
-//            if(window_name.equals("Snap/Live View")){
-//                mmExecutor.execute(new datastoreEventsThread(mm, event.getDatastore(), event.getCoords(), prefix, true));
-//            } else {
-//                mmExecutor.execute(new datastoreEventsThread(mm, event.getDatastore(), event.getCoords(), prefix, false));
-//            }
-
         } catch (NullPointerException ex) {
             System.out.println("null ptr exception in newImageeventMonitor");
         } catch (Exception ex) {

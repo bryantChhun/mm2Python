@@ -22,7 +22,6 @@ public class Py4jEntryPoint implements dataInterface {
     private static CMMCore mmc;
     private static Py4JListener listener;
 
-
     /**
      * 
      * @param mm_: the parent studio object.
@@ -50,14 +49,28 @@ public class Py4jEntryPoint implements dataInterface {
         Class<?> py = Class.forName("messenger.Py4J.Py4JListenerInterface");
         return py.toString();
     }
+
+    public String getClassPath() {
+        ClassLoader loader = Py4jEntryPoint.class.getClassLoader();
+        return loader.getResource("").toString();
+    }
+
+
+    public String getSystemPath() {
+        return System.getProperty("java.class.path");
+    }
     
     //============== Data interface methods ====================//
 
+    //TODO: inspect the data bit depth and pixel size, send this!
+
     @Override
     public String retrieveFileByChannelName(String channel_name) {
-        String filepath =constants.chanToFileMap.get(channel_name);
-        constants.removeChanStoreMap(channel_name);
-        constants.removeChanToFileMap(channel_name);
+        String filepath = constants.getNextFileForChannel(channel_name);
+        System.out.println("====== Retrieve file requested ======== ");
+        System.out.println("Filepath = "+filepath);
+//        constants.removeChanToMetaStoreMap(channel_name);
+        constants.removeChanToFilenameMap(channel_name);
         return filepath;
     }
 
@@ -73,7 +86,7 @@ public class Py4jEntryPoint implements dataInterface {
 
     @Override
     public boolean storeByChannelNameExists(String channel_name) {
-        return constants.chanToStoreMap.containsKey(channel_name);
+        return constants.nextImageExists(channel_name);
     }
 
 //    @Override

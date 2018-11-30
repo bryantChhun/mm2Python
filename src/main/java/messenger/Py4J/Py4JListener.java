@@ -44,6 +44,11 @@ public class Py4JListener {
         }
     }
 
+    public String getClassPath() {
+        ClassLoader loader = Py4JListener.class.getClassLoader();
+        return loader.getResource("").toString();
+    }
+
     @Override
     public String toString() {
         return "<py4jEntryPoint> instance";

@@ -19,7 +19,7 @@ import Constants.constants;
  */
 public class Py4J implements messengerInterface {
     private static Studio mm;
-    private GatewayServer gatewayServer;
+    private static GatewayServer gatewayServer;
     private final reports reports;
     
     

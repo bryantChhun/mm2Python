@@ -8,6 +8,8 @@ package mmDataHandler.ramDisk;
 import org.micromanager.Studio;
 import Constants.constants;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  *
  * @author bryant.chhun
@@ -43,6 +45,7 @@ public class ramDiskConstructor {
             System.out.println(command);
             // because making ramdisk requires parsing used by shell.  We must use String[] object
             Process p = Runtime.getRuntime().exec(new String[] { "bash", "-c", command});
+            TimeUnit.SECONDS.sleep(3);
             Process p2 = Runtime.getRuntime().exec(new String[] { "bash", "-c", command2});
         } catch (Exception ex) {
             mm.logs().showError(ex);

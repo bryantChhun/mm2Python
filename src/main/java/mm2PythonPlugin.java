@@ -12,15 +12,14 @@
  */
 
 import UI.pythonBridgeUI_dialog;
-
 import mmcorej.CMMCore;
-import org.micromanager.Studio;
-import org.scijava.plugin.SciJavaPlugin;
-import org.scijava.plugin.Plugin;
 import org.micromanager.MenuPlugin;
+import org.micromanager.Studio;
+import org.scijava.plugin.Plugin;
+import org.scijava.plugin.SciJavaPlugin;
 
 @Plugin(type = MenuPlugin.class)
-public class pythonBridgePluginInterface implements MenuPlugin, SciJavaPlugin{
+public class mm2PythonPlugin implements MenuPlugin, SciJavaPlugin{
     private static final String menuName = "PythonBridge";
     private static final String tooltipDescription = "Establishes a Py4J gateway to MM images";
     private static final String version =  "0.1";

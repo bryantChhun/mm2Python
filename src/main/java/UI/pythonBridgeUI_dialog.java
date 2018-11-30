@@ -9,6 +9,7 @@ import com.intellij.uiDesigner.core.Spacer;
 import Constants.constants;
 import messenger.Py4J.Py4J;
 import mmDataHandler.ramDisk.ramDiskConstructor;
+import mmDataHandler.ramDisk.ramDiskFlush;
 import mmEventHandler.globalEvents;
 import org.micromanager.Studio;
 
@@ -45,6 +46,7 @@ public class pythonBridgeUI_dialog extends JFrame {
     private Py4J gate;
     private globalEvents gevents;
     private final reports reporter;
+    private final ramDiskFlush flush;
 
     public pythonBridgeUI_dialog(Studio mm_) {
         // UI components created in the static constructor below
@@ -66,9 +68,10 @@ public class pythonBridgeUI_dialog extends JFrame {
 
         mm = mm_;
         reporter = new reports(UI_logger_textArea);
+        flush = new ramDiskFlush(mm);
 
         // initialize constants
-        new constants();
+        new constants(mm);
         if (py4JRadioButton.isSelected()){
             constants.py4JRadioButton = true;
         }
@@ -96,8 +99,10 @@ public class pythonBridgeUI_dialog extends JFrame {
     }
 
     private void stop_monitor_global_eventsActionPerformed(ActionEvent evt) {
-        reporter.set_report_area("STOP monitoring global events");
+        reporter.set_report_area("STOP monitoring global events, clearing data store references");
+        constants.resetAll();
         gevents.unRegisterGlobalEvents();
+
     }
 
     private void create_ramdiskActionPerformed(ActionEvent evt) {
@@ -105,7 +110,7 @@ public class pythonBridgeUI_dialog extends JFrame {
     }
 
     private void clear_ramdiskActionPerformed(ActionEvent evt) {
-        //TODO: write this
+        flush.clearRamDiskContents();
     }
 
     private void destroy_ramdiskActionPerformed(ActionEvent evt) {

@@ -25,17 +25,17 @@ public class datastoreEventsThread implements Runnable {
     private final Image temp_img;
     private final Coords temp_coord;
     private final String prefix;
-//    private final boolean snaplive;
     private String filename;
     private final String window_name;
+    private final String[] channel_names;
 
     public datastoreEventsThread(Studio mm_, Datastore data_, Coords c_, String prefix_, String window_name_) {
         mm = mm_;
         temp_img = data_.getImage(c_);
+        channel_names = data_.getSummaryMetadata().getChannelNames();
         temp_coord = c_;
         prefix = prefix_;
         window_name = window_name_;
-//        snaplive = snaplive_;
     }
     
     @Override
@@ -45,14 +45,14 @@ public class datastoreEventsThread implements Runnable {
         if(window_name.equals("Snap/Live View")) {
             filename = constants.RAMDiskName+"Snap-Live-Stream.dat";
         } else {
-            filename = String.format(constants.RAMDiskName+"/%s_t%03d_p%03d_z%02d_c%02d.dat", 
+            filename = String.format(constants.RAMDiskName+"%s_t%03d_p%03d_z%02d_c%02d.dat",
                 prefix, temp_coord.getTime(), temp_coord.getStagePosition(), temp_coord.getZ(), temp_coord.getChannel());
         }
         
         // write memory mapped image 
         try {
             System.out.println("FILENAME = "+filename);
-            memMapImage out = new memMapImage(mm, temp_img, temp_coord, filename, prefix, window_name);
+            memMapImage out = new memMapImage(temp_img, temp_coord, filename, prefix, window_name, channel_names);
             out.writeToMemMap();
         } catch (NullPointerException ex) {
             System.out.println("null ptr exception in datastoreEvents Thread");

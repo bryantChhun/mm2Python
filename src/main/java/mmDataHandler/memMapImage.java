@@ -31,15 +31,15 @@ public class memMapImage {
     private final Coords coord;
     private final String prefix;
     private final String window_name;
-    private final Studio mm;
+    private final String[] channel_names;
     
-    public memMapImage(Studio mm_, Image temp_img_, Coords coord_, String filename_, String prefix_, String window_name_) {
+    public memMapImage(Image temp_img_, Coords coord_, String filename_, String prefix_, String window_name_, String[] channel_names_) {
         temp_img = temp_img_;
         filename = filename_;
         prefix = prefix_;
         coord = coord_;
         window_name = window_name_;
-        mm = mm_;
+        channel_names = channel_names_;
         System.out.println("memMapImage constructor filename = "+filename);
     }
     
@@ -72,28 +72,27 @@ public class memMapImage {
                     coord.getStagePosition(),
                     coord.getZ(),
                     coord.getChannel(),
-                    mm.getAcquisitionManager().getAcquisitionSettings().channelGroup);
+                    temp_img.getWidth(),
+                    temp_img.getHeight(),
+                    temp_img.getBytesPerPixel(),
+                    channel_names[coord.getChannel()]
+                    );
+            System.out.println("writing meta = "+meta.toString());
+            System.out.println("writing filename = "+filename);
+            System.out.println("writing chanName = "+channel_names[coord.getChannel()]);
 
-            constants.putMetaDataMap(meta, filename);
+            constants.putMetaStoreToFilenameMap(meta, filename);
 
-            constants.putChanStoreMap(mm.getAcquisitionManager().getAcquisitionSettings().channelGroup, meta);
+            constants.putChanToMetaStoreMap(channel_names[coord.getChannel()], meta);
 
-            constants.putChanToFileMap(mm.getAcquisitionManager().getAcquisitionSettings().channelGroup, filename);
-
-//            constants.LBQ_data_queue.put(filename);
-            //constants.writeCoordToHashMap(coord, filename);
-            //constants.data_list.add(filename);
-//            if(byteimg != null) {constants.LBQ_metadata_queue.put(""+byteimg.length);}
-
+            constants.putChanToFilenameMap(channel_names[coord.getChannel()], filename);
             return true;
+
         } catch (NullPointerException ex) {
             System.out.println("null ptr exception in lbq data queue");
-        }  catch (Exception ex) {
+        } catch (Exception ex) {
             System.out.println(ex);
         }
-//        catch (InterruptedException ex) {
-//            System.out.println("interrupted exception: queue interrupted while waiting for put");
-//        }
         return false;
     }
     

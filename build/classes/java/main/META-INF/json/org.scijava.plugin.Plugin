@@ -1,1 +1,1 @@
-{"class":"pythonBridgePluginInterface","values":{"type":"org.micromanager.MenuPlugin"}}
+{"class":"mm2PythonPlugin","values":{"type":"org.micromanager.MenuPlugin"}}
