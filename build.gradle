@@ -55,23 +55,23 @@ dependencies {
 //    ['compile', 'plugin_libs'].each{ conf -> compile group: 'org.junit.vintage', name: 'junit-vintage-engine', version: '5.2.0', configuration: conf }
 
     // Micromanager core jars
-    compile fileTree(include: ['*.jar'], dir: '/Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager')
+    compile fileTree(include: ['*.jar'], exclude: 'mm2Python_core.jar', dir: '/Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager')
     plugin_libs fileTree(include: ['*.jar'], dir: '/Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager')
     complete_libs fileTree(include: ['*.jar'], dir: '/Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager')
+    // example jar of difference between projector and projectorplugin
+    compile fileTree(include: ['ProjectorPlugin.jar'], dir: '/Applications/Micro-Manager-2.0.0-beta3-20181001/mmplugins')
 
     // ImageJ
     compile fileTree(include: ['*.jar'], dir: '/Applications/Micro-Manager-2.0.0-beta3-20181001/ij.jar')
     plugin_libs fileTree(include: ['*.jar'], dir: '/Applications/Micro-Manager-2.0.0-beta3-20181001/ij.jar')
     complete_libs fileTree(include: ['*.jar'], dir: '/Applications/Micro-Manager-2.0.0-beta3-20181001/ij.jar')
 
-
     //Py4J
     compile group: 'net.sf.py4j', name: 'py4j', version: '0.10.8.1'
     core_libs group: 'net.sf.py4j', name: 'py4j', version: '0.10.8.1'
     complete_libs group: 'net.sf.py4j', name: 'py4j', version: '0.10.8.1'
 
-
-    // IntelliJ UI Designer
+    // IntelliJ mm2python.UI Designer
     compile group: 'com.intellij', name: 'forms_rt', version: '7.0.3'
     core_libs group: 'com.intellij', name: 'forms_rt', version: '7.0.3'
     complete_libs group: 'com.intellij', name: 'forms_rt', version: '7.0.3'
