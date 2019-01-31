@@ -74,16 +74,16 @@ dependencies {
     else if(OperatingSystem.current().isWindows()) {
 
         // Micromanager core jars
-        compile fileTree(include: ['*.jar'], exclude: 'mm2Python_core.jar', dir: '/Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager')
-        plugin_libs fileTree(include: ['*.jar'], dir: '/Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager')
-        complete_libs fileTree(include: ['*.jar'], dir: '/Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager')
+        compile fileTree(include: ['*.jar'], exclude: 'mm2Python_core.jar', dir: 'C:\\Program Files\\Micro-Manager-2.0beta_20181001\\plugins\\Micro-Manager')
+        plugin_libs fileTree(include: ['*.jar'], dir: 'C:\\Program Files\\Micro-Manager-2.0beta_20181001\\plugins\\Micro-Manager')
+        complete_libs fileTree(include: ['*.jar'], dir: 'C:\\Program Files\\Micro-Manager-2.0beta_20181001\\plugins\\Micro-Manager')
         // example jar of difference between projector and projectorplugin
 //        compile fileTree(include: ['ProjectorPlugin.jar'], dir: '/Applications/Micro-Manager-2.0.0-beta3-20181001/mmplugins')
 
         // ImageJ
-        compile fileTree(include: ['*.jar'], dir: '/Applications/Micro-Manager-2.0.0-beta3-20181001/ij.jar')
-        plugin_libs fileTree(include: ['*.jar'], dir: '/Applications/Micro-Manager-2.0.0-beta3-20181001/ij.jar')
-        complete_libs fileTree(include: ['*.jar'], dir: '/Applications/Micro-Manager-2.0.0-beta3-20181001/ij.jar')
+        compile fileTree(include: ['*.jar'], dir: 'C:\\Program Files\\Micro-Manager-2.0beta_20181001\\ij.jar')
+        plugin_libs fileTree(include: ['*.jar'], dir: 'C:\\Program Files\\Micro-Manager-2.0beta_20181001\\ij.jar')
+        complete_libs fileTree(include: ['*.jar'], dir: 'C:\\Program Files\\Micro-Manager-2.0beta_20181001\\ij.jar')
 
     }
 
@@ -158,7 +158,7 @@ task copyCoreToMM(type: Copy) {
     }
     else if(OperatingSystem.current().isWindows()) {
         from 'build/libs/mm2Python_core.jar'
-        into "/Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager"
+        into "C:\\Program Files\\Micro-Manager-2.0beta_20181001\\plugins\\Micro-Manager"
         project.logger.lifecycle("moving CORE jar to micro-manager root")
     }
 }
