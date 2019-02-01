@@ -105,7 +105,7 @@ public class pythonBridgeUI_dialog extends JFrame {
     }
 
     private void create_ramdiskActionPerformed(ActionEvent evt) {
-        new ramDiskConstructor(mm);
+        new ramDiskConstructor(mm, UI_logger_textArea);
     }
 
     private void clear_ramdiskActionPerformed(ActionEvent evt) {
