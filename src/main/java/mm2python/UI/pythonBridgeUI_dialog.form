@@ -34,7 +34,9 @@
                 <children>
                   <component id="da932" class="javax.swing.JTextArea" binding="UI_logger_textArea">
                     <constraints/>
-                    <properties/>
+                    <properties>
+                      <font size="8"/>
+                    </properties>
                   </component>
                 </children>
               </scrollpane>

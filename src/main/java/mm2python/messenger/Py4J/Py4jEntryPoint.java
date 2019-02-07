@@ -6,9 +6,11 @@
 package mm2python.messenger.Py4J;
 
 import mm2python.mmDataHandler.dataInterface;
-import mm2python.Constants.constants;
+import mm2python.DataStructures.constants;
 import mmcorej.CMMCore;
 import org.micromanager.Studio;
+
+import mm2python.UI.reporter;
 
 
 /**
@@ -43,7 +45,7 @@ public class Py4jEntryPoint implements dataInterface {
     }
 
     public String classtest() throws Exception {
-        System.out.println("classtest called");
+        reporter.set_report_area(true, false, "classtest called");
         Class<?> py = Class.forName("mm2python.messenger.Py4J.Py4JListenerInterface");
         return py.toString();
     }
@@ -65,8 +67,8 @@ public class Py4jEntryPoint implements dataInterface {
     @Override
     public String retrieveFileByChannelName(String channel_name) {
         String filepath = constants.getNextFileForChannel(channel_name);
-        System.out.println("====== Retrieve file requested ======== ");
-        System.out.println("Filepath = "+filepath);
+        reporter.set_report_area(true, false, "====== Retrieve file requested ======== ");
+        reporter.set_report_area(true, false, "Filepath = "+filepath);
 //        constants.removeChanToMetaStoreMap(channel_name);
         constants.removeChanToFilenameMap(channel_name);
         return filepath;

@@ -5,11 +5,12 @@
  */
 package mm2python.mmEventHandler;
 
-import mm2python.Constants.constants;
+import mm2python.DataStructures.constants;
 import mm2python.mmDataHandler.Exceptions.NoImageException;
 import mm2python.messenger.Py4J.Exceptions.Py4JListenerException;
 import mm2python.messenger.Py4J.Py4JListener;
 import mm2python.mmDataHandler.memMapImage;
+import mm2python.UI.reporter;
 import org.micromanager.Studio;
 import org.micromanager.data.Coords;
 import org.micromanager.data.Datastore;
@@ -49,29 +50,28 @@ public class datastoreEventsThread implements Runnable {
                 prefix, temp_coord.getTime(), temp_coord.getStagePosition(), temp_coord.getZ(), temp_coord.getChannel());
         }
         
-        // write memory mapped image 
+        //Write memory mapped image
         try {
-            System.out.println("FILENAME = "+filename);
+            reporter.set_report_area(true, false, "FILENAME = "+filename);
             memMapImage out = new memMapImage(temp_img, temp_coord, filename, prefix, window_name, channel_names);
             out.writeToMemMap();
         } catch (NullPointerException ex) {
-            System.out.println("null ptr exception in datastoreEvents Thread");
+            reporter.set_report_area(true, false, "null ptr exception in datastoreEvents Thread");
         } catch (NoImageException ex) {
-            System.out.println(ex);
+            reporter.set_report_area(true, false, ex.toString());
         }
         
         // notify Listeners
-        //TODO: generalize this to broadcast regardless of messaging system type.
         try {
-            System.out.println("notifying py4j listeners");
+            reporter.set_report_area(true, false, "notifying py4j listeners");
             if (constants.py4JRadioButton) {
                 Py4JListener notifyListener = new Py4JListener();
                 notifyListener.notifyAllListeners();
             }
         } catch (Py4JListenerException ex) {
-            System.out.println("Exception in datastore events thread while notifying Py4J listeners: "+ex.toString());
+            reporter.set_report_area(true, false, "Exception in datastore events thread while notifying Py4J listeners: "+ex.toString());
         } catch (Exception ex) {
-            System.out.println("General Exception while notifying Py4J listeners: "+ex.toString());
+            reporter.set_report_area(true, false, "General Exception while notifying Py4J listeners: "+ex.toString());
         }
         
     }

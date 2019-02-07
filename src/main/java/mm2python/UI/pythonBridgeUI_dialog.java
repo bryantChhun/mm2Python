@@ -5,18 +5,22 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 
-// mm libraries
-import mm2python.Constants.constants;
+// mm2python libraries
+import mm2python.DataStructures.constants;
 import mm2python.messenger.Py4J.Py4J;
 import mm2python.mmDataHandler.ramDisk.ramDiskConstructor;
 import mm2python.mmDataHandler.ramDisk.ramDiskFlush;
 import mm2python.mmEventHandler.globalEvents;
+import mm2python.UI.reporter;
+
+// mm libraries
 import org.micromanager.Studio;
 
 // java libraries
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+
 
 public class pythonBridgeUI_dialog extends JFrame {
     private JPanel contentPane;
@@ -44,7 +48,7 @@ public class pythonBridgeUI_dialog extends JFrame {
     private static Studio mm;
     private Py4J gate;
     private globalEvents gevents;
-    private final reports reporter;
+    private final mm2python.UI.reporter init_reports;
     private final ramDiskFlush flush;
 
     public pythonBridgeUI_dialog(Studio mm_) {
@@ -65,25 +69,28 @@ public class pythonBridgeUI_dialog extends JFrame {
         openMQRadioButton.addActionListener(e -> openMQRadioButtonActionPerformed(e));
         arrowRadioButton.addActionListener(e -> arrowRadioButtonActionPerformed(e));
 
+        temp_file_path.addActionListener(e -> temp_file_pathActionPerformed(e));
+
         mm = mm_;
-        reporter = new reports(UI_logger_textArea);
+        init_reports = new reporter(UI_logger_textArea, mm);
         flush = new ramDiskFlush(mm);
 
         // initialize constants
         new constants(mm);
-        if (py4JRadioButton.isSelected()) {
-            constants.py4JRadioButton = true;
-        }
+        if (py4JRadioButton.isSelected()) { constants.py4JRadioButton = true; }
+        constants.RAMDiskName = temp_file_path.getText();;
+        reporter.set_report_area(true, false, "mm2python.UI INITIALIZATION filename = " + constants.RAMDiskName);
+
+    }
+
+    private void temp_file_pathActionPerformed(ActionEvent evt){
         constants.RAMDiskName = temp_file_path.getText();
-
-        System.out.println("mm2python.UI INITIALIZATION filename = " + constants.RAMDiskName);
-
-
+        reporter.set_report_area(false, false,"Temp file path changed to: "+constants.RAMDiskName);
     }
 
     private void create_python_bridgeActionPerformed(ActionEvent evt) {
         reporter.set_report_area("creating python bridge");
-        gate = new Py4J(mm, UI_logger_textArea);
+        gate = new Py4J(mm);
         gate.startConnection();
     }
 
@@ -105,7 +112,7 @@ public class pythonBridgeUI_dialog extends JFrame {
     }
 
     private void create_ramdiskActionPerformed(ActionEvent evt) {
-        new ramDiskConstructor(mm, UI_logger_textArea);
+        new ramDiskConstructor(mm);
     }
 
     private void clear_ramdiskActionPerformed(ActionEvent evt) {
@@ -252,4 +259,5 @@ public class pythonBridgeUI_dialog extends JFrame {
     public JComponent $$$getRootComponent$$$() {
         return contentPane;
     }
+
 }

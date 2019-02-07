@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package mm2python.Constants;
+package mm2python.DataStructures;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import mm2python.mmDataHandler.MetaDataStore;
+import mm2python.UI.reporter;
 import org.micromanager.Studio;
 
 /**
@@ -19,13 +19,18 @@ import org.micromanager.Studio;
  * @author bryant.chhun
  */
 public class constants {
+    /**
+     * Constants contains data maps for reference by the messenger service
+     *  It also contains methods for OS-level constants, like temp file paths.
+     *
+     *
+     */
 
     private static Studio mm;
     
     public static int current_window_count;
     public static String RAMDiskName;
-    public static String PythonScriptPath;
-    
+
     public static List<Integer> ports;
 
     private static LinkedBlockingQueue<String> filenameByChannel1;
@@ -41,8 +46,6 @@ public class constants {
     //TODO: write atomic update to this string...one that checks vs other processes and also checks vs other channels.
     private static HashMap<String, LinkedBlockingQueue<String>> chanToFilenameMap;
 
-
-    //TODO: replace radio buttons with enums
     public static boolean py4JRadioButton;
 
     public constants(Studio mm_) {
@@ -97,20 +100,23 @@ public class constants {
             }
             filenameByChannel1.offer(filename, 10, TimeUnit.MILLISECONDS);
 
-            System.out.println(String.format("placing filename by Channel: (chan, size) = (%s, %s)",
+            reporter.set_report_area(true, false,
+                    String.format("placing filename by Channel: (chan, size) = (%s, %s)",
                     channel,
                     filenameByChannel1.size()));
 
             chanToFilenameMap.put(channel, filenameByChannel1);
         } catch (InterruptedException iEX){
-            System.out.println(iEX.toString());
+            reporter.set_report_area(true, false,
+                    iEX.toString());
         }
     }
 
     public static void removeChanToFilenameMap(String channel) {
         filenameByChannel1 = chanToFilenameMap.get(channel);
         filenameByChannel1.poll();
-        System.out.println(String.format("Removing filename from channel: (chan, new size) = (%s, %s) ",
+        reporter.set_report_area(true, false,
+                String.format("Removing filename from channel: (chan, new size) = (%s, %s) ",
                 channel,
                 filenameByChannel1.size()));
         chanToFilenameMap.put(channel, filenameByChannel1);
@@ -118,7 +124,8 @@ public class constants {
 
     public static String getNextFileForChannel(String channel) {
         LinkedBlockingQueue<String> filenames = chanToFilenameMap.get(channel);
-        System.out.println(String.format("filename size at Peek: %s %s %s", channel, filenames.size(), filenames));
+        reporter.set_report_area(true, false,
+                String.format("filename size at Peek: %s %s %s", channel, filenames.size(), filenames));
         return filenames.peek();
     }
 

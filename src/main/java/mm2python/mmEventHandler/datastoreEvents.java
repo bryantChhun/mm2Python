@@ -5,7 +5,7 @@
  */
 package mm2python.mmEventHandler;
 
-import mm2python.UI.reports;
+import mm2python.UI.reporter;
 
 import org.micromanager.Studio;
 import org.micromanager.data.Datastore;
@@ -27,19 +27,17 @@ import org.micromanager.acquisition.SequenceSettings;
  */
 public class datastoreEvents {
     private final Studio mm;
-    private final reports report;
     private final Datastore data;
     private final String window_name;
     private String prefix;
     private final ExecutorService mmExecutor;
     
-    public datastoreEvents(Studio mm_, Datastore data_, String window_name_, reports report_) {
+    public datastoreEvents(Studio mm_, Datastore data_, String window_name_) {
         mm = mm_;
         data = data_;
         window_name = window_name_;
-        report = report_;
         mmExecutor = main_executor.getExecutor();
-        System.out.println(String.format("window %s registered", window_name));
+        reporter.set_report_area(true, false, String.format("window %s registered", window_name));
     }
     
     public void registerThisDatastore(){
@@ -49,7 +47,6 @@ public class datastoreEvents {
             SequenceSettings seq = mm.acquisitions().getAcquisitionSettings();
             prefix = seq.prefix;
 
-            // Normal datastore
             data.registerForEvents(this);
             
             // writes any data existing in window before draw.
@@ -61,7 +58,6 @@ public class datastoreEvents {
             }
             
         } else {
-            // Snap/Live view datastore
             data.registerForEvents(this);
         }
         
@@ -69,28 +65,31 @@ public class datastoreEvents {
     
     @Subscribe
     public void monitor_DatastoreFrozenEvent(DatastoreFrozenEvent event) {
-        System.out.println("DatastoreFrozen event");
-        System.out.println("num images in this datastore = "+data.getNumImages());
+        reporter.set_report_area(true, false, "DatastoreFrozen event");
+        reporter.set_report_area(true, false, "num images in this datastore = "+data.getNumImages());
         data.unregisterForEvents(this);
     }
     
     @Subscribe
     public void monitor_DatastoreSavePathEvent(DatastoreSavePathEvent event) {
-        System.out.println("Datastore save path event");
-        System.out.println("num images in this datastore = "+data.getNumImages());
+        reporter.set_report_area(true, false, "Datastore save path event");
+        reporter.set_report_area(true, false, "num images in this datastore = "+data.getNumImages());
         data.unregisterForEvents(this);
     }
-    
+
+    /**
+     * NewImageEvent spins off new threads for the datastore
+     *  Consider implementing PrioerityBlockingQueue
+     * @param event
+     */
     @Subscribe
     public void monitor_NewImageEvent(NewImageEvent event){
-        //get coordinates
         try {
             mmExecutor.execute(new datastoreEventsThread(mm, event.getDatastore(), event.getCoords(), prefix, window_name));
-
         } catch (NullPointerException ex) {
-            System.out.println("null ptr exception in newImageeventMonitor");
+            reporter.set_report_area(true, false, "null ptr exception in newImageeventMonitor");
         } catch (Exception ex) {
-            System.out.println("new image event exception = "+ex);
+            reporter.set_report_area(true, false, "new image event exception = "+ex);
         }
     }
     

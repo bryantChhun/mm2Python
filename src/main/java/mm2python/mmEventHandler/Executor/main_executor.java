@@ -12,6 +12,10 @@ import java.util.concurrent.Executors;
  *
  * @author bryant.chhun
  */
+
+/**
+ * Singleton executor for window and data creation threads
+ */
 public class main_executor {
     
     private static ExecutorService mmExecutor;

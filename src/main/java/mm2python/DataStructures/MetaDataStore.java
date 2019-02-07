@@ -1,4 +1,4 @@
-package mm2python.mmDataHandler;
+package mm2python.DataStructures;
 
 import java.util.Objects;
 
@@ -30,6 +30,11 @@ public class MetaDataStore {
         channel_name = channel_name_;
     }
 
+    /**
+     * Must override equals for proper hash map population
+     * @param o target MetaDataStore object
+     * @return True if each field is equal
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -43,6 +48,11 @@ public class MetaDataStore {
                 Objects.equals(windowname, that.windowname);
     }
 
+    /**
+     * Must override hashCode for proper hash map population
+     * @return hash for this object, based purely on the 6 constructor parameters:
+     *  time, x-y position, z-position, channel, filename prefix, windowname
+     */
     @Override
     public int hashCode() {
         return Objects.hash(time, stage, z, channel, prefix, windowname);

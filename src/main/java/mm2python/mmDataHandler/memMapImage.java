@@ -15,7 +15,8 @@ import java.nio.MappedByteBuffer;
 import java.nio.ShortBuffer;
 import java.nio.channels.FileChannel;
 
-import mm2python.Constants.constants;
+import mm2python.DataStructures.MetaDataStore;
+import mm2python.DataStructures.constants;
 import mm2python.mmDataHandler.Exceptions.NoImageException;
 import org.micromanager.data.Coords;
 import org.micromanager.data.Image;
@@ -42,7 +43,7 @@ public class memMapImage {
         System.out.println("memMapImage constructor filename = "+filename);
     }
     
-    public boolean writeToMemMap() throws NoImageException {
+    public void writeToMemMap() throws NoImageException {
         byte[] byteimg= null;
                 
         File file = new File(filename);
@@ -63,8 +64,7 @@ public class memMapImage {
             System.out.println(ex);
         }
         
-        // write data record to class constants.
-        // This is what Py4J uses to fetch the data from RAMdisk.
+        // Record filename and metadata to appropriate maps/queues in constants structure
         try {
             MetaDataStore meta = new MetaDataStore(prefix, window_name,
                     coord.getTime(),
@@ -85,14 +85,12 @@ public class memMapImage {
             constants.putChanToMetaStoreMap(channel_names[coord.getChannel()], meta);
 
             constants.putChanToFilenameMap(channel_names[coord.getChannel()], filename);
-            return true;
 
         } catch (NullPointerException ex) {
-            System.out.println("null ptr exception in lbq data queue");
+            System.out.println("null ptr exception writing to LinkedBlockingQueue");
         } catch (Exception ex) {
             System.out.println(ex);
         }
-        return false;
     }
     
     private byte[] convertToByte(Image tempImg_) throws UnsupportedOperationException {
