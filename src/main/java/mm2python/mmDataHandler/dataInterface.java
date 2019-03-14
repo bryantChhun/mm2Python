@@ -5,6 +5,8 @@
  */
 package mm2python.mmDataHandler;
 
+import mm2python.DataStructures.MetaDataStore;
+
 /**
  *
  * @author bryant.chhun
@@ -21,15 +23,23 @@ public interface dataInterface {
 
 //    public boolean doesStoreExist(MetaDataStore store_);
 //
-//    public String retrieveStorePath(MetaDataStore store_);
+//    public String getStorePath(MetaDataStore store_);
 
-    public String retrieveFileByChannelName(String channel_name);
+    public String getFile(String channel_name);
+
+    public String getFile(MetaDataStore store);
+
+    public MetaDataStore getStore(String channel_name);
 
 //    public boolean storeByIndexExists(int time, int stage, int z);
 //
 //    public boolean removeByIndex();
 
-    public boolean storeByChannelNameExists(String channel_name);
+    public boolean storeExists(String channel_name);
+
+    public boolean fileExists(String channel_name);
+
+    public boolean fileExists(MetaDataStore store);
 
 //    public boolean removeByChannelName(String channel_name);
     

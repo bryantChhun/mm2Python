@@ -20,6 +20,7 @@ import mm2python.DataStructures.constants;
 import mm2python.mmDataHandler.Exceptions.NoImageException;
 import org.micromanager.data.Coords;
 import org.micromanager.data.Image;
+import mm2python.UI.reporter;
 
 /**
  *
@@ -44,17 +45,20 @@ public class memMapImage {
     }
     
     public void writeToMemMap() throws NoImageException {
-        byte[] byteimg= null;
+        byte[] byteimg;
                 
         File file = new File(filename);
         file.delete();
-        System.out.println("writeToMemMap filename = "+filename);
+
+        // check that parameters are not Nonetype
+        reporter.set_report_area(false, false, "coord.getchannel = "+coord.getChannel());
+        reporter.set_report_area(false, false, "channel_names = "+channel_names.toString());
+        reporter.set_report_area(false, false, "writeToMemMap filename = "+filename);
 
         // write data as memmap to memmap file
         try (   FileChannel fileChannel = new RandomAccessFile(file, "rw").getChannel())
         {
             byteimg = convertToByte(temp_img);
-            //byte[] byteimg = convertToByteViaOutputStream(temp_img);
             if(byteimg == null) {
                 throw new NoImageException("image not converted to byte[]");
             }
@@ -66,6 +70,13 @@ public class memMapImage {
         
         // Record filename and metadata to appropriate maps/queues in constants structure
         try {
+            reporter.set_report_area(false, false, "writing chan to filename map = ("+filename+", "+channel_names[coord.getChannel()]+")" );
+            constants.putChanToFilenameMap(channel_names[coord.getChannel()], filename);
+        } catch (Exception ex) {
+            reporter.set_report_area(false, false, ex.toString());
+        }
+
+        try {
             MetaDataStore meta = new MetaDataStore(prefix, window_name,
                     coord.getTime(),
                     coord.getStagePosition(),
@@ -76,20 +87,17 @@ public class memMapImage {
                     temp_img.getBytesPerPixel(),
                     channel_names[coord.getChannel()]
                     );
-            System.out.println("writing meta = "+meta.toString());
-            System.out.println("writing filename = "+filename);
-            System.out.println("writing chanName = "+channel_names[coord.getChannel()]);
+
+            reporter.set_report_area(false, false, "writing meta = "+meta.toString());
 
             constants.putMetaStoreToFilenameMap(meta, filename);
 
             constants.putChanToMetaStoreMap(channel_names[coord.getChannel()], meta);
 
-            constants.putChanToFilenameMap(channel_names[coord.getChannel()], filename);
-
         } catch (NullPointerException ex) {
-            System.out.println("null ptr exception writing to LinkedBlockingQueue");
+            reporter.set_report_area(false, false, "null ptr exception writing to LinkedBlockingQueue");
         } catch (Exception ex) {
-            System.out.println(ex);
+            reporter.set_report_area(false, false, ex.toString());
         }
     }
     

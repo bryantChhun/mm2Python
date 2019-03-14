@@ -70,9 +70,9 @@ public class globalEvents {
     public void monitor_aboutToShow(DisplayAboutToShowEvent event) {
         reporter.set_report_area("DisplayAboutToShowEvent event detected");
 
-        DisplayWindow dw = event.getDisplay();
+//        DisplayWindow dw = event.getDisplay();
 
-        mmExecutor.execute(new globalEventsThread(mm, dw));
+        mmExecutor.execute(new globalEventsThread(mm, event.getDisplay()));
     }
     
 }

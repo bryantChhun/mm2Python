@@ -50,6 +50,8 @@ public class reporter {
      * @param report String message
      */
     public static void set_report_area(boolean systemout, boolean mmlogs, String report) {
+        // this logic is weird, fix it
+        // just do two if's and one else.  Remove the overload above.
         if (systemout && mmlogs){
             System.out.println(report);
             mm.logs().logMessage(report);

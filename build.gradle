@@ -35,6 +35,9 @@ sourceSets
                     }
         }
 
+//sourceCompatibility = 1.7
+//targetCompatibility = 1.7
+
 configurations {
     core_libs
     plugin_libs

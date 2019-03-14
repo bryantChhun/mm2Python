@@ -7,6 +7,8 @@ package mm2python.messenger.Py4J;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import mm2python.UI.reporter;
 import mm2python.messenger.Py4J.Exceptions.Py4JListenerException;
 
 /**
@@ -23,13 +25,25 @@ public class Py4JListener {
     
     //================ Listener methods =================================//
     
-    public static void registerListener(Py4JListenerInterface listener) throws Py4JListenerException {
+    public void registerListener(Py4JListenerInterface listener) throws Py4JListenerException {
         System.out.println("adding listener requested");
         try{
             listeners.add(listener);
         } catch (Exception ex) {
             throw new Py4JListenerException("Py4J Exception while registering listener: "+ex.toString());
         }
+    }
+
+    public String classtest() throws Exception {
+        reporter.set_report_area(true, false, "classtest called");
+        Class<?> py = Class.forName("mm2python.messenger.Py4J.Py4JListenerInterface");
+        return py.toString();
+    }
+
+    public String classtest2() throws Exception {
+        reporter.set_report_area(true, false, "classtest called");
+        Class<?> py = Class.forName("mm2python.messenger.Py4J.Py4JListenerInterface");
+        return py.toString();
     }
 
     public void notifyAllListeners() throws Py4JListenerException {

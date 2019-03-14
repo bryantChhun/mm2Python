@@ -10,11 +10,11 @@ public class MetaDataStore {
 
     private final int time, stage, z, channel;
 
-    public final int x_dim, y_dim, bitdepth;
+    private final int x_dim, y_dim, bitdepth;
 
     private final String prefix, windowname;
 
-    public final String channel_name;
+    private final String channel_name;
 
     public MetaDataStore(String prefix_, String windowname_, int time_, int stage_,
                   int z_, int channel_, int x_dim_, int y_dim_, int bytesPerPixel, String channel_name_) {
@@ -28,6 +28,14 @@ public class MetaDataStore {
         y_dim = y_dim_;
         bitdepth = bytesPerPixel;
         channel_name = channel_name_;
+    }
+
+    public int x_dim(){
+        return x_dim;
+    }
+
+    public int y_dim(){
+        return y_dim;
     }
 
     /**

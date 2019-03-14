@@ -44,6 +44,10 @@ public class constants {
     // every channel has a list of strings.  List position represents next value that was entered.
     //TODO: consider concurrency issue here. Writing memmap image is aysnc event, while populating this array must be done synchronously.
     //TODO: write atomic update to this string...one that checks vs other processes and also checks vs other channels.
+    /**
+     * chanToFilenameMap maps:
+     *  Channel : Queue of filenames
+     */
     private static HashMap<String, LinkedBlockingQueue<String>> chanToFilenameMap;
 
     public static boolean py4JRadioButton;
@@ -76,12 +80,17 @@ public class constants {
         filenameByChannel1 = new LinkedBlockingQueue<>();
     }
 
-    // Every MetaDataStore is kept.  Its corresponding mmap filename is registered.
+    // map population and depopulation methods
+
+    /**
+     * map a metastore to its corresponding memory-mapped file
+     * @param store_ MetaDataStore
+     * @param filename memory mapped file path
+     */
     public static void putMetaStoreToFilenameMap(MetaDataStore store_, String filename) {
         MetaStoreToFilenameMap.put(store_, filename);
     }
 
-    // map should contain only ONE instance of each channel
     public static void putChanToMetaStoreMap(String channel, MetaDataStore store_) {
         chanToMetaStoreMap.put(channel, store_);
     }
@@ -90,7 +99,6 @@ public class constants {
         chanToMetaStoreMap.remove(channel);
     }
 
-    // map should contain only ONE instance of each channel
     public static void putChanToFilenameMap(String channel, String filename) {
         try {
             if(chanToFilenameMap.containsKey(channel)){
@@ -98,16 +106,19 @@ public class constants {
             } else {
                 filenameByChannel1 = new LinkedBlockingQueue<>();
             }
-            filenameByChannel1.offer(filename, 10, TimeUnit.MILLISECONDS);
 
-            reporter.set_report_area(true, false,
+            if(!filenameByChannel1.offer(filename, 100, TimeUnit.MILLISECONDS)){
+                reporter.set_report_area(false, false, "LBQ timeout when offering new filename "+filename);
+            }
+
+            reporter.set_report_area(false, false,
                     String.format("placing filename by Channel: (chan, size) = (%s, %s)",
                     channel,
                     filenameByChannel1.size()));
 
             chanToFilenameMap.put(channel, filenameByChannel1);
-        } catch (InterruptedException iEX){
-            reporter.set_report_area(true, false,
+        } catch (Exception iEX){
+            reporter.set_report_area(false, false,
                     iEX.toString());
         }
     }
@@ -122,6 +133,13 @@ public class constants {
         chanToFilenameMap.put(channel, filenameByChannel1);
     }
 
+    // Retrieval methods
+
+    /**
+     *
+     * @param channel
+     * @return
+     */
     public static String getNextFileForChannel(String channel) {
         LinkedBlockingQueue<String> filenames = chanToFilenameMap.get(channel);
         reporter.set_report_area(true, false,
@@ -129,10 +147,24 @@ public class constants {
         return filenames.peek();
     }
 
+    public static String getFileFromMetaStore(MetaDataStore store_) {
+        return MetaStoreToFilenameMap.get(store_);
+    }
+
+    public static MetaDataStore getStore(String channel) {
+        return chanToMetaStoreMap.get(channel);
+    }
+
+    // Data check methods
+
     public static boolean nextImageExists(String channel) {
         // check that both key and corresponding LBQ are not empty
         return chanToFilenameMap.containsKey(channel) &&
                 chanToFilenameMap.get(channel).size() != 0;
     }
-    
+
+    public static boolean nextImageExists(MetaDataStore store) {
+        // check that both key and corresponding LBQ are not empty
+        return MetaStoreToFilenameMap.containsKey(store);
+    }
 }

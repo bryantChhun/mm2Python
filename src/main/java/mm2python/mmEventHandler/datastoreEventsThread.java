@@ -30,6 +30,18 @@ public class datastoreEventsThread implements Runnable {
     private final String window_name;
     private final String[] channel_names;
 
+    /**
+     * Executes sequence of tasks up run by executor:
+     *  1) assigns a filename based on metadata
+     *  2) writes the file as memory mapped image
+     *  3) registers file metadata in static repository
+     *  4) notifies any py4j listeners
+     * @param mm_
+     * @param data_
+     * @param c_
+     * @param prefix_
+     * @param window_name_
+     */
     public datastoreEventsThread(Studio mm_, Datastore data_, Coords c_, String prefix_, String window_name_) {
         mm = mm_;
         temp_img = data_.getImage(c_);
@@ -45,14 +57,16 @@ public class datastoreEventsThread implements Runnable {
         //Check for live vs MDA image
         if(window_name.equals("Snap/Live View")) {
             filename = constants.RAMDiskName+"Snap-Live-Stream.dat";
+            reporter.set_report_area(true, true, "datastoreEventsThread SNAPLIVE = "+filename);
         } else {
             filename = String.format(constants.RAMDiskName+"%s_t%03d_p%03d_z%02d_c%02d.dat",
                 prefix, temp_coord.getTime(), temp_coord.getStagePosition(), temp_coord.getZ(), temp_coord.getChannel());
+            reporter.set_report_area(true, true, "datastoreEventsThread MDA = "+filename);
         }
         
         //Write memory mapped image
         try {
-            reporter.set_report_area(true, false, "FILENAME = "+filename);
+            reporter.set_report_area(true, true, "datastoreEventsThread FILENAME = "+filename);
             memMapImage out = new memMapImage(temp_img, temp_coord, filename, prefix, window_name, channel_names);
             out.writeToMemMap();
         } catch (NullPointerException ex) {

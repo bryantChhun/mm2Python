@@ -5,12 +5,14 @@
  */
 package mm2python.messenger.Py4J;
 
+import mm2python.DataStructures.MetaDataStore;
 import mm2python.mmDataHandler.dataInterface;
 import mm2python.DataStructures.constants;
 import mmcorej.CMMCore;
 import org.micromanager.Studio;
 
 import mm2python.UI.reporter;
+
 
 
 /**
@@ -55,6 +57,14 @@ public class Py4jEntryPoint implements dataInterface {
         return loader.getResource("").toString();
     }
 
+    public void getClasses() {
+        ClassLoader appLoader = ClassLoader.getSystemClassLoader();
+        ClassLoader loader = Py4jEntryPoint.class.getClassLoader();
+        String[] classes = ClassScope.getLoadedLibraries(new ClassLoader[] {appLoader, loader});
+        for (String str: classes) {
+            reporter.set_report_area(false, false, str);
+        }
+    }
 
     public String getSystemPath() {
         return System.getProperty("java.class.path");
@@ -65,13 +75,41 @@ public class Py4jEntryPoint implements dataInterface {
     //TODO: inspect the data bit depth and pixel size, send this!
 
     @Override
-    public String retrieveFileByChannelName(String channel_name) {
+    public String getFile(String channel_name) {
         String filepath = constants.getNextFileForChannel(channel_name);
         reporter.set_report_area(true, false, "====== Retrieve file requested ======== ");
         reporter.set_report_area(true, false, "Filepath = "+filepath);
 //        constants.removeChanToMetaStoreMap(channel_name);
         constants.removeChanToFilenameMap(channel_name);
         return filepath;
+    }
+
+    @Override
+    public String getFile(MetaDataStore store) {
+        return constants.getFileFromMetaStore(store);
+    }
+
+    @Override
+    /**
+     * only returns the most recent store associated with that channel
+     */
+    public MetaDataStore getStore(String channel_name) {
+        return constants.getStore(channel_name);
+    }
+
+    @Override
+    public boolean storeExists(String channel_name) {
+        return constants.nextImageExists(channel_name);
+    }
+
+    @Override
+    public boolean fileExists(String channel_name) {
+        return constants.nextImageExists(channel_name);
+    }
+
+    @Override
+    public boolean fileExists(MetaDataStore store) {
+        return constants.nextImageExists(store);
     }
 
 //    @Override
@@ -83,11 +121,6 @@ public class Py4jEntryPoint implements dataInterface {
 //    public boolean removeByIndex(){
 //
 //    }
-
-    @Override
-    public boolean storeByChannelNameExists(String channel_name) {
-        return constants.nextImageExists(channel_name);
-    }
 
 //    @Override
 //    public boolean removeByChannelName(String channel_name) {

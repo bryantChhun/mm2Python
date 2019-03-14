@@ -1,6 +1,6 @@
 package Tests;
 
-import mm2python.Constants.constants;
+import mm2python.DataStructures.constants;
 import org.junit.jupiter.api.Test;
 
 import org.micromanager.Studio;
