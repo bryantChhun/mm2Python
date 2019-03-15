@@ -10,7 +10,7 @@ public class MetaDataStore {
 
     private final int time, stage, z, channel;
 
-    private final int x_dim, y_dim, bitdepth;
+    private final int xRange, yRange, bitDepth;
 
     private final String prefix, windowname;
 
@@ -24,19 +24,24 @@ public class MetaDataStore {
         stage = stage_;
         z = z_;
         channel = channel_;
-        x_dim = x_dim_;
-        y_dim = y_dim_;
-        bitdepth = bytesPerPixel;
+        xRange = x_dim_;
+        yRange = y_dim_;
+        bitDepth = bytesPerPixel;
         channel_name = channel_name_;
     }
 
-    public int x_dim(){
-        return x_dim;
+    public int getxRange() {
+        return xRange;
     }
 
-    public int y_dim(){
-        return y_dim;
+    public int getyRange() {
+        return yRange;
     }
+
+    public int getBitDepth() {
+        return bitDepth;
+    }
+
 
     /**
      * Must override equals for proper hash map population
