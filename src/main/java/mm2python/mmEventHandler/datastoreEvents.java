@@ -29,7 +29,7 @@ public class datastoreEvents {
     private final Studio mm;
     private final Datastore data;
     private final String window_name;
-    private String prefix;
+    private String prefix_;
     private final ExecutorService mmExecutor;
     
     public datastoreEvents(Studio mm_, Datastore data_, String window_name_) {
@@ -45,17 +45,17 @@ public class datastoreEvents {
 //        if(!window_name.equals("Snap/Live View")) {
             
             SequenceSettings seq = mm.acquisitions().getAcquisitionSettings();
-            prefix = seq.prefix;
+            prefix_ = seq.prefix;
 
             data.registerForEvents(this);
-            reporter.set_report_area(true, true, "datastoreEvent: registered this datastore, prefix: "+data.toString()+" "+prefix);
+            reporter.set_report_area(true, true, "datastoreEvent: registered this datastore, prefix: "+data.toString()+" "+prefix_);
             
             // writes any data existing in window before draw.
             if(data.getNumImages() > 0){
                 Iterable<Coords> itercoords = data.getUnorderedImageCoords();
                 for (Coords c: itercoords) {
                     reporter.set_report_area(true, true, "datastoreEvent: existing images in datastore before window rendered: "+c.toString());
-                    mmExecutor.execute(new datastoreEventsThread(mm, data, c, prefix, window_name) );
+                    mmExecutor.execute(new datastoreEventsThread(mm, data, c, prefix_, window_name) );
                 }
             }
             
@@ -87,8 +87,13 @@ public class datastoreEvents {
     @Subscribe
     public void monitor_NewImageEvent(NewImageEvent event){
         try {
-            reporter.set_report_area(true, true, "new image event: "+prefix.toString()+" "+window_name.toString());
-            mmExecutor.execute(new datastoreEventsThread(mm, event.getDatastore(), event.getCoords(), prefix, window_name));
+            SequenceSettings seq = mm.acquisitions().getAcquisitionSettings();
+            prefix_ = seq.prefix;
+
+            reporter.set_report_area(false, false, "\nNewImageEvent event detected");
+            reporter.set_report_area(false, false, "new image event: "+prefix_+" "+window_name);
+            mmExecutor.execute(new datastoreEventsThread(mm, event.getDatastore(), event.getCoords(), prefix_, window_name));
+
         } catch (NullPointerException ex) {
             reporter.set_report_area(true, false, "null ptr exception in newImageeventMonitor");
         } catch (Exception ex) {

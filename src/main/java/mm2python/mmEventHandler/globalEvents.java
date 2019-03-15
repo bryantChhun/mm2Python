@@ -68,6 +68,7 @@ public class globalEvents {
      */
     @Subscribe
     public void monitor_aboutToShow(DisplayAboutToShowEvent event) {
+        reporter.set_report_area(false, false, "\n");
         reporter.set_report_area("DisplayAboutToShowEvent event detected");
 
 //        DisplayWindow dw = event.getDisplay();
