@@ -41,7 +41,6 @@ public class memMapImage {
         coord = coord_;
         window_name = window_name_;
         channel_names = channel_names_;
-        System.out.println("memMapImage constructor filename = "+filename);
     }
     
     public void writeToMemMap() throws NoImageException {
@@ -53,6 +52,7 @@ public class memMapImage {
         // check that parameters are not Nonetype
         reporter.set_report_area(false, false, "coord.getchannel = "+coord.getChannel());
         reporter.set_report_area(false, false, "channel_names = "+channel_names.toString());
+        reporter.set_report_area(false, false, "channel name = "+channel_names[coord.getChannel()]);
         reporter.set_report_area(false, false, "writeToMemMap filename = "+filename);
 
         // write data as memmap to memmap file
@@ -68,7 +68,7 @@ public class memMapImage {
             System.out.println(ex);
         }
         
-        // Record filename and metadata to appropriate maps/queues in constants structure
+        // write filename to queue based on Channel
         try {
             reporter.set_report_area(false, false, "writing chan to filename map = ("+filename+", "+channel_names[coord.getChannel()]+")" );
             constants.putChanToFilenameMap(channel_names[coord.getChannel()], filename);
@@ -76,6 +76,8 @@ public class memMapImage {
             reporter.set_report_area(false, false, ex.toString());
         }
 
+        // write metastore to queue based on channel
+        // write filename to queue based on metastore
         try {
             MetaDataStore meta = new MetaDataStore(prefix, window_name,
                     coord.getTime(),
