@@ -42,6 +42,10 @@ public class MetaDataStore {
         return bitDepth;
     }
 
+    public String getChannelName() {
+        return channel_name;
+    }
+
 
     /**
      * Must override equals for proper hash map population
@@ -70,6 +74,8 @@ public class MetaDataStore {
     public int hashCode() {
         return Objects.hash(time, stage, z, channel, prefix, windowname);
     }
+
+
 
 }
 

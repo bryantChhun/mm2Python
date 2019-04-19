@@ -46,6 +46,20 @@ configurations {
 
 import org.gradle.internal.os.OperatingSystem
 
+String core_plugin_path
+String studio_plugin_path
+String app_path
+
+if(OperatingSystem.current().isMacOsX()) {
+    core_plugin_path = '/Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager'
+    studio_plugin_path = '/Applications/Micro-Manager-2.0.0-beta3-20181001/mmplugins/'
+    app_path = '/Applications/Micro-Manager-2.0.0-beta3-20181001/'
+} else if(OperatingSystem.current().isWindows()) {
+    core_plugin_path = 'C:\\Applications\\Micro-Manager-2.0.0-beta3-20181001\\plugins\\Micro-Manager'
+    studio_plugin_path = 'C:\\Applications\\Micro-Manager-2.0.0-beta3-20181001\\mmplugins'
+    app_path = 'C:\\Applications\\Micro-Manager-2.0.0-beta3-20181001'
+}
+
 dependencies {
     // This dependency is exported to consumers, that is to say found on their compile classpath.
     api 'org.apache.commons:commons-math3:3.6.1'
@@ -57,41 +71,19 @@ dependencies {
     compile group: 'org.junit.platform', name: 'junit-platform-commons', version: '1.2.0'
     compile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.2.0'
     compile group: 'org.junit.vintage', name: 'junit-vintage-engine', version: '5.2.0'
-//    ['compile', 'plugin_libs'].each{ conf -> compile group: 'org.junit.vintage', name: 'junit-vintage-engine', version: '5.2.0', configuration: conf }
 
-    if(OperatingSystem.current().isMacOsX()) {
+    // Micromanager core jars
+    compile fileTree(include: ['*.jar'], exclude: 'mm2Python_core.jar', dir: core_plugin_path)
+    plugin_libs fileTree(include: ['*.jar'], dir: core_plugin_path)
+    complete_libs fileTree(include: ['*.jar'], dir: core_plugin_path)
 
-        // Micromanager core jars
-        compile fileTree(include: ['*.jar'], exclude: 'mm2Python_core.jar', dir: '/Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager')
-        plugin_libs fileTree(include: ['*.jar'], dir: '/Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager')
-        complete_libs fileTree(include: ['*.jar'], dir: '/Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager')
-        // example jar of difference between projector and projectorplugin
-//        compile fileTree(include: ['ProjectorPlugin.jar'], dir: '/Applications/Micro-Manager-2.0.0-beta3-20181001/mmplugins')
-
-        // ImageJ
-        compile fileTree(include: ['*.jar'], dir: '/Applications/Micro-Manager-2.0.0-beta3-20181001/ij.jar')
-        plugin_libs fileTree(include: ['*.jar'], dir: '/Applications/Micro-Manager-2.0.0-beta3-20181001/ij.jar')
-        complete_libs fileTree(include: ['*.jar'], dir: '/Applications/Micro-Manager-2.0.0-beta3-20181001/ij.jar')
-
-    }
-    else if(OperatingSystem.current().isWindows()) {
-
-        // Micromanager core jars
-        compile fileTree(include: ['*.jar'], exclude: 'mm2Python_core.jar', dir: 'C:\\Program Files\\Micro-Manager-2.0beta_20181001\\plugins\\Micro-Manager')
-        plugin_libs fileTree(include: ['*.jar'], dir: 'C:\\Program Files\\Micro-Manager-2.0beta_20181001\\plugins\\Micro-Manager')
-        complete_libs fileTree(include: ['*.jar'], dir: 'C:\\Program Files\\Micro-Manager-2.0beta_20181001\\plugins\\Micro-Manager')
-        // example jar of difference between projector and projectorplugin
-//        compile fileTree(include: ['ProjectorPlugin.jar'], dir: '/Applications/Micro-Manager-2.0.0-beta3-20181001/mmplugins')
-
-        // ImageJ
-        compile fileTree(include: ['*.jar'], dir: 'C:\\Program Files\\Micro-Manager-2.0beta_20181001\\ij.jar')
-        plugin_libs fileTree(include: ['*.jar'], dir: 'C:\\Program Files\\Micro-Manager-2.0beta_20181001\\ij.jar')
-        complete_libs fileTree(include: ['*.jar'], dir: 'C:\\Program Files\\Micro-Manager-2.0beta_20181001\\ij.jar')
-
-    }
+    // ImageJ
+    compile fileTree(include: ['*.jar'], dir: app_path+'/ij.jar')
+    plugin_libs fileTree(include: ['*.jar'], dir: app_path+'/ij.jar')
+    complete_libs fileTree(include: ['*.jar'], dir: app_path+'/ij.jar')
 
     //zeroMQ
-    compile group: 'org.zeromq', name: 'jzmq', version: '2.1.0'
+    // compile group: 'org.zeromq', name: 'jzmq', version: '2.1.0'
 
     //Py4J
     compile group: 'net.sf.py4j', name: 'py4j', version: '0.10.8.1'
@@ -118,6 +110,19 @@ jar {
         configurations.core_libs.collect {it.isDirectory() ? it : zipTree(it) }
     }
     project.logger.lifecycle("creating Core Jar with dependencies")
+}
+
+task copyCoreToMM(type: Copy) {
+    if(OperatingSystem.current().isMacOsX()) {
+        from 'build/libs/mm2Python_core.jar'
+        into "/Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager"
+        project.logger.lifecycle("moving CORE jar to micro-manager root")
+    }
+    else if(OperatingSystem.current().isWindows()) {
+        from 'build/libs/mm2Python_core.jar'
+        into "C:\\Program Files\\Micro-Manager-2.0beta_20181001\\plugins\\Micro-Manager"
+        project.logger.lifecycle("moving CORE jar to micro-manager root")
+    }
 }
 
 // Include ONLY Py4J and IntelliJ designer in this jar
@@ -152,27 +157,11 @@ jar {
 //    project.logger.lifecycle("creating Complete Jar with dependencies")
 //}
 
-
-task copyCoreToMM(type: Copy) {
-    if(OperatingSystem.current().isMacOsX()) {
-        from 'build/libs/mm2Python_core.jar'
-        into "/Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager"
-        project.logger.lifecycle("moving CORE jar to micro-manager root")
-    }
-    else if(OperatingSystem.current().isWindows()) {
-        from 'build/libs/mm2Python_core.jar'
-        into "C:\\Program Files\\Micro-Manager-2.0beta_20181001\\plugins\\Micro-Manager"
-        project.logger.lifecycle("moving CORE jar to micro-manager root")
-    }
-}
-
 //task copyPluginToMM(type: Copy) {
 //    from 'build/libs/mm2Python_plugin.jar'
 //    into "/Applications/Micro-Manager-2.0.0-beta3-20181001/mmplugins"
 //    project.logger.lifecycle("moving PLUGIN jar to mmplugins folder")
 //}
-
-
 
 //task pluginJar(type: Jar) {
 //    archiveName = "mm2Python_plugin.jar"
@@ -201,8 +190,6 @@ task copyCoreToMM(type: Copy) {
 //    from 'build/libs/mm2Python_plugin.jar'
 //    into "/Applications/Micro-Manager-2.0.0-beta3-20181001/mmplugins"
 //}
-
-
 
 //task movejar() {
 //    apply plugin: 'java'

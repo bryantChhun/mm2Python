@@ -5,6 +5,7 @@
  */
 package mm2python.mmEventHandler;
 
+import ij.gui.NewImage;
 import mm2python.UI.reporter;
 
 import org.micromanager.Studio;
@@ -31,7 +32,7 @@ public class datastoreEvents {
     private final String window_name;
     private String prefix_;
     private final ExecutorService mmExecutor;
-    
+
     public datastoreEvents(Studio mm_, Datastore data_, String window_name_) {
         mm = mm_;
         data = data_;
@@ -41,27 +42,31 @@ public class datastoreEvents {
     }
     
     public void registerThisDatastore(){
-        
-//        if(!window_name.equals("Snap/Live View")) {
-            
-            SequenceSettings seq = mm.acquisitions().getAcquisitionSettings();
+
+        SequenceSettings seq = mm.acquisitions().getAcquisitionSettings();
+        if(seq.prefix != null) {
             prefix_ = seq.prefix;
+        } else {
+            prefix_ = "prefix_";
+        }
+        
+        if(!window_name.equals("Snap/Live View")) {
 
             data.registerForEvents(this);
-            reporter.set_report_area(true, true, "datastoreEvent: registered this datastore, prefix: "+data.toString()+" "+prefix_);
-            
+            reporter.set_report_area(true, true, "datastoreEvent: registered this SNAPLIVE datastore, prefix: "+data.toString()+" "+prefix_);
+
+        } else {
+            data.registerForEvents(this);
+            reporter.set_report_area(true, true, "datastoreEvent: registered this MDA datastore, prefix: "+data.toString()+" "+prefix_);
             // writes any data existing in window before draw.
             if(data.getNumImages() > 0){
                 Iterable<Coords> itercoords = data.getUnorderedImageCoords();
                 for (Coords c: itercoords) {
-                    reporter.set_report_area(true, true, "datastoreEvent: existing images in datastore before window rendered: "+c.toString());
+                    reporter.set_report_area(false, false, "datastoreEvent: existing images in datastore before window rendered: "+c.toString());
                     mmExecutor.execute(new datastoreEventsThread(mm, data, c, prefix_, window_name) );
                 }
             }
-            
-//        } else {
-//            data.registerForEvents(this);
-//        }
+        }
         
     }
     
@@ -93,6 +98,7 @@ public class datastoreEvents {
             reporter.set_report_area(false, false, "\nNewImageEvent event detected");
             reporter.set_report_area(false, false, "new image event: "+prefix_+" "+window_name);
             mmExecutor.execute(new datastoreEventsThread(mm, event.getDatastore(), event.getCoords(), prefix_, window_name));
+//            mmExecutor.execute(new datastoreEventsThread(mm, event, prefix_, window_name));
 
         } catch (NullPointerException ex) {
             reporter.set_report_area(true, false, "null ptr exception in newImageeventMonitor");

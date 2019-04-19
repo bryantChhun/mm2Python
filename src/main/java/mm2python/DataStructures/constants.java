@@ -33,6 +33,8 @@ public class constants {
 
     public static List<Integer> ports;
 
+    private static LinkedBlockingQueue<String> liveQueue;
+
     private static LinkedBlockingQueue<String> filenameByChannel1;
 
     private static HashMap<MetaDataStore, String> MetaStoreToFilenameMap;
@@ -55,6 +57,7 @@ public class constants {
     public constants(Studio mm_) {
         mm = mm_;
         filenameByChannel1 = new LinkedBlockingQueue<>();
+        liveQueue = new LinkedBlockingQueue<>();
 
         //TODO do we want to allow clearing of values by calling the constructor?  or should we clear using methods?
         if(ports == null) {
@@ -78,6 +81,7 @@ public class constants {
         chanToMetaStoreMap = new HashMap<>();
         chanToFilenameMap = new HashMap<>();
         filenameByChannel1 = new LinkedBlockingQueue<>();
+        liveQueue = new LinkedBlockingQueue<>();
     }
 
     // map population and depopulation methods
@@ -166,5 +170,22 @@ public class constants {
     public static boolean nextImageExists(MetaDataStore store) {
         // check that both key and corresponding LBQ are not empty
         return MetaStoreToFilenameMap.containsKey(store);
+    }
+
+    public static void putNextImage(String path) {
+        try {
+            liveQueue.put(path);
+        } catch(Exception e) {
+            reporter.set_report_area(false, false,
+                    e.toString());
+        }
+    }
+
+    public static boolean nextImageExists() {
+        return !liveQueue.isEmpty();
+    }
+
+    public static String getNextImage() {
+        return liveQueue.poll();
     }
 }

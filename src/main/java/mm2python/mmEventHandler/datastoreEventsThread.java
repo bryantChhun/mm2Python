@@ -30,6 +30,7 @@ public class datastoreEventsThread implements Runnable {
     private final String window_name;
     private final String[] channel_names;
 
+
     /**
      * Executes sequence of tasks up run by executor:
      *  1) assigns a filename based on metadata
@@ -45,10 +46,10 @@ public class datastoreEventsThread implements Runnable {
     public datastoreEventsThread(Studio mm_, Datastore data_, Coords c_, String prefix_, String window_name_) {
         mm = mm_;
         temp_img = data_.getImage(c_);
-        channel_names = data_.getSummaryMetadata().getChannelNames();
         temp_coord = c_;
         prefix = prefix_;
         window_name = window_name_;
+        channel_names = data_.getSummaryMetadata().getChannelNames();
     }
     
     @Override
@@ -57,7 +58,7 @@ public class datastoreEventsThread implements Runnable {
         //Check for live vs MDA image
         if(window_name.equals("Snap/Live View")) {
             filename = constants.RAMDiskName+"Snap-Live-Stream.dat";
-            reporter.set_report_area(false, false, "datastoreEventsThread SNAPLIVE = "+filename);
+            reporter.set_report_area(false, false, "datastoreEventsThread: SNAPLIVE = "+filename);
         } else {
             filename = String.format(constants.RAMDiskName+"%s_t%03d_p%03d_z%02d_c%02d.dat",
                 prefix, temp_coord.getTime(), temp_coord.getStagePosition(), temp_coord.getZ(), temp_coord.getChannel());
@@ -66,8 +67,8 @@ public class datastoreEventsThread implements Runnable {
         
         //Write memory mapped image
         try {
-            reporter.set_report_area(true, true, "datastoreEventsThread FILENAME = "+filename);
-            memMapImage out = new memMapImage(temp_img, temp_coord, filename, prefix, window_name, channel_names);
+            reporter.set_report_area(false, false, "datastoreEventsThread: writing memmap");
+            memMapImage out = new memMapImage(mm, temp_img, temp_coord, filename, prefix, window_name, channel_names);
             out.writeToMemMap();
         } catch (NullPointerException ex) {
             reporter.set_report_area(true, false, "null ptr exception in datastoreEvents Thread");
