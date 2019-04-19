@@ -10,6 +10,8 @@ import org.micromanager.Studio;
 import mm2python.messenger.messengerInterface;
 import py4j.GatewayServer;
 import mm2python.DataStructures.constants;
+import py4j.reflection.ReflectionUtil;
+import py4j.reflection.RootClassLoadingStrategy;
 
 
 /**
@@ -19,15 +21,18 @@ import mm2python.DataStructures.constants;
 public class Py4J implements messengerInterface {
     private static Studio mm;
     private static GatewayServer gatewayServer;
-    
+
     public Py4J(Studio mm_) {
         mm = mm_;
+        RootClassLoadingStrategy rmmClassLoader = new RootClassLoadingStrategy();
+        ReflectionUtil.setClassLoadingStrategy(rmmClassLoader);
     }
 
     @Override
     public void startConnection(int port) {
         gatewayServer = new GatewayServer(new Py4jEntryPoint(mm), port);
         gatewayServer.start();
+
         reporter.set_report_area(false, true, "Gateway Started at IP:port = "+gatewayServer.getAddress()+":"+gatewayServer.getPort());
     }
     

@@ -14,7 +14,6 @@ import org.micromanager.Studio;
 import mm2python.UI.reporter;
 
 
-
 /**
  * 
  * @author bryant.chhun
@@ -44,30 +43,6 @@ public class Py4jEntryPoint implements dataInterface {
     
     public Py4JListener getListener() {
         return listener;
-    }
-
-    public String classtest() throws Exception {
-        reporter.set_report_area(true, false, "classtest called");
-        Class<?> py = Class.forName("mm2python.messenger.Py4J.Py4JListenerInterface");
-        return py.toString();
-    }
-
-    public String getClassPath() {
-        ClassLoader loader = Py4jEntryPoint.class.getClassLoader();
-        return loader.getResource("").toString();
-    }
-
-    public void getClasses() {
-        ClassLoader appLoader = ClassLoader.getSystemClassLoader();
-        ClassLoader loader = Py4jEntryPoint.class.getClassLoader();
-        String[] classes = ClassScope.getLoadedLibraries(new ClassLoader[] {appLoader, loader});
-        for (String str: classes) {
-            reporter.set_report_area(false, false, str);
-        }
-    }
-
-    public String getSystemPath() {
-        return System.getProperty("java.class.path");
     }
     
     //============== Data interface methods ====================//
@@ -111,6 +86,15 @@ public class Py4jEntryPoint implements dataInterface {
     public boolean fileExists(MetaDataStore store) {
         return constants.nextImageExists(store);
     }
+
+    public boolean nextImageExists() {
+        return constants.nextImageExists();
+    }
+
+    public String getNextImage() {
+        return constants.getNextImage();
+    }
+
 
 //    @Override
 //    public boolean storeByIndexExists(int time, int stage, int z){

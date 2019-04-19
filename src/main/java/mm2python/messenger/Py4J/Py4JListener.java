@@ -8,7 +8,6 @@ package mm2python.messenger.Py4J;
 import java.util.ArrayList;
 import java.util.List;
 
-import mm2python.UI.reporter;
 import mm2python.messenger.Py4J.Exceptions.Py4JListenerException;
 
 /**
@@ -34,18 +33,6 @@ public class Py4JListener {
         }
     }
 
-    public String classtest() throws Exception {
-        reporter.set_report_area(true, false, "classtest called");
-        Class<?> py = Class.forName("mm2python.messenger.Py4J.Py4JListenerInterface");
-        return py.toString();
-    }
-
-    public String classtest2() throws Exception {
-        reporter.set_report_area(true, false, "classtest called");
-        Class<?> py = Class.forName("mm2python.messenger.Py4J.Py4JListenerInterface");
-        return py.toString();
-    }
-
     public void notifyAllListeners() throws Py4JListenerException {
         System.out.println("notifying listeners requested");
         try{
@@ -56,11 +43,6 @@ public class Py4JListener {
         } catch (Exception ex) {
             throw new Py4JListenerException("Py4J Exception while notifying all listeners: "+ex.toString());
         }
-    }
-
-    public String getClassPath() {
-        ClassLoader loader = Py4JListener.class.getClassLoader();
-        return loader.getResource("").toString();
     }
 
     @Override
