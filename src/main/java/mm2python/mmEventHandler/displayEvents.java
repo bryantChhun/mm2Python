@@ -51,7 +51,7 @@ public class displayEvents {
     @Subscribe
     public void monitor_DisplayDestroyedEvent(DisplayDestroyedEvent event){
         reporter.set_report_area("display destroyed");
-        constants.current_window_count -= 1;
+//        constants.current_window_count -= 1;
         //textarea.set_report_area("window count after destuction= "+constants.current_window_count);
         window.unregisterForEvents(this);
     }

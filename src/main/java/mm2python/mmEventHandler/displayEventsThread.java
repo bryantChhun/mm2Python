@@ -32,33 +32,34 @@ public class displayEventsThread implements Runnable {
          * To keep track of the number of active windows in micromanager.
          *  **** This was deemed entirely unnecessary as micromanager already handles window counts ****
          */
-        while(constants.current_window_count <= dm.getAllImageWindows().size()) {
-            
-            reporter.set_report_area(true, false, "current window count = "+constants.current_window_count);
-            int num_windows = dm.getAllImageWindows().size();
-            reporter.set_report_area(true, false, "num of image windows = "+num_windows);
-            //System.out.println("old window counter = "+old_window_count);
-
-            if(num_windows > constants.current_window_count){
-                reporter.set_report_area(true, false, "num windows increased = "+num_windows);
-                DisplayWindow dw = dm.getAllImageWindows().get(num_windows-1);
-                reporter.set_report_area(true, false,"new displaywindow exists = "+dw);
-
-                display_events = new displayEvents(mm, constants.current_window_count, dw);
-                display_events.registerThisDisplay();
-
-                constants.current_window_count += 1;
-                reporter.set_report_area("current window count = "+constants.current_window_count);
-                old_window_count = constants.current_window_count;
-                break;
-                
-            } else if (old_window_count == dm.getAllImageWindows().size()){
-                //old_window_count = current_window_count;
-                break;
-            } else  {
-                reporter.set_report_area(true, false, "num_windows not incremented yet");
-            }
-        }
+//        while(constants.current_window_count <= dm.getAllImageWindows().size()) {
+//
+//            reporter.set_report_area(true, false, "current window count = "+constants.current_window_count);
+//            int num_windows = dm.getAllImageWindows().size();
+//            reporter.set_report_area(true, false, "num of image windows = "+num_windows);
+//            //System.out.println("old window counter = "+old_window_count);
+//
+//            if(num_windows > constants.current_window_count){
+//                reporter.set_report_area(true, false, "num windows increased = "+num_windows);
+//                DisplayWindow dw = dm.getAllImageWindows().get(num_windows-1);
+//                reporter.set_report_area(true, false,"new displaywindow exists = "+dw);
+//
+//                display_events = new displayEvents(mm, constants.current_window_count, dw);
+//                display_events.registerThisDisplay();
+//
+//                constants.current_window_count += 1;
+//                reporter.set_report_area("current window count = "+constants.current_window_count);
+//                old_window_count = constants.current_window_count;
+//                break;
+//
+//            } else if (old_window_count == dm.getAllImageWindows().size()){
+//                //old_window_count = current_window_count;
+//                break;
+//            } else  {
+//                reporter.set_report_area(true, false, "num_windows not incremented yet");
+//            }
+//        }
+        reporter.set_report_area(false, false, "displayevents not supported");
     }
     
 }

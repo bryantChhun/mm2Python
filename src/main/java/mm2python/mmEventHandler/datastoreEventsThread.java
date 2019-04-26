@@ -65,12 +65,12 @@ public class datastoreEventsThread implements Runnable {
         //Check for live vs MDA image
         if(window_name.equals("Snap/Live View")) {
 
-            filename = constants.tempFilePath +"Snap-Live-Stream.dat";
+            filename = constants.tempFilePath +"/Snap-Live-Stream.dat";
             reporter.set_report_area(false, false, "datastoreEventsThread: SNAPLIVE = "+filename);
 
         } else {
 
-            filename = String.format(constants.tempFilePath +"%s_t%03d_p%03d_z%02d_c%02d.dat",
+            filename = String.format(constants.tempFilePath +"/%s_t%03d_p%03d_z%02d_c%02d.dat",
                 prefix, coord.getTime(), coord.getStagePosition(), coord.getZ(), coord.getChannel());
             reporter.set_report_area(false, false, "datastoreEventsThread MDA = "+filename);
 

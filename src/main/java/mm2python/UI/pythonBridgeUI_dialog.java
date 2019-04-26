@@ -21,6 +21,8 @@ import org.micromanager.Studio;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 
 
@@ -72,7 +74,11 @@ public class pythonBridgeUI_dialog extends JFrame {
         openMQRadioButton.addActionListener(e -> openMQRadioButtonActionPerformed(e));
         arrowRadioButton.addActionListener(e -> arrowRadioButtonActionPerformed(e));
 
-        temp_file_path.addActionListener(e -> temp_file_pathActionPerformed(e));
+        temp_file_path.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent me) {
+                temp_file_path_MousePerformed(me);
+            }
+        });
 
         mm = mm_;
         new reporter(UI_logger_textArea, mm);
@@ -86,7 +92,7 @@ public class pythonBridgeUI_dialog extends JFrame {
         reporter.set_report_area(true, false, "mm2python.UI INITIALIZATION filename = " + constants.tempFilePath);
     }
 
-    private void temp_file_pathActionPerformed(ActionEvent evt){
+    private void temp_file_path_MousePerformed(MouseEvent evt){
         int returnVal = fc.showOpenDialog(pythonBridgeUI_dialog.this);
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -99,6 +105,7 @@ public class pythonBridgeUI_dialog extends JFrame {
             reporter.set_report_area(false, false, "unable to set new path for temp file");
         }
     }
+
 
     private void create_python_bridgeActionPerformed(ActionEvent evt) {
         reporter.set_report_area("creating python bridge");
