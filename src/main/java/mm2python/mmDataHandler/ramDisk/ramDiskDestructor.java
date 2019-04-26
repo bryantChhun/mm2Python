@@ -5,10 +5,20 @@
  */
 package mm2python.mmDataHandler.ramDisk;
 
+import javax.swing.JPanel;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author bryant.chhun
  */
 public class ramDiskDestructor {
-    
+
+    private static final JPanel panel = new JPanel();
+
+    public ramDiskDestructor() {
+        JOptionPane.showMessageDialog(panel, "Automatic Destruction of RAM DISK not implemented\n" +
+                "Please manually unmount your ramdisk after micromanager is shut down");
+    }
+
 }

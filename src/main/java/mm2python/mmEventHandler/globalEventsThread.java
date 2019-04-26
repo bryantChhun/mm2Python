@@ -28,7 +28,7 @@ public class globalEventsThread implements Runnable {
     public globalEventsThread(Studio mm_, DisplayWindow dw_) {
         mm = mm_;
         dw = dw_;
-        reporter.set_report_area(true, false, "global events thread filename = "+constants.RAMDiskName);
+        reporter.set_report_area(true, false, "global events thread filename = "+constants.tempFilePath);
     }
 
     /**

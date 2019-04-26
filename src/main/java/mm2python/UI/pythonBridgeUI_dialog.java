@@ -6,12 +6,13 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 
 // mm2python libraries
+import mm2python.DataStructures.Exceptions.OSTypeException;
 import mm2python.DataStructures.constants;
 import mm2python.messenger.Py4J.Py4J;
 import mm2python.mmDataHandler.ramDisk.ramDiskConstructor;
-import mm2python.mmDataHandler.ramDisk.ramDiskFlush;
+import mm2python.mmDataHandler.ramDisk.ramDiskDestructor;
+import mm2python.mmDataHandler.ramDisk.tempPathFlush;
 import mm2python.mmEventHandler.globalEvents;
-import mm2python.UI.reporter;
 
 // mm libraries
 import org.micromanager.Studio;
@@ -20,6 +21,7 @@ import org.micromanager.Studio;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.File;
 
 
 public class pythonBridgeUI_dialog extends JFrame {
@@ -48,8 +50,9 @@ public class pythonBridgeUI_dialog extends JFrame {
     private static Studio mm;
     private Py4J gate;
     private globalEvents gevents;
-    private final mm2python.UI.reporter init_reports;
-    private final ramDiskFlush flush;
+    private final tempPathFlush ramDisk;
+    private static final JFileChooser fc = new JFileChooser();
+    private static File defaultTempPath;
 
     public pythonBridgeUI_dialog(Studio mm_) {
         // mm2python.UI components created in the static constructor below
@@ -72,20 +75,29 @@ public class pythonBridgeUI_dialog extends JFrame {
         temp_file_path.addActionListener(e -> temp_file_pathActionPerformed(e));
 
         mm = mm_;
-        init_reports = new reporter(UI_logger_textArea, mm);
-        flush = new ramDiskFlush(mm);
+        new reporter(UI_logger_textArea, mm);
+        ramDisk = new tempPathFlush(mm);
+        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
         // initialize constants
-        new constants(mm);
+        new constants();
         if (py4JRadioButton.isSelected()) { constants.py4JRadioButton = true; }
-        constants.RAMDiskName = temp_file_path.getText();;
-        reporter.set_report_area(true, false, "mm2python.UI INITIALIZATION filename = " + constants.RAMDiskName);
-
+        constants.tempFilePath = temp_file_path.getText();
+        reporter.set_report_area(true, false, "mm2python.UI INITIALIZATION filename = " + constants.tempFilePath);
     }
 
     private void temp_file_pathActionPerformed(ActionEvent evt){
-        constants.RAMDiskName = temp_file_path.getText();
-        reporter.set_report_area(false, false,"Temp file path changed to: "+constants.RAMDiskName);
+        int returnVal = fc.showOpenDialog(pythonBridgeUI_dialog.this);
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fc.getSelectedFile();
+            temp_file_path.setText(file.toString());
+            constants.tempFilePath = file.toString();
+            defaultTempPath = file;
+            reporter.set_report_area(false, false,"Temp file path changed to: "+constants.tempFilePath);
+        } else {
+            reporter.set_report_area(false, false, "unable to set new path for temp file");
+        }
     }
 
     private void create_python_bridgeActionPerformed(ActionEvent evt) {
@@ -116,11 +128,11 @@ public class pythonBridgeUI_dialog extends JFrame {
     }
 
     private void clear_ramdiskActionPerformed(ActionEvent evt) {
-        flush.clearRamDiskContents();
+        ramDisk.clearTempPathContents();
     }
 
     private void destroy_ramdiskActionPerformed(ActionEvent evt) {
-        //ToDO: write this
+        new ramDiskDestructor();
     }
 
     private void py4jRadioButtonActionPerformed(ActionEvent evt) {
@@ -242,7 +254,19 @@ public class pythonBridgeUI_dialog extends JFrame {
         destroy_ramdisk.setText("Destroy RAM disk");
         tempfilePathLabel.add(destroy_ramdisk, new GridConstraints(3, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         temp_file_path = new JTextField();
-        temp_file_path.setText("/Volumes/RAM_Disk/JavaPlugin_temp_folder/");
+        try {
+            if (constants.getOS().equals("win")) {
+                temp_file_path.setText("C:/mmtemp");
+                defaultTempPath = new File(temp_file_path.getText());
+                fc.setCurrentDirectory(defaultTempPath);
+            } else if (constants.getOS().equals("mac")) {
+                temp_file_path.setText("/Volumes/Q/mmtemp/");
+                defaultTempPath = new File(temp_file_path.getText());
+                fc.setCurrentDirectory(defaultTempPath);
+            }
+        } catch (OSTypeException ex) {
+            reporter.set_report_area(false, false, ex.toString());
+        }
         tempfilePathLabel.add(temp_file_path, new GridConstraints(5, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         final Spacer spacer3 = new Spacer();
         tempfilePathLabel.add(spacer3, new GridConstraints(4, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));

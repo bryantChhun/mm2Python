@@ -12,7 +12,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import mm2python.UI.reporter;
-import org.micromanager.Studio;
+import mm2python.DataStructures.Exceptions.OSTypeException;
+import sun.awt.OSInfo;
 
 /**
  *
@@ -22,14 +23,9 @@ public class constants {
     /**
      * Constants contains data maps for reference by the messenger service
      *  It also contains methods for OS-level constants, like temp file paths.
-     *
-     *
      */
 
-    private static Studio mm;
-    
-    public static int current_window_count;
-    public static String RAMDiskName;
+    public static String tempFilePath;
 
     public static List<Integer> ports;
 
@@ -39,27 +35,17 @@ public class constants {
 
     private static HashMap<MetaDataStore, String> MetaStoreToFilenameMap;
 
-    // TODO: we could also replace hashmap with a simple arraylist.  Each index could represent channel index.
-    // but this would prevent us from using channel names to retreive data.
+    // maps
     private static HashMap<String, MetaDataStore> chanToMetaStoreMap;
 
-    // every channel has a list of strings.  List position represents next value that was entered.
-    //TODO: consider concurrency issue here. Writing memmap image is aysnc event, while populating this array must be done synchronously.
-    //TODO: write atomic update to this string...one that checks vs other processes and also checks vs other channels.
-    /**
-     * chanToFilenameMap maps:
-     *  Channel : Queue of filenames
-     */
     private static HashMap<String, LinkedBlockingQueue<String>> chanToFilenameMap;
 
     public static boolean py4JRadioButton;
 
-    public constants(Studio mm_) {
-        mm = mm_;
+    public constants() {
         filenameByChannel1 = new LinkedBlockingQueue<>();
         liveQueue = new LinkedBlockingQueue<>();
 
-        //TODO do we want to allow clearing of values by calling the constructor?  or should we clear using methods?
         if(ports == null) {
             ports = new ArrayList<>();
         }
@@ -74,6 +60,17 @@ public class constants {
         }
 
         py4JRadioButton = false;
+    }
+
+    public static String getOS() throws OSTypeException {
+        String OS = System.getProperty("os.name").toLowerCase();
+        if (OS.indexOf("win") >= 0) {
+            return("win");
+        } else if (OS.indexOf("mac") >= 0) {
+            return("mac");
+        } else {
+            throw new OSTypeException("OS type is not implemented.  Must use Mac or Windows");
+        }
     }
     
     public static void resetAll() {
@@ -137,13 +134,8 @@ public class constants {
         chanToFilenameMap.put(channel, filenameByChannel1);
     }
 
-    // Retrieval methods
 
-    /**
-     *
-     * @param channel
-     * @return
-     */
+    // Retrieval methods
     public static String getNextFileForChannel(String channel) {
         LinkedBlockingQueue<String> filenames = chanToFilenameMap.get(channel);
         reporter.set_report_area(true, false,
@@ -159,8 +151,8 @@ public class constants {
         return chanToMetaStoreMap.get(channel);
     }
 
-    // Data check methods
 
+    // Data check methods
     public static boolean nextImageExists(String channel) {
         // check that both key and corresponding LBQ are not empty
         return chanToFilenameMap.containsKey(channel) &&

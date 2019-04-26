@@ -11,7 +11,9 @@ package mm2python.messenger.Py4J;
  */
 public interface Py4JListenerInterface {
     
-    Object notify(Object source);
+//    Object notify(Object source);
+
+    Object notify(String source);
     
 }
 

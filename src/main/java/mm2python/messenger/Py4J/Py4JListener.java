@@ -18,14 +18,13 @@ public class Py4JListener {
     
     private static List<Py4JListenerInterface> listeners = new ArrayList<Py4JListenerInterface>();
 
-    public Py4JListener() {
-        System.out.println("constructing the listener");
-    }
+//    public Py4JListener() {
+//        System.out.println("constructing the listener");
+//    }
     
     //================ Listener methods =================================//
     
-    public void registerListener(Py4JListenerInterface listener) throws Py4JListenerException {
-        System.out.println("adding listener requested");
+    public static void registerListener(Py4JListenerInterface listener) throws Py4JListenerException {
         try{
             listeners.add(listener);
         } catch (Exception ex) {
@@ -33,11 +32,11 @@ public class Py4JListener {
         }
     }
 
-    public void notifyAllListeners() throws Py4JListenerException {
-        System.out.println("notifying listeners requested");
+    public static void notifyAllListeners() throws Py4JListenerException {
         try{
             listeners.stream().forEach((listener) -> {
-                Object returnValue = listener.notify(this);
+//                Object returnValue = listener.notify(this);
+                Object returnValue = listener.notify("this string is the notification");
                 System.out.println(returnValue);
             });
         } catch (Exception ex) {

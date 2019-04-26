@@ -7,7 +7,6 @@ package mm2python.mmEventHandler;
 
 import mm2python.UI.reporter;
 import org.micromanager.Studio;
-import org.micromanager.display.DisplayWindow;
 
 import javax.swing.JTextArea;
 
@@ -39,7 +38,7 @@ public class globalEvents {
     public globalEvents(Studio mm_, JTextArea UI_textArea) {
         mm = mm_;
         mmExecutor = main_executor.getExecutor();
-        reporter.set_report_area(true, false, "global events filename = "+constants.RAMDiskName);
+        reporter.set_report_area(true, false, "global events filename = "+constants.tempFilePath);
     }
 
     /**

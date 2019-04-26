@@ -102,8 +102,9 @@ repositories {
     mavenCentral()
 }
 
+
 jar {
-    archiveName = "mm2Python_core.jar"
+    archiveName = "mm2Python.jar"
 //    from sourceSets.main.output
     exclude '/mm2PythonPlugin.class'
     from {
@@ -112,15 +113,34 @@ jar {
     project.logger.lifecycle("creating Core Jar with dependencies")
 }
 
+
+//jar {
+//    archiveName = "mm2Python_core.jar"
+//    from {
+//        configurations.core_libs.collect {it.isDirectory() ? it : zipTree(it) }
+//    }
+//    project.logger.lifecycle("creating Jar with dependencies")
+//}
+
+
+//task copyPluginToMM(type: Copy) {
+//    from 'build/libs/mm2Python_plugin.jar'
+//    into "/Applications/Micro-Manager-2.0.0-beta3-20181001/mmplugins"
+//    project.logger.lifecycle("moving jar to mmplugins folder")
+//}
+
+
 task copyCoreToMM(type: Copy) {
     if(OperatingSystem.current().isMacOsX()) {
-        from 'build/libs/mm2Python_core.jar'
-        into "/Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager"
+        from 'build/libs/mm2Python.jar'
+        into core_plugin_path
+//        into "/Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager"
         project.logger.lifecycle("moving CORE jar to micro-manager root")
     }
     else if(OperatingSystem.current().isWindows()) {
-        from 'build/libs/mm2Python_core.jar'
-        into "C:\\Program Files\\Micro-Manager-2.0beta_20181001\\plugins\\Micro-Manager"
+        from 'build/libs/mm2Python.jar'
+        into core_plugin_path
+//        into "C:\\Program Files\\Micro-Manager-2.0beta_20181001\\plugins\\Micro-Manager"
         project.logger.lifecycle("moving CORE jar to micro-manager root")
     }
 }
