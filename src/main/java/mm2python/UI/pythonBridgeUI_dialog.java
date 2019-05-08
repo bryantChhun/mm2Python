@@ -80,6 +80,7 @@ public class pythonBridgeUI_dialog extends JFrame {
             }
         });
 
+        // initialize static values
         mm = mm_;
         new reporter(UI_logger_textArea, mm);
         ramDisk = new tempPathFlush(mm);
@@ -300,4 +301,5 @@ public class pythonBridgeUI_dialog extends JFrame {
     public boolean isModified(pythonBridgeUI_dialog data) {
         return false;
     }
+
 }
