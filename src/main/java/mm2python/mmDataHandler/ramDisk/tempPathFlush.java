@@ -5,7 +5,7 @@
  */
 package mm2python.mmDataHandler.ramDisk;
 
-import mm2python.DataStructures.constants;
+import mm2python.DataStructures.Constants;
 import org.micromanager.Studio;
 
 import javax.swing.JOptionPane;
@@ -31,7 +31,7 @@ public class tempPathFlush {
      * This method should be called to clear old memmap file names from earlier runs
      */
     public void clearTempPathContents() {
-        File index = new File(constants.tempFilePath);
+        File index = new File(Constants.tempFilePath);
         String[] entries = index.list();
 
         int count = 0;
@@ -50,12 +50,12 @@ public class tempPathFlush {
         JOptionPane.showMessageDialog(panel,
                 String.format("Removing files from %s\n" +
                 "%s files removed\n"+
-                "%s files skipped", constants.tempFilePath, count, skipped));
+                "%s files skipped", Constants.tempFilePath, count, skipped));
 
         //        String OS = System.getProperty("os.name").toLowerCase();
 
 //        if (OS.contains("mac")) {
-//            String command = String.format("rm %s/*.dat", constants.tempFilePath);
+//            String command = String.format("rm %s/*.dat", Constants.tempFilePath);
 //            try {
 //                Process p = Runtime.getRuntime().exec(new String[]{"bash", "-c", command});
 //            } catch (Exception ex) {

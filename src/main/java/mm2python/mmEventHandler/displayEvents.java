@@ -6,7 +6,6 @@
 package mm2python.mmEventHandler;
 
 import mm2python.UI.reporter;
-import mm2python.DataStructures.constants;
 import mm2python.mmEventHandler.Exceptions.NotImplementedException;
 
 import com.google.common.eventbus.Subscribe;
@@ -15,7 +14,7 @@ import org.micromanager.display.*;
 
 /**
  * used to track display windows
- *    number of windows is tracked using static field in "constants" class.
+ *    number of windows is tracked using static field in "Constants" class.
  * @author bryant.chhun
  */
 public class displayEvents {
@@ -51,8 +50,8 @@ public class displayEvents {
     @Subscribe
     public void monitor_DisplayDestroyedEvent(DisplayDestroyedEvent event){
         reporter.set_report_area("display destroyed");
-//        constants.current_window_count -= 1;
-        //textarea.set_report_area("window count after destuction= "+constants.current_window_count);
+//        Constants.current_window_count -= 1;
+        //textarea.set_report_area("window count after destuction= "+Constants.current_window_count);
         window.unregisterForEvents(this);
     }
     

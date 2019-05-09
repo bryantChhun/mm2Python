@@ -5,11 +5,11 @@
  */
 package mm2python.messenger.Py4J;
 
+import mm2python.DataStructures.Constants;
 import mm2python.UI.reporter;
 import org.micromanager.Studio;
 import mm2python.messenger.messengerInterface;
 import py4j.GatewayServer;
-import mm2python.DataStructures.constants;
 import py4j.reflection.ReflectionUtil;
 import py4j.reflection.RootClassLoadingStrategy;
 
@@ -41,7 +41,7 @@ public class Py4J implements messengerInterface {
         gatewayServer = new GatewayServer(new Py4jEntryPoint(mm));
         gatewayServer.start();
         int port = gatewayServer.getPort();
-        constants.ports.add(port);
+        Constants.ports.add(port);
         reporter.set_report_area(false, true, "Gateway Started at IP:port = "+gatewayServer.getAddress()+":"+gatewayServer.getPort());
     }
     
@@ -53,7 +53,7 @@ public class Py4J implements messengerInterface {
     
     @Override
     public void stopConnection() {
-        constants.ports.stream().forEach((port) -> {
+        Constants.ports.stream().forEach((port) -> {
             gatewayServer.shutdown();
             reporter.set_report_area(false, true, String.format("Gateway at port %04d shut down", port));
         });

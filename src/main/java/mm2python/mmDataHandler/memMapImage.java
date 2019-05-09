@@ -14,15 +14,11 @@ import java.nio.ByteOrder;
 import java.nio.MappedByteBuffer;
 import java.nio.ShortBuffer;
 import java.nio.channels.FileChannel;
-import java.util.Arrays;
 
-import mm2python.DataStructures.MetaDataStore;
-import mm2python.DataStructures.constants;
 import mm2python.mmDataHandler.Exceptions.NoImageException;
 import org.micromanager.Studio;
 import org.micromanager.data.Coords;
 import org.micromanager.data.Image;
-import mm2python.UI.reporter;
 
 /**
  *

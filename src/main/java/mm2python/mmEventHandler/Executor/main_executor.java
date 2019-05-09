@@ -22,7 +22,7 @@ public class main_executor {
     
     public static ExecutorService getExecutor(){
         if(mmExecutor == null) {
-            mmExecutor = Executors.newFixedThreadPool(20);
+            mmExecutor = Executors.newFixedThreadPool(50);
         }
         return mmExecutor;
     }

@@ -5,8 +5,10 @@
  */
 package mm2python.mmEventHandler;
 
+import mm2python.DataStructures.Constants;
+import mm2python.DataStructures.Maps;
 import mm2python.DataStructures.MetaDataStore;
-import mm2python.DataStructures.constants;
+import mm2python.DataStructures.Queues;
 import mm2python.mmDataHandler.Exceptions.NoImageException;
 import mm2python.messenger.Py4J.Exceptions.Py4JListenerException;
 import mm2python.messenger.Py4J.Py4JListener;
@@ -65,12 +67,12 @@ public class datastoreEventsThread implements Runnable {
         //Check for live vs MDA image
         if(window_name.equals("Snap/Live View")) {
 
-            filename = constants.tempFilePath +"/Snap-Live-Stream.dat";
+            filename = Constants.tempFilePath +"/Snap-Live-Stream.dat";
             reporter.set_report_area(false, false, "datastoreEventsThread: SNAPLIVE = "+filename);
 
         } else {
 
-            filename = String.format(constants.tempFilePath +"/%s_t%03d_p%03d_z%02d_c%02d.dat",
+            filename = String.format(Constants.tempFilePath +"/%s_t%03d_p%03d_z%02d_c%02d.dat",
                 prefix, coord.getTime(), coord.getStagePosition(), coord.getZ(), coord.getChannel());
             reporter.set_report_area(false, false, "datastoreEventsThread MDA = "+filename);
 
@@ -96,11 +98,11 @@ public class datastoreEventsThread implements Runnable {
         try {
 //            // by summary meta data
 //            reporter.set_report_area(false, false, "writing chan to filename map = ("+filename+", "+channel_names[coord.getChannel()]+")" );
-//            constants.putChanToFilenameMap(channel_names[coord.getChannel()], filename);
+//            Constants.putChanToFilenameMap(channel_names[coord.getChannel()], filename);
 
             // by cmm core
             reporter.set_report_area(false, false, "writing chan to filename map = ("+filename+", "+channel_name+")" );
-            constants.putChanToFilenameMap(channel_name, filename);
+            Maps.putChanToFilenameMap(channel_name, filename);
         } catch (Exception ex) {
             reporter.set_report_area(false, false, ex.toString());
         }
@@ -109,23 +111,25 @@ public class datastoreEventsThread implements Runnable {
         // write metastore to queue based on channel
         // write filename to queue based on metastore
         try {
-            MetaDataStore meta = new MetaDataStore(prefix, window_name,
-                    coord.getTime(),
-                    coord.getStagePosition(),
+            MetaDataStore meta = new MetaDataStore(
                     coord.getZ(),
+                    coord.getStagePosition(),
+                    coord.getTime(),
                     coord.getChannel(),
                     temp_img.getWidth(),
                     temp_img.getHeight(),
                     temp_img.getBytesPerPixel(),
-                    channel_name);
+                    channel_name, prefix, window_name,
+                    filename
+                    );
 
             reporter.set_report_area(false, false, "writing meta = "+meta.toString());
 
-            constants.putMetaStoreToFilenameMap(meta, filename);
+            Maps.putMetaStoreToFilenameMap(meta, filename);
 
-            constants.putChanToMetaStoreMap(channel_name, meta);
+            Maps.putChanToMetaStoreMap(channel_name, meta);
 
-            constants.putNextImage(filename);
+            Queues.putNextImage(filename);
 
         } catch (NullPointerException ex) {
             reporter.set_report_area(false, false, "null ptr exception writing to LinkedBlockingQueue");
@@ -136,7 +140,7 @@ public class datastoreEventsThread implements Runnable {
         // notify Listeners
         try {
             reporter.set_report_area(true, false, "notifying py4j listeners");
-            if (constants.py4JRadioButton) {
+            if (Constants.py4JRadioButton) {
 //                Py4JListener notifyListener = new Py4JListener();
 //                notifyListener.notifyAllListeners();
                 Py4JListener.notifyAllListeners();

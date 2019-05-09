@@ -5,7 +5,7 @@
  */
 package mm2python.mmEventHandler;
 
-import mm2python.DataStructures.constants;
+import mm2python.DataStructures.Constants;
 import mm2python.UI.reporter;
 import org.micromanager.Studio;
 import org.micromanager.display.DisplayWindow;
@@ -28,7 +28,7 @@ public class globalEventsThread implements Runnable {
     public globalEventsThread(Studio mm_, DisplayWindow dw_) {
         mm = mm_;
         dw = dw_;
-        reporter.set_report_area(true, false, "global events thread filename = "+constants.tempFilePath);
+        reporter.set_report_area(true, false, "global events thread filename = "+Constants.tempFilePath);
     }
 
     /**

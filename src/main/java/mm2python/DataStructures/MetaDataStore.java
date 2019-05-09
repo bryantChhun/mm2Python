@@ -8,27 +8,73 @@ import java.util.Objects;
  */
 public class MetaDataStore {
 
-    private final int time, stage, z, channel;
+    private final int time, pos, z, channel;
 
     private final int xRange, yRange, bitDepth;
 
-    private final String prefix, windowname;
+    private final String prefix, windowname, channel_name;
 
-    private final String channel_name;
+    private final String filepath;
 
-    public MetaDataStore(String prefix_, String windowname_, int time_, int stage_,
-                  int z_, int channel_, int x_dim_, int y_dim_, int bytesPerPixel, String channel_name_) {
-        prefix = prefix_;
-        windowname = windowname_;
+    public MetaDataStore(int z_, int pos_, int time_, int channel_,
+                         int x_dim_, int y_dim_, int bytesPerPixel,
+                         String channel_name_, String prefix_, String windowname_,
+                         String filepath_) {
         time = time_;
-        stage = stage_;
+        pos = pos_;
         z = z_;
         channel = channel_;
         xRange = x_dim_;
         yRange = y_dim_;
         bitDepth = bytesPerPixel;
         channel_name = channel_name_;
+        prefix = prefix_;
+        windowname = windowname_;
+        filepath = filepath_;
+
     }
+
+    // overload: z, p, t, c, x-dim, y-dim, bytes
+    public MetaDataStore(int z_, int pos_, int time_, int channel_,
+                         int x_dim_, int y_dim_, int bytesPerPixel_,
+                         String filepath_)
+    {
+        this(z_, pos_, time_, channel_,
+                x_dim_, y_dim_, bytesPerPixel_,
+                null, null, null, filepath_);
+    }
+
+    // overload: z, c
+    public MetaDataStore(int z_, int channel_, String filepath_)
+    {
+        this(z_, 0, 0, channel_,
+                0, 0, 0,
+                null, null, null, filepath_);
+    }
+
+    // overload: z, p, c
+    public MetaDataStore(int z_, int pos_, int channel_, String filepath_)
+    {
+        this(z_, pos_, 0, channel_,
+                0, 0, 0,
+                null, null, null, filepath_);
+    }
+
+    // overload: z, p, t, c
+    public MetaDataStore(int z_, int pos_, int time_, int channel_, String filepath_)
+    {
+        this(z_, pos_, time_, channel_,
+                0, 0, 0,
+                null, null, null, filepath_);
+    }
+
+    public int getZ() { return z;}
+
+    public int getP() { return pos;}
+
+    public int getTime() { return time;}
+
+    public int getChannel() { return channel;}
 
     public int getxRange() {
         return xRange;
@@ -46,6 +92,12 @@ public class MetaDataStore {
         return channel_name;
     }
 
+    public String getPrefix() { return prefix;}
+
+    public String getWindowName() { return windowname;}
+
+    public String getFilepath() { return filepath;}
+
 
     /**
      * Must override equals for proper hash map population
@@ -58,11 +110,11 @@ public class MetaDataStore {
         if (o == null || getClass() != o.getClass()) return false;
         MetaDataStore that = (MetaDataStore) o;
         return time == that.time &&
-                stage == that.stage &&
+                pos == that.pos &&
                 z == that.z &&
-                channel == that.channel &&
-                Objects.equals(prefix, that.prefix) &&
-                Objects.equals(windowname, that.windowname);
+                channel == that.channel; //&&
+//                Objects.equals(prefix, that.prefix) &&
+//                Objects.equals(windowname, that.windowname);
     }
 
     /**
@@ -72,9 +124,8 @@ public class MetaDataStore {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(time, stage, z, channel, prefix, windowname);
+        return Objects.hash(z, pos, time, channel);
     }
-
 
 
 }

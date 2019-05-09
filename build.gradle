@@ -43,16 +43,17 @@ configurations {
 import org.gradle.internal.os.OperatingSystem
 
 String core_plugin_path
-String studio_plugin_path
 String app_path
 
+/***
+ * Provide the core_plugin_path to your installation of micromanager 2.0
+ * Privde the app_path to the installation used for testing
+ */
 if(OperatingSystem.current().isMacOsX()) {
     core_plugin_path = '/Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager'
-    studio_plugin_path = '/Applications/Micro-Manager-2.0.0-beta3-20181001/mmplugins/'
     app_path = '/Applications/Micro-Manager-2.0.0-beta3-20181001/'
 } else if(OperatingSystem.current().isWindows()) {
     core_plugin_path = 'C:\\Applications\\Micro-Manager-2.0.0-beta3-20181001\\plugins\\Micro-Manager'
-    studio_plugin_path = 'C:\\Applications\\Micro-Manager-2.0.0-beta3-20181001\\mmplugins'
     app_path = 'C:\\Applications\\Micro-Manager-2.0.0-beta3-20181001'
 }
 
@@ -69,7 +70,7 @@ dependencies {
     compile group: 'org.junit.vintage', name: 'junit-vintage-engine', version: '5.2.0'
 
     // Micromanager core jars
-    compile fileTree(include: ['*.jar'], exclude: 'mm2Python_core.jar', dir: core_plugin_path)
+    compile fileTree(include: ['*.jar'], exclude: 'mm2Python.jar', dir: core_plugin_path)
     plugin_libs fileTree(include: ['*.jar'], dir: core_plugin_path)
     complete_libs fileTree(include: ['*.jar'], dir: core_plugin_path)
 
@@ -110,22 +111,6 @@ jar {
 }
 
 
-//jar {
-//    archiveName = "mm2Python_core.jar"
-//    from {
-//        configurations.core_libs.collect {it.isDirectory() ? it : zipTree(it) }
-//    }
-//    project.logger.lifecycle("creating Jar with dependencies")
-//}
-
-
-//task copyPluginToMM(type: Copy) {
-//    from 'build/libs/mm2Python_plugin.jar'
-//    into "/Applications/Micro-Manager-2.0.0-beta3-20181001/mmplugins"
-//    project.logger.lifecycle("moving jar to mmplugins folder")
-//}
-
-
 task copyCoreToMM(type: Copy) {
     if(OperatingSystem.current().isMacOsX()) {
         from 'build/libs/mm2Python.jar'
@@ -138,79 +123,3 @@ task copyCoreToMM(type: Copy) {
         project.logger.lifecycle("moving CORE jar to micro-manager root")
     }
 }
-
-// Include ONLY Py4J and IntelliJ designer in this jar
-//task coreJar(type: Jar) {
-//    archiveName = "mm2Python_core.jar"
-//    from sourceSets.main.output
-//    exclude '/mm2PythonPlugin/mm2PythonPlugin.class'
-//    exclude '/mm2PythonPlugin/*.*'
-//    from {
-//        configurations.core_libs.collect {it.isDirectory() ? it : zipTree(it) }
-//    }
-//    project.logger.lifecycle("creating Core Jar with dependencies")
-//}
-
-//// Include ONLY ImageJ and mmCore in this Jar
-//task pluginJar(type: Jar) {
-//    archiveName = "mm2Python_plugin.jar"
-//    from sourceSets.main.output
-//    include '/mm2PythonPlugin/mm2PythonPlugin.class'
-//    from {
-//        configurations.plugin_libs.collect {it.isDirectory() ? it : zipTree(it) }
-//    }
-//    project.logger.lifecycle("creating Plugin Jar with dependencies")
-//}
-//
-//// Complete package
-//task completeJar(type: Jar) {
-//    archiveName = "mm2Python_complete.jar"
-//    from {
-//        configurations.complete_libs.collect {it.isDirectory() ? it : zipTree(it) }
-//    }
-//    project.logger.lifecycle("creating Complete Jar with dependencies")
-//}
-
-//task copyPluginToMM(type: Copy) {
-//    from 'build/libs/mm2Python_plugin.jar'
-//    into "/Applications/Micro-Manager-2.0.0-beta3-20181001/mmplugins"
-//    project.logger.lifecycle("moving PLUGIN jar to mmplugins folder")
-//}
-
-//task pluginJar(type: Jar) {
-//    archiveName = "mm2Python_plugin.jar"
-////    dependsOn compileJava
-//    from sourceSets.main.output
-////    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-//    include('*.class')
-////    jar.includeEmptyDirs = false
-//}
-
-//task fatJar(type: Jar) {
-//    manifest {
-//        attributes 'Implementation-Title': 'micromanager 2.0 bridge to python example',
-//                'Implementation-Version': version
-//    }
-////    baseName = project.name +'-all'
-//    archiveName = "mm2Python_core_fat.jar"
-////    exclude 'pythonBridgePluginInterface.class'
-//
-//    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-////    from { configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) } }
-//    with jar
-//}
-
-//task copyPluginToMM(type: Copy) {
-//    from 'build/libs/mm2Python_plugin.jar'
-//    into "/Applications/Micro-Manager-2.0.0-beta3-20181001/mmplugins"
-//}
-
-//task movejar() {
-//    apply plugin: 'java'
-//    tasks.withType() {
-//        destinationDir = file("/Applications/Micro-Manager-2.0.0-beta3-20181001/mmplugins")
-//    }
-//    tasks.fatJar.execute() {
-//        destinationDir = file("/Applications/Micro-Manager-2.0.0-beta3-20181001/plugins")
-//    }
-//}

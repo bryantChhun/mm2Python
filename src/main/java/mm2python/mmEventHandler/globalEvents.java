@@ -5,12 +5,11 @@
  */
 package mm2python.mmEventHandler;
 
+import mm2python.DataStructures.Constants;
 import mm2python.UI.reporter;
 import org.micromanager.Studio;
 
 import javax.swing.JTextArea;
-
-import mm2python.DataStructures.constants;
 
 import com.google.common.eventbus.Subscribe;
 import java.util.concurrent.ExecutorService;
@@ -38,7 +37,7 @@ public class globalEvents {
     public globalEvents(Studio mm_, JTextArea UI_textArea) {
         mm = mm_;
         mmExecutor = main_executor.getExecutor();
-        reporter.set_report_area(true, false, "global events filename = "+constants.tempFilePath);
+        reporter.set_report_area(true, false, "global events filename = "+Constants.tempFilePath);
     }
 
     /**
@@ -54,7 +53,7 @@ public class globalEvents {
     public void unRegisterGlobalEvents() {
         reporter.set_report_area(true, false,"shutting down event monitoring and clearing dequeue references");
         reporter.set_report_area("shutting down event monitoring and clearing dequeue references");
-        constants.resetAll();
+//        Constants.resetAll();
         mm.events().unregisterForEvents(this);
     }
 
