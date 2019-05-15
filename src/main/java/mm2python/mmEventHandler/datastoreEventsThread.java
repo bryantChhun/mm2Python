@@ -5,10 +5,7 @@
  */
 package mm2python.mmEventHandler;
 
-import mm2python.DataStructures.Constants;
-import mm2python.DataStructures.Maps;
-import mm2python.DataStructures.MetaDataStore;
-import mm2python.DataStructures.Queues;
+import mm2python.DataStructures.*;
 import mm2python.mmDataHandler.Exceptions.NoImageException;
 import mm2python.messenger.Py4J.Exceptions.Py4JListenerException;
 import mm2python.messenger.Py4J.Py4JListener;
@@ -111,17 +108,20 @@ public class datastoreEventsThread implements Runnable {
         // write metastore to queue based on channel
         // write filename to queue based on metastore
         try {
-            MetaDataStore meta = new MetaDataStore(
-                    coord.getZ(),
-                    coord.getStagePosition(),
-                    coord.getTime(),
-                    coord.getChannel(),
-                    temp_img.getWidth(),
-                    temp_img.getHeight(),
-                    temp_img.getBytesPerPixel(),
-                    channel_name, prefix, window_name,
-                    filename
-                    );
+//            MetaDataStore meta = new MetaDataStore(
+//                    coord.getZ(),
+//                    coord.getStagePosition(),
+//                    coord.getTime(),
+//                    coord.getChannel(),
+//                    temp_img.getWidth(),
+//                    temp_img.getHeight(),
+//                    temp_img.getBytesPerPixel(),
+//                    channel_name, prefix, window_name,
+//                    filename
+//                    );
+            MetaDataStore meta = new MDSBuilder().z(coord.getZ()).position(coord.getStagePosition()).time(coord.getTime()).
+                    channel(coord.getChannel()).xRange(temp_img.getWidth()).yRange(temp_img.getHeight()).bitDepth(temp_img.getBytesPerPixel()).
+                    channel_name(channel_name).prefix(prefix).windowname(window_name).filepath(filename).buildMDS();
 
             reporter.set_report_area(false, false, "writing meta = "+meta.toString());
 

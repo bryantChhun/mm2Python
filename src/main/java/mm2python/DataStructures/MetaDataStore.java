@@ -4,99 +4,70 @@ import java.util.Objects;
 
 /**
  * Object that stores meta data for every image
- *  not all data is required for construction
+ *  uses a builder pattern to construct.
  */
 public class MetaDataStore {
 
-    private final int time, pos, z, channel;
+    private Integer time, pos, z, channel;
 
-    private final int xRange, yRange, bitDepth;
+    private Integer xRange, yRange, bitDepth;
 
-    private final String prefix, windowname, channel_name;
+    private String prefix, windowname, channel_name;
 
-    private final String filepath;
+    private String filepath;
 
-    public MetaDataStore(int z_, int pos_, int time_, int channel_,
-                         int x_dim_, int y_dim_, int bytesPerPixel,
+    // package private constructor
+    MetaDataStore(final Integer z_, Integer pos_, Integer time_, Integer channel_,
+                  Integer x_dim_, Integer y_dim_, Integer bitDepth_,
                          String channel_name_, String prefix_, String windowname_,
-                         String filepath_) {
-        time = time_;
-        pos = pos_;
-        z = z_;
-        channel = channel_;
-        xRange = x_dim_;
-        yRange = y_dim_;
-        bitDepth = bytesPerPixel;
-        channel_name = channel_name_;
-        prefix = prefix_;
-        windowname = windowname_;
-        filepath = filepath_;
-
-    }
-
-    // overload: z, p, t, c, x-dim, y-dim, bytes
-    public MetaDataStore(int z_, int pos_, int time_, int channel_,
-                         int x_dim_, int y_dim_, int bytesPerPixel_,
                          String filepath_)
     {
-        this(z_, pos_, time_, channel_,
-                x_dim_, y_dim_, bytesPerPixel_,
-                null, null, null, filepath_);
+        if((z_!=null && z_<0) || (pos_!=null && pos_<0) || (time_!=null && time_<0) || (channel_!=null && channel_<0)
+                || (x_dim_!=null && x_dim_<0) || (y_dim_!=null && y_dim_<0) || (bitDepth_!=null && bitDepth_ <0)){
+            throw new IllegalArgumentException("MDS param must be positive");
+        }
+        if(time_!=null) {this.time = time_;}
+        if(pos_!=null) {this.pos = pos_;}
+        if(z_!=null) {this.z = z_;}
+        if(channel_!=null) {this.channel = channel_;}
+        if(x_dim_!=null) {this.xRange = x_dim_;}
+        if(y_dim_!=null) {this.yRange = y_dim_;}
+        if(bitDepth_!=null) {this.bitDepth = bitDepth_;}
+        if(channel_name_!=null) {this.channel_name = channel_name_;}
+        if(prefix_!=null) {this.prefix = prefix_;}
+        if(windowname_!=null) {this.windowname = windowname_;}
+        if(filepath_!=null) {this.filepath = filepath_;}
     }
 
-    // overload: z, c
-    public MetaDataStore(int z_, int channel_, String filepath_)
-    {
-        this(z_, 0, 0, channel_,
-                0, 0, 0,
-                null, null, null, filepath_);
+    public Integer getZ() { return this.z;}
+
+    public Integer getPosition() { return this.pos;}
+
+    public Integer getTime() { return this.time;}
+
+    public Integer getChannel() { return this.channel;}
+
+    public Integer getxRange() {
+        return this.xRange;
     }
 
-    // overload: z, p, c
-    public MetaDataStore(int z_, int pos_, int channel_, String filepath_)
-    {
-        this(z_, pos_, 0, channel_,
-                0, 0, 0,
-                null, null, null, filepath_);
+    public Integer getyRange() {
+        return this.yRange;
     }
 
-    // overload: z, p, t, c
-    public MetaDataStore(int z_, int pos_, int time_, int channel_, String filepath_)
-    {
-        this(z_, pos_, time_, channel_,
-                0, 0, 0,
-                null, null, null, filepath_);
-    }
-
-    public int getZ() { return z;}
-
-    public int getP() { return pos;}
-
-    public int getTime() { return time;}
-
-    public int getChannel() { return channel;}
-
-    public int getxRange() {
-        return xRange;
-    }
-
-    public int getyRange() {
-        return yRange;
-    }
-
-    public int getBitDepth() {
-        return bitDepth;
+    public Integer getBitDepth() {
+        return this.bitDepth;
     }
 
     public String getChannelName() {
-        return channel_name;
+        return this.channel_name;
     }
 
-    public String getPrefix() { return prefix;}
+    public String getPrefix() { return this.prefix;}
 
-    public String getWindowName() { return windowname;}
+    public String getWindowName() { return this.windowname;}
 
-    public String getFilepath() { return filepath;}
+    public String getFilepath() { return this.filepath;}
 
 
     /**
@@ -112,9 +83,7 @@ public class MetaDataStore {
         return time == that.time &&
                 pos == that.pos &&
                 z == that.z &&
-                channel == that.channel; //&&
-//                Objects.equals(prefix, that.prefix) &&
-//                Objects.equals(windowname, that.windowname);
+                channel == that.channel;
     }
 
     /**

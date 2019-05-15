@@ -4,8 +4,13 @@ import mm2python.UI.reporter;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+/***
+ * Methods to place and retrieve MetaDataStores in a HashMap
+ *  Backed by a concurrent Hash Map because all data writes are threaded
+ */
 public class FullDataSet {
 
     private static final ConcurrentHashMap<MetaDataStore, MetaDataStore> allData
@@ -23,10 +28,11 @@ public class FullDataSet {
      *  Behavior is like a set, but allows retrieval of the object
      * @param m : MetaDataStore object
      */
-    public void putDataToSet(MetaDataStore m) {
+    public void putMDS(MetaDataStore m) {
         try {
             allData.put(m, m);
         } catch(NullPointerException e) {
+            System.out.println("null MDS parameter" + e.toString());
             reporter.set_report_area(false, false, "null MDS parameter "+e.toString());
         }
     }
@@ -34,64 +40,67 @@ public class FullDataSet {
     /***
      * return MDS value matching MDS key
      *  returned MDS contains additional metadata from acquisition time
+     *  MDS must match based on hashed values
      * @param m : MDS is hashed only on Z, P, T, C
      * @return : an MDS
      */
-    public MetaDataStore getDataFromSet(MetaDataStore m) {
+    public MetaDataStore getMDS(MetaDataStore m) {
         return allData.getOrDefault(m, null);
     }
 
-    /***
-     * return all MDS that contain matching C
-     * @param c : channel index
-     * @return : list of MDS
+    /**
+     * method to retrieve any subset of data that matches the supplied parameters
+     *
+     * @param mp : MDSParameter object
+     * @return : an arraylist of all MDS that match the parameters
      */
-    public ArrayList<MetaDataStore> getDataFromSetByC(int c) {
+    public ArrayList<MetaDataStore> getMDSByParams(MDSParameters mp) {
+        List<Boolean> boolList = new ArrayList<>();
+        ArrayList<MDSParamObject> params = mp.getParams();
+
+        // iterate through concurrent HashMap allData
         Iterator<MetaDataStore> itr = allData.keySet().iterator();
         ArrayList<MetaDataStore> mds = new ArrayList<>();
         while(itr.hasNext()) {
             MetaDataStore temp = allData.get(itr.next());
-            if(temp.getChannel() == c) {
-                mds.add(temp);
+
+            // populate a list of Boolean upon matching parameters
+            // iterates for only exactly the defined parameters in MDSParameters
+            for(MDSParamObject s : params) {
+                switch(s.getLabel()){
+                    case "TIME":
+                        if(temp.getTime() == s.getInt()) {boolList.add(true);}
+                        else {boolList.add(false);}
+                        break;
+                    case "POSITION":
+                        if(temp.getPosition() == s.getInt()) {boolList.add(true);}
+                        else {boolList.add(false);}
+                        break;
+                    case "Z":
+                        if(temp.getZ() == s.getInt()) {boolList.add(true);}
+                        else {boolList.add(false);}
+                        break;
+                    case "CHANNEL":
+                        if(temp.getChannel() == s.getInt()) {boolList.add(true);}
+                        else {boolList.add(false);}
+                        break;
+                }
             }
+            if(areAllTrue(boolList)) { mds.add(temp);}
+            boolList.clear();
         }
         return mds;
     }
 
-    /***
-     * return all MDS that contain matching P and C
-     * @param p : position index
-     * @param c : channel index
-     * @return : list of MDS
-     */
-    public ArrayList<MetaDataStore> getDataFromSetByP(int p, int c) {
-        Iterator<MetaDataStore> itr = allData.keySet().iterator();
-        ArrayList<MetaDataStore> mds = new ArrayList<>();
-        while(itr.hasNext()) {
-            MetaDataStore temp = allData.get(itr.next());
-            if(temp.getP() == p && temp.getChannel() == c) {
-                mds.add(temp);
-            }
-        }
-        return mds;
+    private boolean areAllTrue(List<Boolean> array){
+        for(boolean b : array) if(!b) return false;
+        return true;
     }
 
-    /***
-     * return all MDS that contain matching Z and C
-     * @param t : single time point
-     * @param c : channel index
-     * @return : list of MDS
-     */
-    public ArrayList<MetaDataStore> getDataFromSetByT(int t, int c) {
-        Iterator<MetaDataStore> itr = allData.keySet().iterator();
-        ArrayList<MetaDataStore> mds = new ArrayList<>();
-        while(itr.hasNext()) {
-            MetaDataStore temp = allData.get(itr.next());
-            if(temp.getTime() == t && temp.getChannel() == c) {
-                mds.add(temp);
-            }
+    public void clearData() {
+        if(!allData.isEmpty()){
+            allData.clear();
         }
-        return mds;
     }
 
 }
