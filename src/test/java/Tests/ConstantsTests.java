@@ -1,7 +1,7 @@
 package Tests;
 
 import mm2python.DataStructures.Constants;
-import mm2python.DataStructures.Maps;
+import mm2python.DataStructures.Maps.Maps;
 import org.junit.jupiter.api.Test;
 
 import org.micromanager.Studio;

@@ -20,7 +20,7 @@ public class MetaDataStore {
     private String filepath;
 
     // package private constructor
-    MetaDataStore(final Integer z_, Integer pos_, Integer time_, Integer channel_,
+    public MetaDataStore(final Integer z_, Integer pos_, Integer time_, Integer channel_,
                   Integer x_dim_, Integer y_dim_, Integer bitDepth_,
                          String channel_name_, String prefix_, String windowname_,
                          String filepath_)

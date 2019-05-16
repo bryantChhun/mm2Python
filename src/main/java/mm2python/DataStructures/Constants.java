@@ -10,7 +10,6 @@ import java.util.ArrayList;
 
 import mm2python.DataStructures.Exceptions.OSTypeException;
 
-
 /**
  *
  * @author bryant.chhun
@@ -31,10 +30,25 @@ public class Constants {
 
     public static boolean py4JRadioButton;
 
+    public static final String OS;
+
+    static {
+        OS = getOSandHandle();
+    }
+
     public Constants() {
         if(ports == null) {
             ports = new ArrayList<>();
         }
+    }
+
+    private static String getOSandHandle() {
+        try {
+            return getOS();
+        } catch(OSTypeException osx) {
+            System.out.println("String osx");
+        }
+        return null;
     }
 
     public static String getOS() throws OSTypeException {

@@ -6,6 +6,11 @@
 package mm2python.mmEventHandler;
 
 import mm2python.DataStructures.*;
+import mm2python.DataStructures.Builders.MDSBuilder;
+import mm2python.DataStructures.Maps.MDSMap;
+import mm2python.DataStructures.Queues.CircularFilenameQueue;
+import mm2python.DataStructures.Queues.MDSQueue;
+import mm2python.DataStructures.Queues.PathQueue;
 import mm2python.mmDataHandler.Exceptions.NoImageException;
 import mm2python.messenger.Py4J.Exceptions.Py4JListenerException;
 import mm2python.messenger.Py4J.Py4JListener;
@@ -56,7 +61,7 @@ public class datastoreEventsThread implements Runnable {
 
         // if using Circular MMapQueue, pick a filename
         if(Constants.getFixedMemMap()){
-            filename = CircularMemMapQueue.getNextMMap();
+            filename = CircularFilenameQueue.getNextFilename();
         } else {
             filename = assignFileName();
         }

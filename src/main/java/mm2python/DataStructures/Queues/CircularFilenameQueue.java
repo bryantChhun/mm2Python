@@ -1,10 +1,11 @@
-package mm2python.DataStructures;
+package mm2python.DataStructures.Queues;
 
-import mm2python.UI.reporter;
+import mm2python.DataStructures.Constants;
 import mm2python.mmDataHandler.Exceptions.NoImageException;
 import org.micromanager.data.Image;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -14,7 +15,12 @@ import java.nio.channels.FileChannel;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
-public class CircularMemMapQueue {
+/**
+ * DataStructure to manage a circular queue of filenames
+ *  filenames represent memory mapped files based on camera parameters
+ *
+ */
+public class CircularFilenameQueue {
 
     private static final Queue<String> MMapQueue = new ConcurrentLinkedDeque<>();
 
@@ -27,14 +33,19 @@ public class CircularMemMapQueue {
      *
      * @param num : number of blank MMaps
      */
-    public static void createMemMaps(int num) {
+    public static void createFilenames(int num) throws FileNotFoundException {
         // pad the length by 1 byte
-        int bitlength = (int)( (Constants.bitDepth*Constants.width*Constants.height)/8 );
+        int bitlength = (int) ((Constants.bitDepth * Constants.width * Constants.height) / 8);
+
+        File directory = new File(Constants.tempFilePath);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
 
         // create num amount of blank mmaps
-        if(Constants.getFixedMemMap()) {
+        if (Constants.getFixedMemMap()) {
             for (int i = 0; i < num; i++) {
-                String fixedMapName = Constants.tempFilePath+"/mmap_fixed_"+i;
+                String fixedMapName = Constants.tempFilePath + "/mmap_fixed_" + i;
                 writeBlankToMemMap(fixedMapName, bitlength);
                 putMemMap(fixedMapName);
             }
@@ -45,7 +56,7 @@ public class CircularMemMapQueue {
      * check if is empty.  Should never be empty
      * @return : boolean
      */
-    public static boolean nextMMapExists() {
+    public static boolean nextFilenameExists() {
         return !MMapQueue.isEmpty();
     }
 
@@ -53,10 +64,15 @@ public class CircularMemMapQueue {
      * pull from head, place back at tail
      * @return : String, head value
      */
-    public static String getNextMMap() {
+    public static String getNextFilename() {
         String next = MMapQueue.poll();
         MMapQueue.offer(next);
+//        MMapQueue.add(next);
         return next;
+    }
+
+    public static int getHashOfNext() throws NullPointerException{
+        return MMapQueue.peek().hashCode();
     }
 
     // ===== Private methods ======
@@ -69,7 +85,7 @@ public class CircularMemMapQueue {
      * @param filename : String, path and filename to temp/MMapFile
      * @param length : int, length in bytes to allocate
      */
-    private static void writeBlankToMemMap(String filename, int length) {
+    private static void writeBlankToMemMap(String filename, int length) throws FileNotFoundException {
         byte[] bytearray = new byte[length];
 
         File file = new File(filename);
@@ -80,10 +96,15 @@ public class CircularMemMapQueue {
         {
             MappedByteBuffer buffer = fileChannel.map(FileChannel.MapMode.READ_WRITE, 0, length);
             buffer.put(bytearray);
-        } catch (Exception ex) {
-            System.out.println(ex.toString());
+        } catch (FileNotFoundException ex) {
+            throw new FileNotFoundException(ex.toString());
+        } catch (Exception e) {
+            System.out.println(e.toString());
         }
     }
+
+    // ======== below methods are taken from image-to-mmap conversion ============
+    // this circular queue doesn't necessarily require these methods.
 
     /**
      * convert supplied image to memory mapped file with name=filename

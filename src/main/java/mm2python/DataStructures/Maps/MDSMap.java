@@ -1,5 +1,8 @@
-package mm2python.DataStructures;
+package mm2python.DataStructures.Maps;
 
+import mm2python.DataStructures.Builders.MDSParamObject;
+import mm2python.DataStructures.Builders.MDSParameters;
+import mm2python.DataStructures.MetaDataStore;
 import mm2python.UI.reporter;
 
 import java.util.ArrayList;
@@ -9,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /***
  * Methods to place and retrieve MetaDataStores in a HashMap
- *  Backed by a concurrent Hash Map because all data writes are threaded
+ *  Backed by a concurrent HashMap because all data writes are threaded
  */
 public class MDSMap {
 
@@ -50,6 +53,9 @@ public class MDSMap {
 
     /**
      * method to retrieve any subset of data that matches the supplied parameters
+     *  Time complexity is O(n*m)
+     *      where n is number of elements in concurrentHashMap
+     *      where m is max number of params to check against (currently m=11)
      *
      * @param mp : MDSParameter object
      * @return : an arraylist of all MDS that match the parameters
@@ -62,6 +68,7 @@ public class MDSMap {
         Iterator<MetaDataStore> itr = allData.keySet().iterator();
         ArrayList<MetaDataStore> mds = new ArrayList<>();
         while(itr.hasNext()) {
+            //temp contains full metadata
             MetaDataStore temp = allData.get(itr.next());
 
             // populate a list of Boolean upon matching parameters

@@ -1,4 +1,6 @@
-package mm2python.DataStructures;
+package mm2python.DataStructures.Builders;
+
+import mm2python.DataStructures.MetaDataStore;
 
 /**
  * Builder base

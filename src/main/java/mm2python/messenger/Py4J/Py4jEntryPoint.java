@@ -5,9 +5,9 @@
  */
 package mm2python.messenger.Py4J;
 
-import mm2python.DataStructures.Maps;
+import mm2python.DataStructures.Maps.Maps;
 import mm2python.DataStructures.MetaDataStore;
-import mm2python.DataStructures.PathQueue;
+import mm2python.DataStructures.Queues.PathQueue;
 import mm2python.mmDataHandler.dataInterface;
 import mmcorej.CMMCore;
 import org.micromanager.Studio;

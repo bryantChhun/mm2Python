@@ -1,5 +1,7 @@
-package mm2python.DataStructures;
+package mm2python.DataStructures.Maps;
 
+import mm2python.DataStructures.MetaDataStore;
+import mm2python.DataStructures.Queues.PathQueue;
 import mm2python.UI.reporter;
 
 import java.util.HashMap;

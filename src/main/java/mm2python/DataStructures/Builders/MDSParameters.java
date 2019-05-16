@@ -1,4 +1,4 @@
-package mm2python.DataStructures;
+package mm2python.DataStructures.Builders;
 
 import java.util.ArrayList;
 

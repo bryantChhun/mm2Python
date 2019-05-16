@@ -1,4 +1,4 @@
-package mm2python.DataStructures;
+package mm2python.DataStructures.Queues;
 
 import mm2python.UI.reporter;
 
@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 public class PathQueue {
     private static LinkedBlockingQueue<String> liveQueue;
-    static LinkedBlockingQueue<String> filenameByChannel1;
+    public static LinkedBlockingQueue<String> filenameByChannel1;
 
     public PathQueue() {
         filenameByChannel1 = new LinkedBlockingQueue<>();

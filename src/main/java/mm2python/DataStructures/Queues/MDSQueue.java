@@ -1,10 +1,15 @@
-package mm2python.DataStructures;
+package mm2python.DataStructures.Queues;
 
+import mm2python.DataStructures.MetaDataStore;
 import mm2python.UI.reporter;
 
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Datastructure to represent a linear queue of filenames
+ *  filenames represent memory mapped files
+ */
 public class MDSQueue {
 
     private static final LinkedBlockingQueue<MetaDataStore> mdsQueue = new LinkedBlockingQueue<>();

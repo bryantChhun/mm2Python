@@ -1,7 +1,7 @@
 package Tests;
 
-import mm2python.DataStructures.MDSBuilder;
-import mm2python.DataStructures.MDSParameters;
+import mm2python.DataStructures.Builders.MDSBuilder;
+import mm2python.DataStructures.Builders.MDSParameters;
 import mm2python.DataStructures.MetaDataStore;
 import org.junit.jupiter.api.Test;
 

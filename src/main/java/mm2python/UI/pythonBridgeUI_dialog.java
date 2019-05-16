@@ -8,6 +8,10 @@ import com.intellij.uiDesigner.core.Spacer;
 // mm2python libraries
 import mm2python.DataStructures.*;
 import mm2python.DataStructures.Exceptions.OSTypeException;
+import mm2python.DataStructures.Maps.MDSMap;
+import mm2python.DataStructures.Queues.CircularFilenameQueue;
+import mm2python.DataStructures.Queues.MDSQueue;
+import mm2python.DataStructures.Queues.PathQueue;
 import mm2python.messenger.Py4J.Py4J;
 import mm2python.mmDataHandler.ramDisk.ramDiskConstructor;
 import mm2python.mmDataHandler.ramDisk.ramDiskDestructor;
@@ -24,6 +28,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
 
 
 public class pythonBridgeUI_dialog extends JFrame {
@@ -121,7 +126,7 @@ public class pythonBridgeUI_dialog extends JFrame {
         // initialize Queues
         new PathQueue();
         new MDSQueue();
-        new CircularMemMapQueue();
+        new CircularFilenameQueue();
     }
 
     private void temp_file_path_MousePerformed(MouseEvent evt) {
@@ -152,7 +157,11 @@ public class pythonBridgeUI_dialog extends JFrame {
     private void start_monitor_global_eventsActionPerformed(ActionEvent evt) {
         reporter.set_report_area("monitoring global events");
         if (Constants.getFixedMemMap()) {
-            CircularMemMapQueue.createMemMaps(100);
+            try {
+                CircularFilenameQueue.createFilenames(100);
+            } catch (FileNotFoundException fex) {
+                reporter.set_report_area(false, false, "exception creating circular memmaps: " + fex.toString());
+            }
         }
         gevents = new globalEvents(mm, UI_logger_textArea);
         gevents.registerGlobalEvents();
