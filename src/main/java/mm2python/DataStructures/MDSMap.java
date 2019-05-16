@@ -11,13 +11,13 @@ import java.util.concurrent.ConcurrentHashMap;
  * Methods to place and retrieve MetaDataStores in a HashMap
  *  Backed by a concurrent Hash Map because all data writes are threaded
  */
-public class FullDataSet {
+public class MDSMap {
 
     private static final ConcurrentHashMap<MetaDataStore, MetaDataStore> allData
             = new ConcurrentHashMap<>(100, 0.75f, 30);
 
-    public ConcurrentHashMap<MetaDataStore, MetaDataStore> getAllData() {
-        return allData;
+    public int getSize() {
+        return allData.size();
     }
 
     /***
@@ -86,6 +86,7 @@ public class FullDataSet {
                         break;
                 }
             }
+            // if all parameters match, add this MDS to result
             if(areAllTrue(boolList)) { mds.add(temp);}
             boolList.clear();
         }

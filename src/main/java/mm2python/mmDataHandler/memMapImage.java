@@ -16,8 +16,6 @@ import java.nio.ShortBuffer;
 import java.nio.channels.FileChannel;
 
 import mm2python.mmDataHandler.Exceptions.NoImageException;
-import org.micromanager.Studio;
-import org.micromanager.data.Coords;
 import org.micromanager.data.Image;
 
 /**
@@ -27,31 +25,10 @@ import org.micromanager.data.Image;
 public class memMapImage {
     private final Image temp_img;
     private final String filename;
-//    private final Coords coord;
-//    private final String prefix;
-//    private final String window_name;
-//    private final String[] channel_names;
-//    private String channel_name = null;
-    private final Studio mm;
-    
-    public memMapImage(Studio mm_, Image temp_img_, Coords coord_, String filename_, String prefix_, String window_name_, String[] channel_names_) {
+
+    public memMapImage(Image temp_img_, String filename_) {
         temp_img = temp_img_;
         filename = filename_;
-//        prefix = prefix_;
-//        coord = coord_;
-//        window_name = window_name_;
-//        channel_names = channel_names_;
-        mm = mm_;
-//        try {
-//            String channel_name = mm.getCMMCore().getCurrentConfig("Channel");
-//        } catch (Exception ex) {
-//            reporter.set_report_area(false, false, "exception fetching channel name: "+ex.toString());
-//        }
-    }
-    public memMapImage(Studio mm_, Image temp_img_, String filename_) {
-        temp_img = temp_img_;
-        filename = filename_;
-        mm = mm_;
     }
     
     public void writeToMemMap() throws NoImageException {

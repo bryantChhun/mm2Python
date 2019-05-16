@@ -26,21 +26,21 @@ public class Maps {
     public static void putChanToFilenameMap(String channel, String filename) {
         try {
             if(chanToFilenameMap.containsKey(channel)){
-                Queues.filenameByChannel1 = chanToFilenameMap.get(channel);
+                PathQueue.filenameByChannel1 = chanToFilenameMap.get(channel);
             } else {
-                Queues.filenameByChannel1 = new LinkedBlockingQueue<>();
+                PathQueue.filenameByChannel1 = new LinkedBlockingQueue<>();
             }
 
-            if(!Queues.filenameByChannel1.offer(filename, 100, TimeUnit.MILLISECONDS)){
+            if(!PathQueue.filenameByChannel1.offer(filename, 100, TimeUnit.MILLISECONDS)){
                 reporter.set_report_area(false, false, "LBQ timeout when offering new filename "+filename);
             }
 
             reporter.set_report_area(false, false,
                     String.format("placing filename by Channel: (chan, size) = (%s, %s)",
                     channel,
-                    Queues.filenameByChannel1.size()));
+                    PathQueue.filenameByChannel1.size()));
 
-            chanToFilenameMap.put(channel, Queues.filenameByChannel1);
+            chanToFilenameMap.put(channel, PathQueue.filenameByChannel1);
         } catch (Exception iEX){
             reporter.set_report_area(false, false,
                     iEX.toString());
@@ -48,13 +48,13 @@ public class Maps {
     }
 
     public static void removeChanToFilenameMap(String channel) {
-        Queues.filenameByChannel1 = chanToFilenameMap.get(channel);
-        Queues.filenameByChannel1.poll();
+        PathQueue.filenameByChannel1 = chanToFilenameMap.get(channel);
+        PathQueue.filenameByChannel1.poll();
         reporter.set_report_area(true, false,
                 String.format("Removing filename from channel: (chan, new size) = (%s, %s) ",
                 channel,
-                Queues.filenameByChannel1.size()));
-        chanToFilenameMap.put(channel, Queues.filenameByChannel1);
+                PathQueue.filenameByChannel1.size()));
+        chanToFilenameMap.put(channel, PathQueue.filenameByChannel1);
     }
 
     // Retrieval methods

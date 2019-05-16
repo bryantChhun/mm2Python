@@ -5,6 +5,9 @@ import java.util.Objects;
 /**
  * Object that stores meta data for every image
  *  uses a builder pattern to construct.
+ *
+ * Is Hashed on ONLY Z, Position, Time, and Channel
+ *  Any stores with duplicate coordinates will be overwritten in hashmaps.
  */
 public class MetaDataStore {
 

@@ -49,9 +49,9 @@ public class datastoreEvents {
         } else {
             prefix_ = "prefix_";
         }
-        
-        if(!window_name.equals("Snap/Live View")) {
 
+        // if not snap/live view, write data that exists before window is drawn
+        if(!window_name.equals("Snap/Live View")) {
             data.registerForEvents(this);
             reporter.set_report_area(true, true, "datastoreEvent: registered this SNAPLIVE datastore, prefix: "+data.toString()+" "+prefix_);
 
@@ -63,7 +63,7 @@ public class datastoreEvents {
                 Iterable<Coords> itercoords = data.getUnorderedImageCoords();
                 for (Coords c: itercoords) {
                     reporter.set_report_area(false, false, "datastoreEvent: existing images in datastore before window rendered: "+c.toString());
-                    mmExecutor.execute(new datastoreEventsThread(mm, data, c, prefix_, window_name) );
+                    mmExecutor.execute(new datastoreEventsThread(mm, data, c, window_name) );
                 }
             }
         }
@@ -92,13 +92,9 @@ public class datastoreEvents {
     @Subscribe
     public void monitor_NewImageEvent(NewImageEvent event){
         try {
-            SequenceSettings seq = mm.acquisitions().getAcquisitionSettings();
-            prefix_ = seq.prefix;
 
             reporter.set_report_area(false, false, "\nNewImageEvent event detected");
-            reporter.set_report_area(false, false, "new image event: "+prefix_+" "+window_name);
-            mmExecutor.execute(new datastoreEventsThread(mm, event.getDatastore(), event.getCoords(), prefix_, window_name));
-//            mmExecutor.execute(new datastoreEventsThread(mm, event, prefix_, window_name));
+            mmExecutor.execute(new datastoreEventsThread(mm, event.getDatastore(), event.getCoords(), window_name));
 
         } catch (NullPointerException ex) {
             reporter.set_report_area(true, false, "null ptr exception in newImageeventMonitor");

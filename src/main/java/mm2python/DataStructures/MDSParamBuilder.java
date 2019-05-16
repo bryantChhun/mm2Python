@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * build an arraylist of parameters (String)
  *  parameters are simply T, P, Z, C
- * used when querying FullDataSet for MetaDataStores
+ * used when querying MDSMap for MetaDataStores
  */
 public class MDSParamBuilder extends MDSBuilderBase {
 

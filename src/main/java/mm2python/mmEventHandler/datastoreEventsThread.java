@@ -22,15 +22,16 @@ import org.micromanager.data.Image;
  * @author bryant.chhun
  */
 public class datastoreEventsThread implements Runnable {
-    private final Studio mm;
     private final Image temp_img;
     private final Coords coord;
     private final String prefix;
     private String filename;
     private final String window_name;
     private final String[] channel_names;
-    private final String channel_name = null;
+    private final String channel_name;
 
+    private final MetaDataStore mds;
+    private final MDSMap fds;
 
     /**
      * Executes sequence of tasks up run by executor:
@@ -38,111 +39,114 @@ public class datastoreEventsThread implements Runnable {
      *  2) writes the file as memory mapped image
      *  3) registers file metadata in static repository
      *  4) notifies any py4j listeners
-     * @param mm_
-     * @param data_
-     * @param c_
-     * @param prefix_
-     * @param window_name_
+     * @param mm_ : Studio object inherited from UI
+     * @param data_ : Most recent Datastore
+     * @param c_ : coordinates
+     * @param window_name_ : window from which this datastore originates
      */
-    public datastoreEventsThread(Studio mm_, Datastore data_, Coords c_, String prefix_, String window_name_) {
-        mm = mm_;
+    datastoreEventsThread(Studio mm_, Datastore data_, Coords c_, String window_name_) {
+        // assigning parameters
         temp_img = data_.getImage(c_);
         coord = c_;
-        prefix = prefix_;
+
         window_name = window_name_;
+        prefix = mm_.acquisitions().getAcquisitionSettings().prefix;
         channel_names = data_.getSummaryMetadata().getChannelNames();
-        try {
-            String channel_name = mm.getCMMCore().getCurrentConfig("Channel");
-        } catch (Exception ex) {
-            reporter.set_report_area(false, false, "exception fetching channel name: "+ex.toString());
+        channel_name = channel_names[coord.getChannel()];
+
+        // if using Circular MMapQueue, pick a filename
+        if(Constants.getFixedMemMap()){
+            filename = CircularMemMapQueue.getNextMMap();
+        } else {
+            filename = assignFileName();
         }
+
+        //create MetaDataStore for this object
+        mds = makeMDS();
+        fds = new MDSMap();
     }
     
     @Override
     public void run() {
-        
-        //Check for live vs MDA image
-        if(window_name.equals("Snap/Live View")) {
 
+        // Write memory mapped image
+        writeToMemMap();
+
+        // Write to concurrent hashmap
+        writeToHashMap();
+
+        // write filename to queue
+        // write MetaDataStore to queue
+        writeToQueues();
+        
+        // notify Listeners
+        notifyListeners();
+        
+    }
+
+    private String assignFileName() {
+        //Check for live vs MDA image, assign a filename
+        if(window_name.equals("Snap/Live View")) {
             filename = Constants.tempFilePath +"/Snap-Live-Stream.dat";
             reporter.set_report_area(false, false, "datastoreEventsThread: SNAPLIVE = "+filename);
-
         } else {
 
             filename = String.format(Constants.tempFilePath +"/%s_t%03d_p%03d_z%02d_c%02d.dat",
-                prefix, coord.getTime(), coord.getStagePosition(), coord.getZ(), coord.getChannel());
+                    prefix, coord.getTime(), coord.getStagePosition(), coord.getZ(), coord.getChannel());
             reporter.set_report_area(false, false, "datastoreEventsThread MDA = "+filename);
-
         }
-        
-        // Write memory mapped image
+        return filename;
+    }
+
+    private MetaDataStore makeMDS() {
         try {
+            return new MDSBuilder().position(coord.getStagePosition()).time(coord.getTime()).z(coord.getZ()).channel(coord.getChannel()).
+                    xRange(temp_img.getWidth()).yRange(temp_img.getHeight()).bitDepth(temp_img.getBytesPerPixel() * 8).
+                    prefix(prefix).windowname(window_name).channel_name(channel_names[coord.getChannel()]).
+                    filepath(filename).buildMDS();
+        } catch(IllegalAccessException ilex){
+            reporter.set_report_area(false, false, String.format("Fail to build MDS for c%d, z%d, p%d, t%d, filepath=%s",
+                    coord.getChannel(), coord.getZ(), coord.getStagePosition(), coord.getTime(), filename));
+        }
+        return null;
+    }
 
+    private void writeToMemMap() {
+        try {
             reporter.set_report_area(false, false, "datastoreEventsThread: writing memmap");
-//            memMapImage out = new memMapImage(mm, temp_img, coord, filename, prefix, window_name, channel_names);
-            memMapImage out = new memMapImage(mm, temp_img, filename);
+            memMapImage out = new memMapImage(temp_img, filename);
             out.writeToMemMap();
-
         } catch (NullPointerException ex) {
             reporter.set_report_area(true, false, "null ptr exception in datastoreEvents Thread");
         } catch (NoImageException ex) {
             reporter.set_report_area(true, false, ex.toString());
         }
+    }
 
-
-        // Write to datastores
-        // write filename to queue based on Channel
+    private void writeToHashMap() {
         try {
-//            // by summary meta data
-//            reporter.set_report_area(false, false, "writing chan to filename map = ("+filename+", "+channel_names[coord.getChannel()]+")" );
-//            Constants.putChanToFilenameMap(channel_names[coord.getChannel()], filename);
-
-            // by cmm core
+            fds.putMDS(mds);
             reporter.set_report_area(false, false, "writing chan to filename map = ("+filename+", "+channel_name+")" );
-            Maps.putChanToFilenameMap(channel_name, filename);
         } catch (Exception ex) {
             reporter.set_report_area(false, false, ex.toString());
         }
+    }
 
-
-        // write metastore to queue based on channel
-        // write filename to queue based on metastore
+    private void writeToQueues() {
         try {
-//            MetaDataStore meta = new MetaDataStore(
-//                    coord.getZ(),
-//                    coord.getStagePosition(),
-//                    coord.getTime(),
-//                    coord.getChannel(),
-//                    temp_img.getWidth(),
-//                    temp_img.getHeight(),
-//                    temp_img.getBytesPerPixel(),
-//                    channel_name, prefix, window_name,
-//                    filename
-//                    );
-            MetaDataStore meta = new MDSBuilder().z(coord.getZ()).position(coord.getStagePosition()).time(coord.getTime()).
-                    channel(coord.getChannel()).xRange(temp_img.getWidth()).yRange(temp_img.getHeight()).bitDepth(temp_img.getBytesPerPixel()).
-                    channel_name(channel_name).prefix(prefix).windowname(window_name).filepath(filename).buildMDS();
-
-            reporter.set_report_area(false, false, "writing meta = "+meta.toString());
-
-            Maps.putMetaStoreToFilenameMap(meta, filename);
-
-            Maps.putChanToMetaStoreMap(channel_name, meta);
-
-            Queues.putNextImage(filename);
-
+            PathQueue.putPath(filename);
+            MDSQueue.putMDS(mds);
         } catch (NullPointerException ex) {
             reporter.set_report_area(false, false, "null ptr exception writing to LinkedBlockingQueue");
         } catch (Exception ex) {
             reporter.set_report_area(false, false, ex.toString());
         }
-        
-        // notify Listeners
+    }
+
+    private void notifyListeners() {
         try {
             reporter.set_report_area(true, false, "notifying py4j listeners");
             if (Constants.py4JRadioButton) {
-//                Py4JListener notifyListener = new Py4JListener();
-//                notifyListener.notifyAllListeners();
                 Py4JListener.notifyAllListeners();
             }
         } catch (Py4JListenerException ex) {
@@ -150,9 +154,8 @@ public class datastoreEventsThread implements Runnable {
         } catch (Exception ex) {
             reporter.set_report_area(true, false, "General Exception while notifying Py4J listeners: "+ex.toString());
         }
-        
     }
-    
-    
+
+
     
 }
