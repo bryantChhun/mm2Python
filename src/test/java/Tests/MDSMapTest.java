@@ -5,22 +5,26 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class FullDataSetTest {
+/**
+ * test operation of concurrentHashMap "MDSMap"
+ */
+class MDSMapTest {
 
     private MetaDataStore mds;
     private MetaDataStore mds1;
     private MetaDataStore mds2;
     private MetaDataStore mds3;
 
-    private FullDataSet fds;
+    private MDSMap fds;
 
     private MDSParameters mdsp1;
 
-    void clear() {
+    private void clear() {
         fds.clearData();
     }
 
@@ -39,7 +43,7 @@ public class FullDataSetTest {
             mds2 = new MDSBuilder().z(2).position(0).filepath("path3").buildMDS();
             mds3 = new MDSBuilder().z(3).position(0).filepath("path4").buildMDS();
 
-            fds = new FullDataSet();
+            fds = new MDSMap();
             fds.putMDS(mds);
             fds.putMDS(mds1);
             fds.putMDS(mds2);
@@ -66,7 +70,7 @@ public class FullDataSetTest {
     {
         try {
             mds = new MDSBuilder().z(0).position(0).filepath("path").buildMDS();
-            fds = new FullDataSet();
+            fds = new MDSMap();
             fds.putMDS(mds);
             assertEquals(mds, fds.getMDS(new MDSBuilder().z(0).position(0).filepath("path").buildMDS()));
         } catch(IllegalAccessException ex) {
@@ -83,9 +87,9 @@ public class FullDataSetTest {
     {
         try{
             mds = new MDSBuilder().z(0).position(0).filepath("path").buildMDS();
-            fds = new FullDataSet();
+            fds = new MDSMap();
             fds.putMDS(mds);
-            assertEquals(null, fds.getMDS(new MDSBuilder().z(1).position(0).filepath("path").buildMDS()));
+            assertNull(fds.getMDS(new MDSBuilder().z(1).position(0).filepath("path").buildMDS()));
         } catch(IllegalAccessException ex) {
             fail(ex);
         }
@@ -116,11 +120,11 @@ public class FullDataSetTest {
             mds = new MDSBuilder().z(0).position(0).channel(0).filepath("path").buildMDS();
             mds2 = new MDSBuilder().z(0).position(0).channel(0).filepath("path").buildMDS();
             mds3 = new MDSBuilder().z(0).position(0).channel(0).xRange(1024).yRange(1024).bitDepth(2).filepath("path").buildMDS();
-            fds = new FullDataSet();
+            fds = new MDSMap();
             fds.putMDS(mds);
             fds.putMDS(mds2);
             fds.putMDS(mds3);
-            assertEquals(1, fds.getAllData().size());
+            assertEquals(1, fds.getSize());
         } catch(IllegalAccessException ex) {
             fail(ex);
         }
@@ -137,10 +141,10 @@ public class FullDataSetTest {
         try {
             mds = new MDSBuilder().z(0).position(0).time(0).channel(0).filepath("path").buildMDS();
             mds1 = new MDSBuilder().z(1).position(0).time(0).channel(0).filepath("path").buildMDS();
-            fds = new FullDataSet();
+            fds = new MDSMap();
             fds.putMDS(mds);
             fds.putMDS(mds1);
-            assertEquals(2, fds.getAllData().size());
+            assertEquals(2, fds.getSize());
         } catch(IllegalAccessException ex) {
             fail(ex);
         }
@@ -157,10 +161,10 @@ public class FullDataSetTest {
         try{
             mds = new MDSBuilder().z(0).position(0).time(0).channel(0).filepath("path").buildMDS();
             mds1 = new MDSBuilder().z(0).position(1).time(0).channel(0).filepath("path").buildMDS();
-            fds = new FullDataSet();
+            fds = new MDSMap();
             fds.putMDS(mds);
             fds.putMDS(mds1);
-            assertEquals(2, fds.getAllData().size());
+            assertEquals(2, fds.getSize());
         } catch(IllegalAccessException ex) {
             fail(ex);
         }
@@ -177,10 +181,10 @@ public class FullDataSetTest {
         try{
             mds = new MDSBuilder().z(0).position(0).time(0).channel(0).filepath("path").buildMDS();
             mds1 = new MDSBuilder().z(0).position(0).time(1).channel(0).filepath("path").buildMDS();
-            fds = new FullDataSet();
+            fds = new MDSMap();
             fds.putMDS(mds);
             fds.putMDS(mds1);
-            assertEquals(2, fds.getAllData().size());
+            assertEquals(2, fds.getSize());
         } catch(IllegalAccessException ex) {
             fail(ex);
         }
@@ -197,10 +201,10 @@ public class FullDataSetTest {
         try{
             mds = new MDSBuilder().z(0).position(0).time(0).channel(0).filepath("path").buildMDS();
             mds1 = new MDSBuilder().z(0).position(0).time(0).channel(1).filepath("path").buildMDS();
-            fds = new FullDataSet();
+            fds = new MDSMap();
             fds.putMDS(mds);
             fds.putMDS(mds1);
-            assertEquals(2, fds.getAllData().size());
+            assertEquals(2, fds.getSize());
         } catch(IllegalAccessException ex) {
             fail(ex);
         }
@@ -226,7 +230,7 @@ public class FullDataSetTest {
         }
 
         try {
-            fds = new FullDataSet();
+            fds = new MDSMap();
             fds.putMDS(mds);
             fds.putMDS(mds1);
             fds.putMDS(mds2);
@@ -262,7 +266,7 @@ public class FullDataSetTest {
         }
 
         try {
-            fds = new FullDataSet();
+            fds = new MDSMap();
             fds.putMDS(mds);
             fds.putMDS(mds1);
             fds.putMDS(mds2);
@@ -298,7 +302,7 @@ public class FullDataSetTest {
         }
 
         try {
-            fds = new FullDataSet();
+            fds = new MDSMap();
             fds.putMDS(mds);
             fds.putMDS(mds1);
             fds.putMDS(mds2);
@@ -331,7 +335,7 @@ public class FullDataSetTest {
         }
 
         try {
-            fds = new FullDataSet();
+            fds = new MDSMap();
             fds.putMDS(mds);
             fds.putMDS(mds1);
             fds.putMDS(mds2);

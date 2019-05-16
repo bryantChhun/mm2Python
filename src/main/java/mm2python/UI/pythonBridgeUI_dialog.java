@@ -6,7 +6,7 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 
 // mm2python libraries
-import mm2python.DataStructures.Constants;
+import mm2python.DataStructures.*;
 import mm2python.DataStructures.Exceptions.OSTypeException;
 import mm2python.messenger.Py4J.Py4J;
 import mm2python.mmDataHandler.ramDisk.ramDiskConstructor;
@@ -56,7 +56,7 @@ public class pythonBridgeUI_dialog extends JFrame {
     private static Studio mm;
     private Py4J gate;
     private globalEvents gevents;
-    private final tempPathFlush ramDisk = new tempPathFlush(mm);
+    private final tempPathFlush clearTempPath = new tempPathFlush(mm);
     private static final JFileChooser fc = new JFileChooser();
     private static File defaultTempPath;
 
@@ -103,7 +103,6 @@ public class pythonBridgeUI_dialog extends JFrame {
         mm = mm_;
         new reporter(UI_logger_textArea, mm);
         fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-//        ramDisk = new tempPathFlush(mm);
 
         // initialize Constants
         new Constants();
@@ -111,7 +110,18 @@ public class pythonBridgeUI_dialog extends JFrame {
             Constants.py4JRadioButton = true;
         }
         Constants.tempFilePath = temp_file_path.getText();
+        Constants.bitDepth = mm.getCMMCore().getImageBitDepth();
+        Constants.height = mm.getCMMCore().getImageHeight();
+        Constants.width = mm.getCMMCore().getImageWidth();
         reporter.set_report_area(true, false, "mm2python.UI INITIALIZATION filename = " + Constants.tempFilePath);
+
+        // initialize MetaDataStore Map
+        new MDSMap();
+
+        // initialize Queues
+        new PathQueue();
+        new MDSQueue();
+        new CircularMemMapQueue();
     }
 
     private void temp_file_path_MousePerformed(MouseEvent evt) {
@@ -141,13 +151,18 @@ public class pythonBridgeUI_dialog extends JFrame {
 
     private void start_monitor_global_eventsActionPerformed(ActionEvent evt) {
         reporter.set_report_area("monitoring global events");
+        if (Constants.getFixedMemMap()) {
+            CircularMemMapQueue.createMemMaps(100);
+        }
         gevents = new globalEvents(mm, UI_logger_textArea);
         gevents.registerGlobalEvents();
     }
 
     private void stop_monitor_global_eventsActionPerformed(ActionEvent evt) {
         reporter.set_report_area("STOP monitoring global events, clearing data store references");
-//        Constants.resetAll();
+        if (!Constants.getFixedMemMap()) {
+            clearTempPath.clearTempPathContents();
+        }
         gevents.unRegisterGlobalEvents();
 
     }
@@ -157,7 +172,7 @@ public class pythonBridgeUI_dialog extends JFrame {
     }
 
     private void clear_ramdiskActionPerformed(ActionEvent evt) {
-        ramDisk.clearTempPathContents();
+        clearTempPath.clearTempPathContents();
     }
 
     private void destroy_ramdiskActionPerformed(ActionEvent evt) {

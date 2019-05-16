@@ -7,7 +7,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class MDSBuilderTest {
+/**
+ * test operation of MetaDataStore builder
+ */
+class MDSBuilderTest {
 
     private MetaDataStore mds;
     private MetaDataStore mds1;
