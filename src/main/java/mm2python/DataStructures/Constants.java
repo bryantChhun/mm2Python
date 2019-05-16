@@ -23,6 +23,8 @@ public class Constants {
 
     public static String tempFilePath;
 
+    public static long bitDepth, height, width;
+
     public static List<Integer> ports;
 
     public static boolean fixedMemMap;
@@ -46,6 +48,10 @@ public class Constants {
         }
     }
 
+    /**
+     * if true, user will use finite number of memmap files
+     * @param b : boolean
+     */
     public static void setFixedMemMap(boolean b) {
         fixedMemMap = b;
     }
@@ -54,6 +60,10 @@ public class Constants {
         return fixedMemMap;
     }
 
+    /**
+     * whether to use the Py4J message passing system
+     * @param b : boolean
+     */
     public static void setPy4JRadioButton(boolean b) {
         py4JRadioButton = b;
     }

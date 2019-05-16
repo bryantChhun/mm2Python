@@ -2,16 +2,14 @@ package mm2python.DataStructures;
 
 import mm2python.UI.reporter;
 
-import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
-public class Queues {
+public class PathQueue {
     private static LinkedBlockingQueue<String> liveQueue;
     static LinkedBlockingQueue<String> filenameByChannel1;
 
-//    static ArrayList<String> Dynamic
-
-    public Queues() {
+    public PathQueue() {
         filenameByChannel1 = new LinkedBlockingQueue<>();
         liveQueue = new LinkedBlockingQueue<>();
     }
@@ -21,20 +19,25 @@ public class Queues {
         liveQueue = new LinkedBlockingQueue<>();
     }
 
-    public static void putNextImage(String path) {
+    // methods to add/retrieve paths from liveQueue
+    public static void putPath(String path) {
         try {
-            liveQueue.put(path);
+            liveQueue.offer(path, 20, TimeUnit.MILLISECONDS);
         } catch(Exception e) {
             reporter.set_report_area(false, false,
                     e.toString());
         }
     }
 
-    public static boolean nextImageExists() {
+    public static boolean nextPathExists() {
         return !liveQueue.isEmpty();
     }
 
-    public static String getNextImage() {
-        return liveQueue.poll();
+    public static String getNextPath() {
+        return liveQueue.peek();
+    }
+
+    public static void removeHeadPath() {
+        liveQueue.poll();
     }
 }
