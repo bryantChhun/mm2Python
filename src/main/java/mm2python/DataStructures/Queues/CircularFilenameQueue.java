@@ -34,7 +34,6 @@ public class CircularFilenameQueue {
      * @param num : number of blank MMaps
      */
     public static void createFilenames(int num) throws FileNotFoundException {
-        // pad the length by 1 byte
         int bitlength = (int) ((Constants.bitDepth * Constants.width * Constants.height) / 8);
 
         File directory = new File(Constants.tempFilePath);

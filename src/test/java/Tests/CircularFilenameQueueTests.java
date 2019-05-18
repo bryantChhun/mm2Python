@@ -5,10 +5,17 @@ import mm2python.DataStructures.Queues.CircularFilenameQueue;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-//todo: create test for concurrency
 class CircularFilenameQueueTests {
 
     /**
@@ -33,7 +40,7 @@ class CircularFilenameQueueTests {
     /**
      * to initialize the constants with reasonable image values and temp file directory
      */
-    private void initializeMMaps() {
+    private void initializeConstants() {
         Constants.setFixedMemMap(true);
         Constants.bitDepth=16;
         Constants.width=2048;
@@ -58,7 +65,7 @@ class CircularFilenameQueueTests {
      */
     @Test
     void testCreateMMap() {
-        initializeMMaps();
+        initializeConstants();
 
         try {
             CircularFilenameQueue.createFilenames(10);
@@ -76,7 +83,7 @@ class CircularFilenameQueueTests {
      */
     @Test
     void testClear() {
-        initializeMMaps();
+        initializeConstants();
 
         try {
             CircularFilenameQueue.createFilenames(10);
@@ -95,7 +102,7 @@ class CircularFilenameQueueTests {
      */
     @Test
     void testGetNext() {
-        initializeMMaps();
+        initializeConstants();
 
         try {
             CircularFilenameQueue.createFilenames(10);
@@ -114,7 +121,7 @@ class CircularFilenameQueueTests {
      */
     @Test
     void testGetNextCircular() {
-        initializeMMaps();
+        initializeConstants();
         int num = 10;
 
         try {
@@ -133,15 +140,50 @@ class CircularFilenameQueueTests {
 
     /**
      * test looping and concurrency
-     * TODO: change all queues to LBQ
      *      can cycle twice and show that we have 2*number of unique names
-     * TODO: implement this concurrent test for the concurrent HashMap
      */
     @Test
     void testGetNextConcurrent() {
-        initializeMMaps();
         // follow: https://dzone.com/articles/how-i-test-my-java-classes-for-thread-safety
+        initializeConstants();
+        int num = 10;
 
+        try {
+            CircularFilenameQueue.createFilenames(num);
+        } catch (Exception ex) {
+            fail(ex);
+        }
+
+        // create threads and submit getNextFilename
+        CountDownLatch latch = new CountDownLatch(1);
+        ExecutorService service = Executors.newFixedThreadPool(num);
+        Collection<Future<String>> futures = new ArrayList<>(num);
+        int retrievals = 2*num;
+        for (int t = 0; t < retrievals; ++t) {
+            futures.add(service.submit(
+                    () -> {
+                        latch.await();
+                        return CircularFilenameQueue.getNextFilename();
+                    }
+            ));
+        }
+        latch.countDown();
+
+        // retrieve number of unique hashes from futures
+        Set<String> ids = new HashSet<>();
+        for (Future<String> f : futures) {
+            try {
+                ids.add(f.get());
+            } catch (Exception ex) {
+                System.out.println("exception checking unique threads "+ex);
+            }
+        }
+
+        // even though we do 20 retrievals on 10 files, we still have only 10 unique IDs
+        // importantly, we do not have fewer than 10 unique IDs
+        assertEquals(ids.size(), num);
+        assertEquals(2*ids.size(), retrievals);
+        clearTempFiles();
     }
 
 }
