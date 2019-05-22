@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package mm2python.messenger;
+package mm2python.MPIMethod;
 
 /**
  *

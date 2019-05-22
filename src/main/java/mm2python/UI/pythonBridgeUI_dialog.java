@@ -12,7 +12,7 @@ import mm2python.DataStructures.Maps.MDSMap;
 import mm2python.DataStructures.Queues.CircularFilenameQueue;
 import mm2python.DataStructures.Queues.MDSQueue;
 import mm2python.DataStructures.Queues.PathQueue;
-import mm2python.messenger.Py4J.Py4J;
+import mm2python.MPIMethod.Py4J.Py4J;
 import mm2python.mmDataHandler.ramDisk.ramDiskConstructor;
 import mm2python.mmDataHandler.ramDisk.ramDiskDestructor;
 import mm2python.mmDataHandler.ramDisk.tempPathFlush;
@@ -118,6 +118,7 @@ public class pythonBridgeUI_dialog extends JFrame {
         Constants.bitDepth = mm.getCMMCore().getImageBitDepth();
         Constants.height = mm.getCMMCore().getImageHeight();
         Constants.width = mm.getCMMCore().getImageWidth();
+        Constants.fixedMemMap = true;
         reporter.set_report_area(true, false, "mm2python.UI INITIALIZATION filename = " + Constants.tempFilePath);
 
         // initialize MetaDataStore Map
@@ -163,8 +164,9 @@ public class pythonBridgeUI_dialog extends JFrame {
                 reporter.set_report_area(false, false, "exception creating circular memmaps: " + fex.toString());
             }
         }
-        gevents = new globalEvents(mm, UI_logger_textArea);
-        gevents.registerGlobalEvents();
+        if (gevents == null) {
+            gevents = new globalEvents(mm);
+        }
     }
 
     private void stop_monitor_global_eventsActionPerformed(ActionEvent evt) {
@@ -195,11 +197,23 @@ public class pythonBridgeUI_dialog extends JFrame {
     }
 
     private void fixedRadioButtonActionPerformed(ActionEvent evt) {
-        Constants.fixedMemMap = true;
+        if (fixedRadioButton.isSelected()) {
+            Constants.fixedMemMap = true;
+            dynamicRadioButton.setSelected(false);
+        } else {
+            Constants.fixedMemMap = false;
+            dynamicRadioButton.setSelected(true);
+        }
     }
 
     private void dynamicRadioButtonActionPerformed(ActionEvent evt) {
-        Constants.fixedMemMap = false;
+        if (dynamicRadioButton.isSelected()) {
+            Constants.fixedMemMap = false;
+            fixedRadioButton.setSelected(false);
+        } else {
+            Constants.fixedMemMap = true;
+            fixedRadioButton.setSelected(true);
+        }
     }
 
     public void setData(pythonBridgeUI_dialog data) {
@@ -237,6 +251,7 @@ public class pythonBridgeUI_dialog extends JFrame {
         UI_logger = new JScrollPane();
         Console.add(UI_logger, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         UI_logger_textArea = new JTextArea();
+        UI_logger_textArea.setEditable(false);
         Font UI_logger_textAreaFont = this.$$$getFont$$$(null, -1, 8, UI_logger_textArea.getFont());
         if (UI_logger_textAreaFont != null) UI_logger_textArea.setFont(UI_logger_textAreaFont);
         UI_logger.setViewportView(UI_logger_textArea);
@@ -291,10 +306,12 @@ public class pythonBridgeUI_dialog extends JFrame {
         dynamicRadioButton.setText("Dynamic");
         Configuration.add(dynamicRadioButton, new GridConstraints(9, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         fixedWriteToATextPane = new JTextPane();
-        fixedWriteToATextPane.setText("Fixed: \nWrite to a fixed number of memory-mapped files (default 50).  Preserves disk space and has faster input-output speeds, but holds only the most recent 50 images");
+        fixedWriteToATextPane.setSelectionColor(new Color(-8529665));
+        fixedWriteToATextPane.setText("Fixed: \nWrite to a fixed number of memory-mapped files (default 100).  Preserves disk space and has faster input-output speeds, but holds only the most recent 100 images");
         Configuration.add(fixedWriteToATextPane, new GridConstraints(10, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
         dynamicWriteToATextPane = new JTextPane();
-        dynamicWriteToATextPane.setText("Dynamic: \nWrite to a growing number of memory-mapped files.  Every new image is mapped to its own file until cleared.  Occupies disk space but has slower input-output speeds.");
+        dynamicWriteToATextPane.setSelectionColor(new Color(-365));
+        dynamicWriteToATextPane.setText("Dynamic: \nWrite to a growing number of memory-mapped files.  Every new image is mapped to its own file until cleared.  Occupies disk space and has slower input-output speeds, but allows data access of the whole acquisition.");
         Configuration.add(dynamicWriteToATextPane, new GridConstraints(10, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
         DiskManagement = new JPanel();
         DiskManagement.setLayout(new GridLayoutManager(6, 3, new Insets(0, 0, 0, 0), -1, -1));
@@ -312,7 +329,7 @@ public class pythonBridgeUI_dialog extends JFrame {
         create_ramdisk.setText("Create RAM disk");
         DiskManagement.add(create_ramdisk, new GridConstraints(4, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         temp_file_path = new JTextField();
-        temp_file_path.setText("/Volumes/RAM_Disk/JavaPlugin_temp_folder/");
+        temp_file_path.setText("/");
         DiskManagement.add(temp_file_path, new GridConstraints(1, 1, 3, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         final JLabel label3 = new JLabel();
         label3.setText("Tempfile Path");

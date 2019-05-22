@@ -13,6 +13,8 @@ import java.util.concurrent.ConcurrentHashMap;
 /***
  * Methods to place and retrieve MetaDataStores in a HashMap
  *  Backed by a concurrent HashMap because all data writes are threaded
+ *
+ *  @author bryant.chhun
  */
 public class MDSMap {
 
@@ -91,10 +93,65 @@ public class MDSMap {
                         if(temp.getChannel() == s.getInt()) {boolList.add(true);}
                         else {boolList.add(false);}
                         break;
+                    case "CHANNELNAME":
+                        if(temp.getChannelName().equals(s.getStr())) {boolList.add(true);}
+                        else {boolList.add(false);}
+                        break;
                 }
             }
             // if all parameters match, add this MDS to result
             if(areAllTrue(boolList)) { mds.add(temp);}
+            boolList.clear();
+        }
+        return mds;
+    }
+
+
+    /**
+     * Same as above but returns an ArrayList of Strings (filenames)
+     *
+     * @param mp : MDSParameter object
+     * @return : an arraylist of all STRING that match the parameters
+     */
+    public ArrayList<String> getFilenamesByParams(MDSParameters mp) {
+        List<Boolean> boolList = new ArrayList<>();
+        ArrayList<MDSParamObject> params = mp.getParams();
+
+        // iterate through concurrent HashMap allData
+        Iterator<MetaDataStore> itr = allData.keySet().iterator();
+        ArrayList<String> mds = new ArrayList<>();
+        while(itr.hasNext()) {
+            //temp contains full metadata
+            MetaDataStore temp = allData.get(itr.next());
+
+            // populate a list of Boolean upon matching parameters
+            // iterates for only exactly the defined parameters in MDSParameters
+            for(MDSParamObject s : params) {
+                switch(s.getLabel()){
+                    case "TIME":
+                        if(temp.getTime() == s.getInt()) {boolList.add(true);}
+                        else {boolList.add(false);}
+                        break;
+                    case "POSITION":
+                        if(temp.getPosition() == s.getInt()) {boolList.add(true);}
+                        else {boolList.add(false);}
+                        break;
+                    case "Z":
+                        if(temp.getZ() == s.getInt()) {boolList.add(true);}
+                        else {boolList.add(false);}
+                        break;
+                    case "CHANNEL":
+                        if(temp.getChannel() == s.getInt()) {boolList.add(true);}
+                        else {boolList.add(false);}
+                        break;
+                    case "CHANNELNAME":
+                        if(temp.getChannelName().equals(s.getStr())) {boolList.add(true);}
+                        else {boolList.add(false);}
+                        break;
+                }
+            }
+            // if all parameters match, add this MDS to result
+            if(areAllTrue(boolList)) { mds.add(temp.getFilepath());}
             boolList.clear();
         }
         return mds;

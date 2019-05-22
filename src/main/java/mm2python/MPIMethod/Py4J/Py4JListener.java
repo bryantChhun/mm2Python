@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package mm2python.messenger.Py4J;
+package mm2python.MPIMethod.Py4J;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import mm2python.messenger.Py4J.Exceptions.Py4JListenerException;
+import mm2python.MPIMethod.Py4J.Exceptions.Py4JListenerException;
 
 /**
  *

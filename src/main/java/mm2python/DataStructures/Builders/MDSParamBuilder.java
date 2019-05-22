@@ -6,8 +6,8 @@ import java.util.ArrayList;
 
 /**
  * build an arraylist of parameters (String)
- *  parameters are simply T, P, Z, C
- * used when querying MDSMap for MetaDataStores
+ *  parameters are simply T, P, Z, C, C_name
+ * used when querying MDSMap or MDSQueue for MetaDataStores
  */
 public class MDSParamBuilder extends MDSBuilderBase {
 
@@ -32,29 +32,31 @@ public class MDSParamBuilder extends MDSBuilderBase {
             params.add(new MDSParamObject("CHANNEL", channel));
         }
 
-        if(xRange!=null) {
-            params.add(new MDSParamObject("XRANGE", xRange));
-        }
-        if(yRange!=null) {
-            params.add(new MDSParamObject("YRANGE", yRange));
-        }
-        if(bitDepth!=null) {
-            params.add(new MDSParamObject("BITDEPTH", bitDepth));
-        }
 
-        if(prefix!=null) {
-            params.add(new MDSParamObject("PREFIX", prefix));
-        }
-        if(windowname!=null) {
-            params.add(new MDSParamObject("WINDOWNAME", windowname));
-        }
         if(channel_name!=null) {
             params.add(new MDSParamObject("CHANNELNAME", channel_name));
         }
 
-        if(filepath!=null) {
-            params.add(new MDSParamObject("FILEPATH", filepath));
-        }
+//      Do not allow parameter search on these values, for now
+//        if(xRange!=null) {
+//            params.add(new MDSParamObject("XRANGE", xRange));
+//        }
+//        if(yRange!=null) {
+//            params.add(new MDSParamObject("YRANGE", yRange));
+//        }
+//        if(bitDepth!=null) {
+//            params.add(new MDSParamObject("BITDEPTH", bitDepth));
+//        }
+//
+//        if(prefix!=null) {
+//            params.add(new MDSParamObject("PREFIX", prefix));
+//        }
+//        if(windowname!=null) {
+//            params.add(new MDSParamObject("WINDOWNAME", windowname));
+//        }
+//        if(filepath!=null) {
+//            params.add(new MDSParamObject("FILEPATH", filepath));
+//        }
 
         return new MDSParameters(params);
     }

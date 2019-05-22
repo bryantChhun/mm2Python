@@ -25,59 +25,59 @@ public class Maps {
         }
     }
 
-    public static void putChanToFilenameMap(String channel, String filename) {
-        try {
-            if(chanToFilenameMap.containsKey(channel)){
-                PathQueue.filenameByChannel1 = chanToFilenameMap.get(channel);
-            } else {
-                PathQueue.filenameByChannel1 = new LinkedBlockingQueue<>();
-            }
-
-            if(!PathQueue.filenameByChannel1.offer(filename, 100, TimeUnit.MILLISECONDS)){
-                reporter.set_report_area(false, false, "LBQ timeout when offering new filename "+filename);
-            }
-
-            reporter.set_report_area(false, false,
-                    String.format("placing filename by Channel: (chan, size) = (%s, %s)",
-                    channel,
-                    PathQueue.filenameByChannel1.size()));
-
-            chanToFilenameMap.put(channel, PathQueue.filenameByChannel1);
-        } catch (Exception iEX){
-            reporter.set_report_area(false, false,
-                    iEX.toString());
-        }
-    }
-
-    public static void removeChanToFilenameMap(String channel) {
-        PathQueue.filenameByChannel1 = chanToFilenameMap.get(channel);
-        PathQueue.filenameByChannel1.poll();
-        reporter.set_report_area(true, false,
-                String.format("Removing filename from channel: (chan, new size) = (%s, %s) ",
-                channel,
-                PathQueue.filenameByChannel1.size()));
-        chanToFilenameMap.put(channel, PathQueue.filenameByChannel1);
-    }
-
-    // Retrieval methods
-    public static String getNextFileForChannel(String channel) {
-        LinkedBlockingQueue<String> filenames = chanToFilenameMap.get(channel);
-        reporter.set_report_area(true, false,
-                String.format("filename size at Peek: %s %s %s", channel, filenames.size(), filenames));
-        return filenames.peek();
-    }
-
-    // Data check methods
-    public static boolean nextImageExists(String channel) {
-        // check that both key and corresponding LBQ are not empty
-        return chanToFilenameMap.containsKey(channel) &&
-                chanToFilenameMap.get(channel).size() != 0;
-    }
-
-    public static boolean nextImageExists(MetaDataStore store) {
-        // check that both key and corresponding LBQ are not empty
-        return MetaStoreToFilenameMap.containsKey(store);
-    }
+//    public static void putChanToFilenameMap(String channel, String filename) {
+//        try {
+//            if(chanToFilenameMap.containsKey(channel)){
+//                PathQueue.filenameByChannel1 = chanToFilenameMap.get(channel);
+//            } else {
+//                PathQueue.filenameByChannel1 = new LinkedBlockingQueue<>();
+//            }
+//
+//            if(!PathQueue.filenameByChannel1.offer(filename, 100, TimeUnit.MILLISECONDS)){
+//                reporter.set_report_area(false, false, "LBQ timeout when offering new filename "+filename);
+//            }
+//
+//            reporter.set_report_area(false, false,
+//                    String.format("placing filename by Channel: (chan, size) = (%s, %s)",
+//                    channel,
+//                    PathQueue.filenameByChannel1.size()));
+//
+//            chanToFilenameMap.put(channel, PathQueue.filenameByChannel1);
+//        } catch (Exception iEX){
+//            reporter.set_report_area(false, false,
+//                    iEX.toString());
+//        }
+//    }
+//
+//    public static void removeChanToFilenameMap(String channel) {
+//        PathQueue.filenameByChannel1 = chanToFilenameMap.get(channel);
+//        PathQueue.filenameByChannel1.poll();
+//        reporter.set_report_area(true, false,
+//                String.format("Removing filename from channel: (chan, new size) = (%s, %s) ",
+//                channel,
+//                PathQueue.filenameByChannel1.size()));
+//        chanToFilenameMap.put(channel, PathQueue.filenameByChannel1);
+//    }
+//
+//    // Retrieval methods
+//    public static String getNextFileForChannel(String channel) {
+//        LinkedBlockingQueue<String> filenames = chanToFilenameMap.get(channel);
+//        reporter.set_report_area(true, false,
+//                String.format("filename size at Peek: %s %s %s", channel, filenames.size(), filenames));
+//        return filenames.peek();
+//    }
+//
+//    // Data check methods
+//    public static boolean nextImageExists(String channel) {
+//        // check that both key and corresponding LBQ are not empty
+//        return chanToFilenameMap.containsKey(channel) &&
+//                chanToFilenameMap.get(channel).size() != 0;
+//    }
+//
+//    public static boolean nextImageExists(MetaDataStore store) {
+//        // check that both key and corresponding LBQ are not empty
+//        return MetaStoreToFilenameMap.containsKey(store);
+//    }
 
 
     // =====================

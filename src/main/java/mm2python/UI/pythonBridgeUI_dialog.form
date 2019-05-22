@@ -35,6 +35,7 @@
                   <component id="da932" class="javax.swing.JTextArea" binding="UI_logger_textArea">
                     <constraints/>
                     <properties>
+                      <editable value="false"/>
                       <font size="8"/>
                     </properties>
                   </component>
@@ -174,7 +175,8 @@
                   </grid>
                 </constraints>
                 <properties>
-                  <text value="Fixed: &#10;Write to a fixed number of memory-mapped files (default 50).  Preserves disk space and has faster input-output speeds, but holds only the most recent 50 images"/>
+                  <selectionColor color="-8529665"/>
+                  <text value="Fixed: &#10;Write to a fixed number of memory-mapped files (default 100).  Preserves disk space and has faster input-output speeds, but holds only the most recent 100 images"/>
                 </properties>
               </component>
               <component id="cdc08" class="javax.swing.JTextPane" binding="dynamicWriteToATextPane" default-binding="true">
@@ -184,7 +186,8 @@
                   </grid>
                 </constraints>
                 <properties>
-                  <text value="Dynamic: &#10;Write to a growing number of memory-mapped files.  Every new image is mapped to its own file until cleared.  Occupies disk space but has slower input-output speeds."/>
+                  <selectionColor color="-365"/>
+                  <text value="Dynamic: &#10;Write to a growing number of memory-mapped files.  Every new image is mapped to its own file until cleared.  Occupies disk space and has slower input-output speeds, but allows data access of the whole acquisition."/>
                 </properties>
               </component>
             </children>
@@ -238,7 +241,7 @@
                   </grid>
                 </constraints>
                 <properties>
-                  <text value="/Volumes/RAM_Disk/JavaPlugin_temp_folder/"/>
+                  <text value="/"/>
                 </properties>
               </component>
               <component id="2bed3" class="javax.swing.JLabel">

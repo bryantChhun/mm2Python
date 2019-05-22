@@ -38,6 +38,7 @@ public class reporter {
     public static void set_report_area(String report) {
         String newline = "\n";
         reportArea.append(newline+report);
+        reportArea.setCaretPosition(reportArea.getDocument().getLength());
     }
 
     /**
@@ -63,6 +64,7 @@ public class reporter {
             System.out.println(report);
             mm.logs().logMessage(report);
             reportArea.append("\n"+report);
+            reportArea.setCaretPosition(reportArea.getDocument().getLength());
         }
     }
 

@@ -12,8 +12,8 @@ import mm2python.DataStructures.Queues.CircularFilenameQueue;
 import mm2python.DataStructures.Queues.MDSQueue;
 import mm2python.DataStructures.Queues.PathQueue;
 import mm2python.mmDataHandler.Exceptions.NoImageException;
-import mm2python.messenger.Py4J.Exceptions.Py4JListenerException;
-import mm2python.messenger.Py4J.Py4JListener;
+import mm2python.MPIMethod.Py4J.Exceptions.Py4JListenerException;
+import mm2python.MPIMethod.Py4J.Py4JListener;
 import mm2python.mmDataHandler.memMapImage;
 import mm2python.UI.reporter;
 import org.micromanager.Studio;
@@ -37,6 +37,9 @@ public class datastoreEventsThread implements Runnable {
 
     private final MetaDataStore mds;
     private final MDSMap fds;
+
+    private final MDSQueue mq;
+    private final PathQueue pq;
 
     /**
      * Executes sequence of tasks up run by executor:
@@ -69,6 +72,9 @@ public class datastoreEventsThread implements Runnable {
         //create MetaDataStore for this object
         mds = makeMDS();
         fds = new MDSMap();
+
+        mq = new MDSQueue();
+        pq = new PathQueue();
     }
     
     @Override
@@ -95,7 +101,6 @@ public class datastoreEventsThread implements Runnable {
             filename = Constants.tempFilePath +"/Snap-Live-Stream.dat";
             reporter.set_report_area(false, false, "datastoreEventsThread: SNAPLIVE = "+filename);
         } else {
-
             filename = String.format(Constants.tempFilePath +"/%s_t%03d_p%03d_z%02d_c%02d.dat",
                     prefix, coord.getTime(), coord.getStagePosition(), coord.getZ(), coord.getChannel());
             reporter.set_report_area(false, false, "datastoreEventsThread MDA = "+filename);
@@ -118,20 +123,20 @@ public class datastoreEventsThread implements Runnable {
 
     private void writeToMemMap() {
         try {
-            reporter.set_report_area(false, false, "datastoreEventsThread: writing memmap");
+            reporter.set_report_area(false, false, "datastoreEventsThread: writing memmap to =("+filename+", "+channel_name+")" );
             memMapImage out = new memMapImage(temp_img, filename);
             out.writeToMemMap();
         } catch (NullPointerException ex) {
-            reporter.set_report_area(true, false, "null ptr exception in datastoreEvents Thread");
+            reporter.set_report_area(false, false, "null ptr exception in datastoreEvents Thread");
         } catch (NoImageException ex) {
-            reporter.set_report_area(true, false, ex.toString());
+            reporter.set_report_area(false, false, ex.toString());
         }
     }
 
     private void writeToHashMap() {
         try {
             fds.putMDS(mds);
-            reporter.set_report_area(false, false, "writing chan to filename map = ("+filename+", "+channel_name+")" );
+            reporter.set_report_area(false, false, "writing MetaDataStore to Map");
         } catch (Exception ex) {
             reporter.set_report_area(false, false, ex.toString());
         }
@@ -139,8 +144,9 @@ public class datastoreEventsThread implements Runnable {
 
     private void writeToQueues() {
         try {
-            PathQueue.putPath(filename);
-            MDSQueue.putMDS(mds);
+            pq.putPath(filename);
+            mq.putMDS(mds);
+            reporter.set_report_area(false, false, "writing to path and MDS queues");
         } catch (NullPointerException ex) {
             reporter.set_report_area(false, false, "null ptr exception writing to LinkedBlockingQueue");
         } catch (Exception ex) {

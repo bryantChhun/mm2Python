@@ -25,7 +25,7 @@ public class globalEventsThread implements Runnable {
      * @param mm_: parent micro-manager Studio object
      * @param dw_: DisplayWindow whose construction triggered this class's construction
      */
-    public globalEventsThread(Studio mm_, DisplayWindow dw_) {
+     globalEventsThread(Studio mm_, DisplayWindow dw_) {
         mm = mm_;
         dw = dw_;
         reporter.set_report_area(true, false, "global events thread filename = "+Constants.tempFilePath);
@@ -37,8 +37,6 @@ public class globalEventsThread implements Runnable {
     @Override
     public void run() {
         // Currently, displayEvents are not used.
-//        displayEvents display_events = new displayEvents(mm, dw, reporter);
-//        display_events.registerThisDisplay();
 
         reporter.set_report_area(true, true, "registering datastore: "+dw.getName());
 

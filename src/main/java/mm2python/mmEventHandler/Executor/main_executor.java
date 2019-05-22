@@ -20,7 +20,7 @@ public class main_executor {
     
     private static ExecutorService mmExecutor;
     
-    public static ExecutorService getExecutor(){
+    public ExecutorService getExecutor(){
         if(mmExecutor == null) {
             mmExecutor = Executors.newFixedThreadPool(50);
         }

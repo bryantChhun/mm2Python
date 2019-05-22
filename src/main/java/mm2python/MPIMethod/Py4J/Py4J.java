@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package mm2python.messenger.Py4J;
+package mm2python.MPIMethod.Py4J;
 
 import mm2python.DataStructures.Constants;
 import mm2python.UI.reporter;
 import org.micromanager.Studio;
-import mm2python.messenger.messengerInterface;
+import mm2python.MPIMethod.messengerInterface;
 import py4j.GatewayServer;
 import py4j.reflection.ReflectionUtil;
 import py4j.reflection.RootClassLoadingStrategy;
@@ -33,7 +33,7 @@ public class Py4J implements messengerInterface {
         gatewayServer = new GatewayServer(new Py4jEntryPoint(mm), port);
         gatewayServer.start();
 
-        reporter.set_report_area(false, true, "Gateway Started at IP:port = "+gatewayServer.getAddress()+":"+gatewayServer.getPort());
+        reporter.set_report_area(false, false, "Gateway Started at IP:port = "+gatewayServer.getAddress()+":"+gatewayServer.getPort());
     }
     
     @Override
@@ -42,20 +42,20 @@ public class Py4J implements messengerInterface {
         gatewayServer.start();
         int port = gatewayServer.getPort();
         Constants.ports.add(port);
-        reporter.set_report_area(false, true, "Gateway Started at IP:port = "+gatewayServer.getAddress()+":"+gatewayServer.getPort());
+        reporter.set_report_area(false, false, "Gateway Started at IP:port = "+gatewayServer.getAddress()+":"+gatewayServer.getPort());
     }
     
     @Override
     public void stopConnection(int port) {
         gatewayServer.shutdown();
-        reporter.set_report_area(false, true, String.format("Gateway at port %04d shut down", port));
+        reporter.set_report_area(false, false, String.format("Gateway at port %04d shut down", port));
     }
     
     @Override
     public void stopConnection() {
         Constants.ports.stream().forEach((port) -> {
             gatewayServer.shutdown();
-            reporter.set_report_area(false, true, String.format("Gateway at port %04d shut down", port));
+            reporter.set_report_area(false, false, String.format("Gateway at port %04d shut down", port));
         });
 
     }

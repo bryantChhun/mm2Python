@@ -487,6 +487,7 @@ class MDSMapTest {
         }
         startSignal.countDown();
 
+        // assert that only 4 unique MDS ids are added
         Set<MetaDataStore> ids = new HashSet<>();
         for (Future<MetaDataStore> f : futures) {
             try {
@@ -497,6 +498,7 @@ class MDSMapTest {
         }
         assertEquals(4, ids.size());
 
+        // assert that we retrieve the correct number of MDS
         List<MetaDataStore> m = new ArrayList<>();
         for (Future<MetaDataStore> f : futures) {
             try {

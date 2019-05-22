@@ -15,6 +15,7 @@ import java.nio.MappedByteBuffer;
 import java.nio.ShortBuffer;
 import java.nio.channels.FileChannel;
 
+import mm2python.UI.reporter;
 import mm2python.mmDataHandler.Exceptions.NoImageException;
 import org.micromanager.data.Image;
 
@@ -53,8 +54,9 @@ public class memMapImage {
             }
             MappedByteBuffer buffer = fileChannel.map(FileChannel.MapMode.READ_WRITE, 0, byteimg.length);
             buffer.put(byteimg);
+            buffer.force();
         } catch (Exception ex) {
-            System.out.println(ex);
+            reporter.set_report_area(false, false, "exception while writing memmap :"+ex.toString());
         }
 
     }

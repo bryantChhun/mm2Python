@@ -5,7 +5,6 @@
  */
 package mm2python.mmEventHandler;
 
-import ij.gui.NewImage;
 import mm2python.UI.reporter;
 
 import org.micromanager.Studio;
@@ -23,7 +22,7 @@ import org.micromanager.acquisition.SequenceSettings;
 
 /**
  * Class that subscribes to datastore events
- *   upon new image events, creates a thread that receives image data and immediately writes to disk
+ *   upon new image events, creates a datastoreEventsThread
  * @author bryant.chhun
  */
 public class datastoreEvents {
@@ -33,15 +32,15 @@ public class datastoreEvents {
     private String prefix_;
     private final ExecutorService mmExecutor;
 
-    public datastoreEvents(Studio mm_, Datastore data_, String window_name_) {
+    datastoreEvents(Studio mm_, Datastore data_, String window_name_) {
         mm = mm_;
         data = data_;
         window_name = window_name_;
-        mmExecutor = main_executor.getExecutor();
+        mmExecutor = new main_executor().getExecutor();
         reporter.set_report_area(true, true, String.format("window %s registered", window_name));
     }
     
-    public void registerThisDatastore(){
+    void registerThisDatastore(){
 
         SequenceSettings seq = mm.acquisitions().getAcquisitionSettings();
         if(seq.prefix != null) {
