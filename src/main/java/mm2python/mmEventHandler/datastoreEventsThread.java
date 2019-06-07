@@ -16,7 +16,6 @@ import mm2python.MPIMethod.Py4J.Exceptions.Py4JListenerException;
 import mm2python.MPIMethod.Py4J.Py4JListener;
 import mm2python.mmDataHandler.memMapImage;
 import mm2python.UI.reporter;
-import org.micromanager.Studio;
 import org.micromanager.data.Coords;
 import org.micromanager.data.Datastore;
 import org.micromanager.data.Image;
@@ -32,8 +31,8 @@ public class datastoreEventsThread implements Runnable {
     private final String prefix;
     private String filename;
     private final String window_name;
-    private final String[] channel_names;
-    private final String channel_name;
+//    private String[] channel_names;
+    private String channel_name;
 
     private final MetaDataStore mds;
     private final MDSMap fds;
@@ -42,25 +41,32 @@ public class datastoreEventsThread implements Runnable {
     private final PathQueue pq;
 
     /**
-     * Executes sequence of tasks up run by executor:
+     * Executes sequence of tasks run by executor:
      *  1) assigns a filename based on metadata
      *  2) writes the file as memory mapped image
      *  3) registers file metadata in static repository
      *  4) notifies any py4j listeners
-     * @param mm_ : Studio object inherited from UI
+     * //@param mm_ : Studio object inherited from UI
      * @param data_ : Most recent Datastore
      * @param c_ : coordinates
      * @param window_name_ : window from which this datastore originates
      */
-    datastoreEventsThread(Studio mm_, Datastore data_, Coords c_, String window_name_) {
+    datastoreEventsThread(Datastore data_, Coords c_, String channel_name_, String prefix_, String window_name_) throws Exception {
         // assigning parameters
         temp_img = data_.getImage(c_);
         coord = c_;
-
         window_name = window_name_;
-        prefix = mm_.acquisitions().getAcquisitionSettings().prefix;
-        channel_names = data_.getSummaryMetadata().getChannelNames();
-        channel_name = channel_names[coord.getChannel()];
+        prefix = prefix_;
+
+        // if using MDA, SummaryMetadata contains channel names
+        // if using script, assume "Channel" group is the channel name
+        try {
+            final String[] channel_names = data_.getSummaryMetadata().getChannelNames();
+            channel_name = channel_names[coord.getChannel()];
+        } catch (NullPointerException nex) {
+            channel_name = channel_name_;
+            reporter.set_report_area(false, false, "\nscript acquisition detected, channel name = "+channel_name);
+        }
 
         // if using Circular MMapQueue, pick a filename
         if(Constants.getFixedMemMap()){
@@ -75,6 +81,7 @@ public class datastoreEventsThread implements Runnable {
 
         mq = new MDSQueue();
         pq = new PathQueue();
+        reporter.set_report_area(false, false, "constructed datastoreEventsThread");
     }
     
     @Override
@@ -112,7 +119,7 @@ public class datastoreEventsThread implements Runnable {
         try {
             return new MDSBuilder().position(coord.getStagePosition()).time(coord.getTime()).z(coord.getZ()).channel(coord.getChannel()).
                     xRange(temp_img.getWidth()).yRange(temp_img.getHeight()).bitDepth(temp_img.getBytesPerPixel() * 8).
-                    prefix(prefix).windowname(window_name).channel_name(channel_names[coord.getChannel()]).
+                    prefix(prefix).windowname(window_name).channel_name(channel_name).
                     filepath(filename).buildMDS();
         } catch(IllegalAccessException ilex){
             reporter.set_report_area(false, false, String.format("Fail to build MDS for c%d, z%d, p%d, t%d, filepath=%s",

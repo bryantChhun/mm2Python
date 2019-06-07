@@ -16,9 +16,11 @@ import mm2python.MPIMethod.Py4J.Py4J;
 import mm2python.mmDataHandler.ramDisk.ramDiskConstructor;
 import mm2python.mmDataHandler.ramDisk.ramDiskDestructor;
 import mm2python.mmDataHandler.ramDisk.tempPathFlush;
+//import mm2python.mmEventHandler.LocalStudio;
 import mm2python.mmEventHandler.globalEvents;
 
 // mm libraries
+import mmcorej.CMMCore;
 import org.micromanager.Studio;
 
 // java libraries
@@ -46,7 +48,7 @@ public class pythonBridgeUI_dialog extends JFrame {
     private JRadioButton arrowRadioButton;
     private JButton clear_ramdisk;
     private JButton create_ramdisk;
-    private JTextField temp_file_path;
+    private JTextField guiTempFilePath;
     private JButton destroy_ramdisk;
     private JScrollPane UI_logger;
     private JLabel selectMessengerInterfaceLabel;
@@ -59,13 +61,14 @@ public class pythonBridgeUI_dialog extends JFrame {
     private JTextPane dynamicWriteToATextPane;
 
     private static Studio mm;
+    private static CMMCore mmc;
     private Py4J gate;
     private globalEvents gevents;
     private final tempPathFlush clearTempPath = new tempPathFlush(mm);
     private static final JFileChooser fc = new JFileChooser();
     private static File defaultTempPath;
 
-    public pythonBridgeUI_dialog(Studio mm_) {
+    public pythonBridgeUI_dialog(Studio mm_, CMMCore mmc_) {
         // mm2python.UI components created in the static constructor below
         setContentPane(contentPane);
         create_python_bridge.addActionListener(e -> create_python_bridgeActionPerformed(e));
@@ -79,33 +82,46 @@ public class pythonBridgeUI_dialog extends JFrame {
         fixedRadioButton.addActionListener(e -> fixedRadioButtonActionPerformed(e));
         dynamicRadioButton.addActionListener(e -> dynamicRadioButtonActionPerformed(e));
 
-        temp_file_path.addMouseListener(new MouseAdapter() {
+        guiTempFilePath.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent me) {
                 temp_file_path_MousePerformed(me);
             }
         });
 
-        nonUIInit(mm_);
+        nonUIInit(mm_, mmc_);
 
+        initTempPath();
+
+        // shutdownhook is broken right now
+        // causes application freeze upon exit
+//        createShutdownHook();
+
+    }
+
+    private void initTempPath() {
         try {
             if (Constants.getOS().equals("win")) {
-                temp_file_path.setText("C:/mmtemp");
-                defaultTempPath = new File(temp_file_path.getText());
+                guiTempFilePath.setText("C:/mmtemp");
+                defaultTempPath = new File(guiTempFilePath.getText());
+                Constants.tempFilePath = defaultTempPath.toString();
                 fc.setCurrentDirectory(defaultTempPath);
             } else if (Constants.getOS().equals("mac")) {
-                temp_file_path.setText("/Volumes/Q/mmtemp/");
-                defaultTempPath = new File(temp_file_path.getText());
+                String path = System.getProperty("user.home") + File.separator + "Documents" + File.separator + "mmtemp";
+                guiTempFilePath.setText(path);
+                defaultTempPath = new File(guiTempFilePath.getText());
+                Constants.tempFilePath = defaultTempPath.toString();
                 fc.setCurrentDirectory(defaultTempPath);
             }
         } catch (OSTypeException ex) {
             reporter.set_report_area(false, false, ex.toString());
         }
-
     }
 
-    private void nonUIInit(Studio mm_) {
+    private void nonUIInit(Studio mm_, CMMCore mmc_) {
         // initialize static values
         mm = mm_;
+        mmc = mmc_;
+//        mm = new LocalStudio().getStudio();
         new reporter(UI_logger_textArea, mm);
         fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
@@ -114,7 +130,7 @@ public class pythonBridgeUI_dialog extends JFrame {
         if (py4JRadioButton.isSelected()) {
             Constants.py4JRadioButton = true;
         }
-        Constants.tempFilePath = temp_file_path.getText();
+        Constants.tempFilePath = guiTempFilePath.getText();
         Constants.bitDepth = mm.getCMMCore().getImageBitDepth();
         Constants.height = mm.getCMMCore().getImageHeight();
         Constants.width = mm.getCMMCore().getImageWidth();
@@ -130,12 +146,24 @@ public class pythonBridgeUI_dialog extends JFrame {
         new CircularFilenameQueue();
     }
 
+    private void createShutdownHook() {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            reporter.set_report_area(false, false, "Shutdown Hook is running !");
+            gate.stopConnection(ABORT);
+            if (!Constants.getFixedMemMap()) {
+                clearTempPath.clearTempPathContents();
+            }
+            gevents.unRegisterGlobalEvents();
+        }
+        ));
+    }
+
     private void temp_file_path_MousePerformed(MouseEvent evt) {
         int returnVal = fc.showOpenDialog(pythonBridgeUI_dialog.this);
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
-            temp_file_path.setText(file.toString());
+            guiTempFilePath.setText(file.toString());
             Constants.tempFilePath = file.toString();
             defaultTempPath = file;
             reporter.set_report_area(false, false, "Temp file path changed to: " + Constants.tempFilePath);
@@ -157,13 +185,20 @@ public class pythonBridgeUI_dialog extends JFrame {
 
     private void start_monitor_global_eventsActionPerformed(ActionEvent evt) {
         reporter.set_report_area("monitoring global events");
+        if (defaultTempPath.exists() || defaultTempPath.mkdirs()) {
+            reporter.set_report_area(false, false, "tempPath created or already exists");
+        } else {
+            reporter.set_report_area(false, false, "WARNING: invalid temp path, no MMap files will be made");
+        }
+
         if (Constants.getFixedMemMap()) {
             try {
-                CircularFilenameQueue.createFilenames(100);
+                CircularFilenameQueue.createFilenames(200);
             } catch (FileNotFoundException fex) {
                 reporter.set_report_area(false, false, "exception creating circular memmaps: " + fex.toString());
             }
         }
+
         if (gevents == null) {
             gevents = new globalEvents(mm);
         }
@@ -216,16 +251,6 @@ public class pythonBridgeUI_dialog extends JFrame {
         }
     }
 
-    public void setData(pythonBridgeUI_dialog data) {
-    }
-
-    public void getData(pythonBridgeUI_dialog data) {
-    }
-
-    public boolean isModified(pythonBridgeUI_dialog data) {
-        return false;
-    }
-
     {
 // GUI initializer generated by IntelliJ IDEA GUI Designer
 // >>> IMPORTANT!! <<<
@@ -252,7 +277,7 @@ public class pythonBridgeUI_dialog extends JFrame {
         Console.add(UI_logger, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         UI_logger_textArea = new JTextArea();
         UI_logger_textArea.setEditable(false);
-        Font UI_logger_textAreaFont = this.$$$getFont$$$(null, -1, 8, UI_logger_textArea.getFont());
+        Font UI_logger_textAreaFont = this.$$$getFont$$$(null, -1, 12, UI_logger_textArea.getFont());
         if (UI_logger_textAreaFont != null) UI_logger_textArea.setFont(UI_logger_textAreaFont);
         UI_logger.setViewportView(UI_logger_textArea);
         create_python_bridge = new JButton();
@@ -328,9 +353,9 @@ public class pythonBridgeUI_dialog extends JFrame {
         create_ramdisk = new JButton();
         create_ramdisk.setText("Create RAM disk");
         DiskManagement.add(create_ramdisk, new GridConstraints(4, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        temp_file_path = new JTextField();
-        temp_file_path.setText("/");
-        DiskManagement.add(temp_file_path, new GridConstraints(1, 1, 3, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        guiTempFilePath = new JTextField();
+        guiTempFilePath.setText("/");
+        DiskManagement.add(guiTempFilePath, new GridConstraints(1, 1, 3, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         final JLabel label3 = new JLabel();
         label3.setText("Tempfile Path");
         DiskManagement.add(label3, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -361,4 +386,15 @@ public class pythonBridgeUI_dialog extends JFrame {
     public JComponent $$$getRootComponent$$$() {
         return contentPane;
     }
+
+//    public void setData(pythonBridgeUI_dialog data) {
+//    }
+//
+//    public void getData(pythonBridgeUI_dialog data) {
+//    }
+
+//    public boolean isModified(pythonBridgeUI_dialog data) {
+//        return false;
+//    }
+
 }

@@ -26,6 +26,7 @@ public class globalEventsThread implements Runnable {
      * @param dw_: DisplayWindow whose construction triggered this class's construction
      */
      globalEventsThread(Studio mm_, DisplayWindow dw_) {
+
         mm = mm_;
         dw = dw_;
         reporter.set_report_area(true, false, "global events thread filename = "+Constants.tempFilePath);

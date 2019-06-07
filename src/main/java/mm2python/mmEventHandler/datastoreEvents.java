@@ -19,6 +19,8 @@ import java.util.concurrent.ExecutorService;
 import mm2python.mmEventHandler.Executor.main_executor;
 import org.micromanager.acquisition.SequenceSettings;
 
+import java.io.StringWriter;
+import java.io.PrintWriter;
 
 /**
  * Class that subscribes to datastore events
@@ -34,6 +36,8 @@ public class datastoreEvents {
 
     datastoreEvents(Studio mm_, Datastore data_, String window_name_) {
         mm = mm_;
+//        LocalStudio ls = new LocalStudio(mm_);
+//        mm = ls.getStudio();
         data = data_;
         window_name = window_name_;
         mmExecutor = new main_executor().getExecutor();
@@ -62,7 +66,16 @@ public class datastoreEvents {
                 Iterable<Coords> itercoords = data.getUnorderedImageCoords();
                 for (Coords c: itercoords) {
                     reporter.set_report_area(false, false, "datastoreEvent: existing images in datastore before window rendered: "+c.toString());
-                    mmExecutor.execute(new datastoreEventsThread(mm, data, c, window_name) );
+                    try {
+                        mmExecutor.execute(new datastoreEventsThread(data,
+                                c,
+                                mm.getCMMCore().getCurrentConfig("Channel"),
+                                mm.acquisitions().getAcquisitionSettings().prefix,
+                                window_name)
+                        );
+                    } catch (Exception ex) {
+                        System.out.println(ex.toString());
+                    }
                 }
             }
         }
@@ -91,14 +104,32 @@ public class datastoreEvents {
     @Subscribe
     public void monitor_NewImageEvent(NewImageEvent event){
         try {
-
             reporter.set_report_area(false, false, "\nNewImageEvent event detected");
-            mmExecutor.execute(new datastoreEventsThread(mm, event.getDatastore(), event.getCoords(), window_name));
+            reporter.set_report_area(false, false, "\nevent : \t"+event.toString());
+            reporter.set_report_area(false, false, "event Image  : \t" +event.getImage().toString());
+            reporter.set_report_area(false, false, "event datastore : \t"+event.getDatastore().toString());
+            reporter.set_report_area(false, false, "event coords : \t"+event.getCoords().toString());
+            reporter.set_report_area(false, false, "window name : \t"+window_name);
+//            reporter.set_report_area(false, false, "event Image in Datastore at coords : \t"+event.getDatastore().getImage(event.getCoords()).toString());
+
+//            mmExecutor.execute(new datastoreEventsThread(mm, event.getDatastore(), event.getCoords(), window_name));
+            mmExecutor.execute(new datastoreEventsThread(event.getDatastore(),
+                    event.getCoords(),
+                    mm.getCMMCore().getCurrentConfig("Channel"),
+                    mm.acquisitions().getAcquisitionSettings().prefix,
+                    window_name)
+            );
 
         } catch (NullPointerException ex) {
-            reporter.set_report_area(true, false, "null ptr exception in newImageeventMonitor");
+            reporter.set_report_area(false, false, "null ptr exception in newImageeventMonitor");
+
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            ex.printStackTrace(pw);
+
+            reporter.set_report_area(false, false, "\n"+sw.toString());
         } catch (Exception ex) {
-            reporter.set_report_area(true, false, "new image event exception = "+ex);
+            reporter.set_report_area(false, false, "new image event exception = "+ex);
         }
     }
     

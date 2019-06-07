@@ -22,13 +22,6 @@ import org.micromanager.display.DisplayManager;
  *
  * @author bryant.chhun
  */
-//public class serializedImage {
-//    
-//}
-
-//import java.io.Serializable;
-//import org.scijava.util.ArrayUtils;
-//import org.apache.commons.lang.ArrayUtils;
 
 
 /**
