@@ -49,7 +49,7 @@ For most users, you will simply use default values.  Then the only need is to cl
 
 > 3) to access data using mm2python:
 > ``` buildoutcfg
-> path_to_data = gate.getLastMeta()
+> meta = gate.getLastMeta()
 > dat = np.memmap(meta.getFilepath(), 
 >                 dtype="uint16", 
 >                 mode='r+', offset=0,
@@ -57,6 +57,9 @@ For most users, you will simply use default values.  Then the only need is to cl
 > ```
 > "dat" is an ndarray-like object that can be used interchangeably with numpy arrays.
 
+# about
+> clicking "START monitor" causes mm2python to register for some global and datastore events (https://micro-manager.org/wiki/Version_2.0_API_Events)
+> 
 
 # License
 Chan Zuckerberg Biohub Software License
