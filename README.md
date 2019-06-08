@@ -2,10 +2,61 @@
 micro-manager 2.0 plugin that enables python control using Py4j remote procedure calls and IPC data transfer using memory mapped files
 
 # dependencies
+mm2python is a plugin for the open-source microscopy control project Micro-Manager (https://micro-manager.org/) (https://github.com/micro-manager/micro-manager)
+Please download and install version 2.0 from that site.
+
+mm2python depends on the Py4j project (https://www.py4j.org/).  It is included as a dependency in the gradle build
 
 # getting started
+For micro-manager users:
+> copy the mm2python .jar file from build/libs folder to your micro-manager plugin directory.
+> The next time you start micro-manager, it should be selectable from the menu.
+
+For developers:
+> mm2python uses the gradle build system to manage tests, dependencies and build.
+>
+> Additionally, it was developed in IntelliJ and includes .idea files to help manage debugging configurations.
+> The package .jar can be built by running the "Jar" configuration.  Then that .jar can be copied to your micro-manager directory by running "copyCoreToMM" configuration.
+> Finally, you can launch the external micro-manager program from within IntelliJ (normally or in debug mode) by running the "Run_external_MM" configuration
+
 
 # how to use
+mm2python has a simple UI with three tabs:
+> 1) Main Pane:  Contains a console to display events.  Initiate the bridge to python (using py4j) by clicking the "create python bridge" button.  Initiate the event monitor to track data generation by clicking the "START monitor" button
+
+> 2) Configuration:  Currently, there is only one implemented messenger interface: Py4j.  You can select one of two temp-file management systems: fixed or dynamic.
+
+> 3) Disk Management:  Define the path to temp folder to store memory mapped files.  While not necessary, you can also create a RAM disk to reserve a portion of system ram for temp file placement.  On Windows systems, this requires you have installed the imdisk program.  After RAM disk creation, you will need to format that drive.
+
+For most users, you will simply use default values.  Then the only need is to click "Create Python Bridge" and "START monitor"
+
+> #### accessing the data from python
+> 1. install py4j by using pip or anaconda: 
+> ``` buidoutcfg
+> conda install py4j
+> pip install py4j
+> ```
+
+> 2. type the following:
+> ``` buildoutcfg
+> from py4j.java_gateway import JavaGateway, GatewayParameters
+> gateway = JavaGateway(gateway_parameters=GatewayParameters(auto_field=True))
+> gate = gateway.entry_point
+> mmc = gate.getCMMCore()
+> mm = gate.getStudio()
+> ```
+> this will give you access to all micromanager core and studio functions.
+
+> 3) to access data using mm2python:
+> ``` buildoutcfg
+> path_to_data = gate.getLastMeta()
+> dat = np.memmap(meta.getFilepath(), 
+>                 dtype="uint16", 
+>                 mode='r+', offset=0,
+>                 shape=(meta.getxRange(), meta.getyRange()))
+> ```
+> "dat" is an ndarray-like object that can be used interchangeably with numpy arrays.
+
 
 # License
 Chan Zuckerberg Biohub Software License
