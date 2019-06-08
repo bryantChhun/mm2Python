@@ -18,7 +18,9 @@ For developers:
 > Additionally, it was developed in IntelliJ and includes .idea files to help manage debugging configurations.
 > The package .jar can be built by running the "Jar" configuration.  Then that .jar can be copied to your micro-manager directory by running "copyCoreToMM" configuration.
 > Finally, you can launch the external micro-manager program from within IntelliJ (normally or in debug mode) by running the "Run_external_MM" configuration
-
+> 
+> To develop, you must have a recent installation of micro-manager 2.0 on your computer.  Modify the build.gradle file so that the "core_plugin_path" and "app_path" reflect your installation's plugin folder and root folder, respectively.
+>
 
 # how to use
 mm2python has a simple UI with three tabs:
@@ -31,13 +33,62 @@ mm2python has a simple UI with three tabs:
 For most users, you will simply use default values.  Then the only need is to click "Create Python Bridge" and "START monitor"
 
 > #### accessing the data from python
-> 1. install py4j by using pip or anaconda: 
+> 1 - install py4j by using pip or anaconda: 
 > ``` buidoutcfg
 > conda install py4j
 > pip install py4j
 > ```
+> 
+> 2 - type the following:
+> ``` buildoutcfg
+> from py4j.java_gateway import JavaGateway, GatewayParameters
+> gateway = JavaGateway(gateway_parameters=GatewayParameters(auto_field=True))
+> gate = gateway.entry_point
+> ```
+>
+> 3 - to access data using mm2python (method 1):
+> ``` buildoutcfg
+> # if you want the newest data
+> meta = gate.getLastMeta()
+>
+> # if you want the oldest data
+> meta = gate.getFirstMeta()
+> 
+> dat = np.memmap(meta.getFilepath(), 
+>                 dtype="uint16", 
+>                 mode='r+', offset=0,
+>                 shape=(meta.getxRange(), meta.getyRange()))
+> ```
+> "dat" is an ndarray-like object that can be used interchangeably with numpy arrays.
+>
+> 4 - to access data using mm2python (method 2):
+> ``` buildoutcfg
+> # to retrieve any data based on coordinates, or subset of coordinates, use the builder
+> paramBuilder = gate.getParameterBuilder()
+> 
+> # create coordinate with time=5, position=10, channel=0
+> coordinate = paramBuilder.time(5).position(10).channel(0).buildMDSParams()
+> 
+> # get all MetaDataStores matching those coordinates (even if an unspecified coordinate differs)
+> list_of_meta = gate.getMetaByParameters(coordinate)
+> 
+> list_of_mmap_paths = [item.getFilepath() for item in list_of_meta]
+> ```
+> If the above acquisition contained time, position, channel and slices, "list_of_meta" would be a list of all slices at those time, position, channel coordinates.
+>
+> 5 - access specific meta information:
+> ``` buildoutcfg
+> # once you have a MetaDataStore object you can retrieve standard z, p, t, c coordinates with:
+> meta.getZ(), meta.getPosition(), meta.getTime(), meta.getChannel()
+> 
+> # additionally, the image's maximum X, Y, and bitdepth are available:
+> meta.getxRange(), meta.getyRange(), meta.getBitDepth()
+>
+> # finally, if defined at acquisition, the image's ChannelName, autosave prefix, windowname, and mmap file name are accessible:
+> meta.getChannelName(), meta.getPrefix(), meta.getWindowName(), meta.getFilepath()
 
-> 2. type the following:
+> #### controlling micro-manager from python
+> Install py4j like above, then include this code:
 > ``` buildoutcfg
 > from py4j.java_gateway import JavaGateway, GatewayParameters
 > gateway = JavaGateway(gateway_parameters=GatewayParameters(auto_field=True))
@@ -45,21 +96,22 @@ For most users, you will simply use default values.  Then the only need is to cl
 > mmc = gate.getCMMCore()
 > mm = gate.getStudio()
 > ```
-> this will give you access to all micromanager core and studio functions.
-
-> 3) to access data using mm2python:
-> ``` buildoutcfg
-> meta = gate.getLastMeta()
-> dat = np.memmap(meta.getFilepath(), 
->                 dtype="uint16", 
->                 mode='r+', offset=0,
->                 shape=(meta.getxRange(), meta.getyRange()))
-> ```
-> "dat" is an ndarray-like object that can be used interchangeably with numpy arrays.
+> This gives you access to all micromanager core and studio methods 
+>
+> https://valelab4.ucsf.edu/~MM/doc-2.0.0-beta/mmcorej/mmcorej/CMMCore.html
+>
+> https://valelab4.ucsf.edu/~MM/doc-2.0.0-beta/mmstudio/org/micromanager/Studio.html
+>
+> Be careful to use appropriate types when passing values.  Most micro-manager methods require float.
 
 # about
-> clicking "START monitor" causes mm2python to register for some global and datastore events (https://micro-manager.org/wiki/Version_2.0_API_Events)
-> 
+> clicking "START monitor" causes mm2python to register for some global and datastore events (https://micro-manager.org/wiki/Version_2.0_API_Events).
+> Every time a "New Image Event" occurs, mm2python pulls a new thread to:
+> 1) create a MetaDataStore object that contains coordinate and additional information.
+> 2) write a memory mapped file, representing this data's location in system memory, to disk.
+> 3) write the MetaDataStore object in 1 to a concurrent hashmap and to a concurrent linked deque
+>
+> Methods to retrieve this MetaDataStore information are available through the parameter builder, or through convenience methods in the gateway.entry_point
 
 # License
 Chan Zuckerberg Biohub Software License
