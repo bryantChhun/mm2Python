@@ -20,12 +20,11 @@ public class MDSQueueTests {
         mdsq = new MDSQueue();
     }
 
-    private MDSQueue buildQueue(int entries) throws IllegalAccessException {
+    private void buildQueue(int entries) throws IllegalAccessException {
         for(int i=0; i< entries; i++) {
             mds = new MDSBuilder().time(i).buildMDS();
             mdsq.putMDS(mds);
         }
-        return mdsq;
     }
 
     private void clearMDSQueue() {

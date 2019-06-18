@@ -36,12 +36,10 @@ public class datastoreEvents {
 
     datastoreEvents(Studio mm_, Datastore data_, String window_name_) {
         mm = mm_;
-//        LocalStudio ls = new LocalStudio(mm_);
-//        mm = ls.getStudio();
         data = data_;
         window_name = window_name_;
         mmExecutor = new main_executor().getExecutor();
-        reporter.set_report_area(true, true, String.format("window %s registered", window_name));
+        reporter.set_report_area(true, true, false, String.format("window %s registered", window_name));
     }
     
     void registerThisDatastore(){
@@ -54,45 +52,46 @@ public class datastoreEvents {
         }
 
         // if not snap/live view, write data that exists before window is drawn
-        if(!window_name.equals("Snap/Live View")) {
-            data.registerForEvents(this);
-            reporter.set_report_area(true, true, "datastoreEvent: registered this SNAPLIVE datastore, prefix: "+data.toString()+" "+prefix_);
+//        if(window_name.equals("Snap/Live View")) {
+//            data.registerForEvents(this);
+//            reporter.set_report_area(true, true, false, "datastoreEvent: registered this SNAPLIVE datastore, prefix: "+data.toString()+" "+prefix_);
+//
+//        } else {
+        data.registerForEvents(this);
+        reporter.set_report_area(true, true, false, "datastoreEvent: registered this MDA datastore, prefix: "+data.toString()+" "+prefix_);
 
-        } else {
-            data.registerForEvents(this);
-            reporter.set_report_area(true, true, "datastoreEvent: registered this MDA datastore, prefix: "+data.toString()+" "+prefix_);
-            // writes any data existing in window before draw.
-            if(data.getNumImages() > 0){
-                Iterable<Coords> itercoords = data.getUnorderedImageCoords();
-                for (Coords c: itercoords) {
-                    reporter.set_report_area(false, false, "datastoreEvent: existing images in datastore before window rendered: "+c.toString());
-                    try {
-                        mmExecutor.execute(new datastoreEventsThread(data,
-                                c,
-                                mm.getCMMCore().getCurrentConfig("Channel"),
-                                mm.acquisitions().getAcquisitionSettings().prefix,
-                                window_name)
-                        );
-                    } catch (Exception ex) {
-                        System.out.println(ex.toString());
-                    }
+        // writes any data existing in window before draw.
+        if(data.getNumImages() > 0){
+            Iterable<Coords> itercoords = data.getUnorderedImageCoords();
+            for (Coords c: itercoords) {
+                reporter.set_report_area(true, true, true,  "datastoreEvent: existing images in datastore before window rendered: "+c.toString());
+                try {
+                    mmExecutor.execute(new datastoreEventsThread(data,
+                            c,
+                            mm.getCMMCore().getCurrentConfig("Channel"),
+                            mm.acquisitions().getAcquisitionSettings().prefix,
+                            window_name)
+                    );
+                } catch (Exception ex) {
+                    System.out.println(ex.toString());
                 }
             }
         }
+//        }
         
     }
     
     @Subscribe
     public void monitor_DatastoreFrozenEvent(DatastoreFrozenEvent event) {
-        reporter.set_report_area(true, false, "DatastoreFrozen event");
-        reporter.set_report_area(true, false, "num images in this datastore = "+data.getNumImages());
+        reporter.set_report_area(true, false, false, "DatastoreFrozen event");
+        reporter.set_report_area(true, false, false, "num images in this datastore = "+data.getNumImages());
         data.unregisterForEvents(this);
     }
     
     @Subscribe
     public void monitor_DatastoreSavePathEvent(DatastoreSavePathEvent event) {
-        reporter.set_report_area(true, false, "Datastore save path event");
-        reporter.set_report_area(true, false, "num images in this datastore = "+data.getNumImages());
+        reporter.set_report_area(true, false, false, "Datastore save path event");
+        reporter.set_report_area(true, false, false, "num images in this datastore = "+data.getNumImages());
         data.unregisterForEvents(this);
     }
 
@@ -104,13 +103,13 @@ public class datastoreEvents {
     @Subscribe
     public void monitor_NewImageEvent(NewImageEvent event){
         try {
-            reporter.set_report_area(false, false, "\nNewImageEvent event detected");
-            reporter.set_report_area(false, false, "\nevent : \t"+event.toString());
-            reporter.set_report_area(false, false, "event Image  : \t" +event.getImage().toString());
-            reporter.set_report_area(false, false, "event datastore : \t"+event.getDatastore().toString());
-            reporter.set_report_area(false, false, "event coords : \t"+event.getCoords().toString());
-            reporter.set_report_area(false, false, "window name : \t"+window_name);
-//            reporter.set_report_area(false, false, "event Image in Datastore at coords : \t"+event.getDatastore().getImage(event.getCoords()).toString());
+            reporter.set_report_area(true, true, true,"\nNewImageEvent event detected");
+            reporter.set_report_area(true, true, true,"\nevent : \t"+event.toString());
+            reporter.set_report_area(true, true, true,"event Image  : \t" +event.getImage().toString());
+            reporter.set_report_area(true, true, true,"event datastore : \t"+event.getDatastore().toString());
+            reporter.set_report_area(true, true, true,"event coords : \t"+event.getCoords().toString());
+            reporter.set_report_area(true, true, true,"window name : \t"+window_name);
+//            reporter.set_report_area(true, true, true,"event Image in Datastore at coords : \t"+event.getDatastore().getImage(event.getCoords()).toString());
 
 //            mmExecutor.execute(new datastoreEventsThread(mm, event.getDatastore(), event.getCoords(), window_name));
             mmExecutor.execute(new datastoreEventsThread(event.getDatastore(),
@@ -121,15 +120,15 @@ public class datastoreEvents {
             );
 
         } catch (NullPointerException ex) {
-            reporter.set_report_area(false, false, "null ptr exception in newImageeventMonitor");
+            reporter.set_report_area(true, true, true,"null ptr exception in newImageeventMonitor");
 
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
             ex.printStackTrace(pw);
 
-            reporter.set_report_area(false, false, "\n"+sw.toString());
+            reporter.set_report_area(true, true, true,"\n"+sw.toString());
         } catch (Exception ex) {
-            reporter.set_report_area(false, false, "new image event exception = "+ex);
+            reporter.set_report_area(true, true, true,"new image event exception = "+ex);
         }
     }
     

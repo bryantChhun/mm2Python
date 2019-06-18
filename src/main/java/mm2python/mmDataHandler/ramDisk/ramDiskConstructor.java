@@ -34,7 +34,7 @@ public class ramDiskConstructor {
          * establish commands needed to create RAMDISK based on that OS
          */
         if (OS.indexOf("win") >= 0) {
-            reporter.set_report_area(true, false, "Windows system detected");
+            reporter.set_report_area(true, false, false, "Windows system detected");
             reporter.set_report_area("Windows system detected, be sure imdisk is installed");
             JOptionPane.showMessageDialog(panel, "Windows system detected, \n" +
                     "Please be sure imdisk is installed\n" +
@@ -44,14 +44,14 @@ public class ramDiskConstructor {
 //            command2 = "mkdir JavaPlugin_temp_folder";
 
         } else if (OS.indexOf("mac") >= 0) {
-            reporter.set_report_area(true, false, "Mac system detected, creating 4gb RAM disk at 'RAM_Disk'");
+            reporter.set_report_area(true, false, false, "Mac system detected, creating 4gb RAM disk at 'RAM_Disk'");
             reporter.set_report_area("Mac system detected, creating 4gb RAM disk at 'RAM_Disk'");
 
             command = String.format("diskutil erasevolume HFS+ '%s' `hdiutil attach -nomount ram://8388608`", "RAM_disk");
 //            command2 = "mkdir /Volumes/RAM_disk";
 
         } else if (OS.indexOf("nix") >= 0) {
-            reporter.set_report_area(true, false, "Unix or Linux system detected");
+            reporter.set_report_area(true, false, false, "Unix or Linux system detected");
             reporter.set_report_area("RAMdisk for unix system not supported");
             JOptionPane.showMessageDialog(panel, "Current OS does not support Ram disk, or imdisk is not installed");
 
@@ -59,7 +59,7 @@ public class ramDiskConstructor {
 //            command2 = "";
 
         } else {
-            reporter.set_report_area(true, false, "Current OS is not supported");
+            reporter.set_report_area(true, false, false, "Current OS is not supported");
             reporter.set_report_area("current OS is not supported");
             JOptionPane.showMessageDialog(panel, "Current OS does not support Ram disk, or imdisk is not installed");
 
@@ -69,8 +69,8 @@ public class ramDiskConstructor {
         }
 
         try {
-            reporter.set_report_area(true, false, "creating RAM disk using command: ");
-            reporter.set_report_area(true, false, command);
+            reporter.set_report_area(true, false, false, "creating RAM disk using command: ");
+            reporter.set_report_area(true, false, false, command);
             if (OS.indexOf("mac") >= 0) {
                 // because making ramdisk requires parsing used by shell.  We must use String[] object
                 reporter.set_report_area("(mac): Creating Ramdisk as drive Q");

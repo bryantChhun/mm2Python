@@ -4,8 +4,9 @@ import mm2python.DataStructures.MetaDataStore;
 
 /**
  * Builder base
- *  Build parameters needed for either MDS construction or
- *  for searching MDS by parameters
+ *  Build parameters needed for either
+ *      BuildMDS or
+ *      BuildMDSParams (for searching MDS by parameters)
  */
 abstract public class MDSBuilderBase {
 

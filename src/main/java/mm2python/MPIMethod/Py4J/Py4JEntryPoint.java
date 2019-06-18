@@ -23,7 +23,7 @@ import java.util.ArrayList;
  * 
  * @author bryant.chhun
  */
-public class Py4jEntryPoint implements DataMapInterface, DataPathInterface {
+public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
     private static Studio mm;
     private static CMMCore mmc;
     private static Py4JListener listener;
@@ -32,7 +32,7 @@ public class Py4jEntryPoint implements DataMapInterface, DataPathInterface {
      * 
      * @param mm_: the parent studio object.
      */
-    Py4jEntryPoint(Studio mm_){
+    Py4JEntryPoint(Studio mm_){
         mm = mm_;
         mmc = mm_.getCMMCore();
         listener = new Py4JListener();

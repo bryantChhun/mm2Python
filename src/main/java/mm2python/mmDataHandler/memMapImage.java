@@ -56,7 +56,7 @@ public class memMapImage {
             buffer.put(byteimg);
             buffer.force();
         } catch (Exception ex) {
-            reporter.set_report_area(false, false, "exception while writing memmap :"+ex.toString());
+            reporter.set_report_area(true, true, true, "exception while writing memmap :"+ex.toString());
         }
 
     }

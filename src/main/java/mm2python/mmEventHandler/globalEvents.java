@@ -39,7 +39,7 @@ public class globalEvents {
         mm = mm_;
 
         this.registerGlobalEvents();
-        reporter.set_report_area(true, false, "global events filename = "+Constants.tempFilePath);
+        reporter.set_report_area(true, false, false, "global events filename = "+Constants.tempFilePath);
     }
 
     /**
@@ -53,7 +53,7 @@ public class globalEvents {
      * Unregister this class for notificaitons from micro-manager
      */
     public void unRegisterGlobalEvents() {
-        reporter.set_report_area(true, false,"shutting down event monitoring and clearing dequeue references");
+        reporter.set_report_area(true, false, false,"shutting down event monitoring and clearing dequeue references");
         reporter.set_report_area("shutting down event monitoring and clearing dequeue references");
         mm.events().unregisterForEvents(this);
     }
@@ -67,7 +67,7 @@ public class globalEvents {
      */
     @Subscribe
     public void monitor_aboutToShow(DisplayAboutToShowEvent event) {
-        reporter.set_report_area(false, false, "\n");
+        reporter.set_report_area(true, true, true, "\n");
         reporter.set_report_area("DisplayAboutToShowEvent event detected");
 
         mmExecutor.execute(new globalEventsThread(mm, event.getDisplay()));

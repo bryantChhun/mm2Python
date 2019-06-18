@@ -18,6 +18,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 /**
  * DataStructure to manage a circular queue of filenames
  *  filenames represent memory mapped files based on camera parameters
+ * Used by "fixed memmap mode" so that only a limited number of memmaps are created.
  *
  */
 public class CircularFilenameQueue {

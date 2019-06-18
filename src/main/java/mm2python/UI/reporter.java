@@ -31,6 +31,20 @@ public class reporter {
         }
     }
 
+    public static void set_report_area(boolean systemout, boolean mmlogs, boolean console, String report) {
+        if (systemout) {
+            System.out.println(report);
+        }
+        if (mmlogs) {
+            mm.logs().logMessage(report);
+        }
+        if (console) {
+            String newline = "\n";
+            reportArea.append(newline+report);
+            reportArea.setCaretPosition(reportArea.getDocument().getLength());
+        }
+    }
+
     /**
      * Basic reporter to ONLY JTextArea
      * @param report String message

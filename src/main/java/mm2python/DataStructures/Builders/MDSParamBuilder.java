@@ -32,31 +32,29 @@ public class MDSParamBuilder extends MDSBuilderBase {
             params.add(new MDSParamObject("CHANNEL", channel));
         }
 
-
         if(channel_name!=null) {
             params.add(new MDSParamObject("CHANNELNAME", channel_name));
         }
 
-//      Do not allow parameter search on these values, for now
-//        if(xRange!=null) {
-//            params.add(new MDSParamObject("XRANGE", xRange));
-//        }
-//        if(yRange!=null) {
-//            params.add(new MDSParamObject("YRANGE", yRange));
-//        }
-//        if(bitDepth!=null) {
-//            params.add(new MDSParamObject("BITDEPTH", bitDepth));
-//        }
-//
-//        if(prefix!=null) {
-//            params.add(new MDSParamObject("PREFIX", prefix));
-//        }
-//        if(windowname!=null) {
-//            params.add(new MDSParamObject("WINDOWNAME", windowname));
-//        }
-//        if(filepath!=null) {
-//            params.add(new MDSParamObject("FILEPATH", filepath));
-//        }
+        if(xRange!=null) {
+            params.add(new MDSParamObject("XRANGE", xRange));
+        }
+        if(yRange!=null) {
+            params.add(new MDSParamObject("YRANGE", yRange));
+        }
+        if(bitDepth!=null) {
+            params.add(new MDSParamObject("BITDEPTH", bitDepth));
+        }
+
+        if(prefix!=null) {
+            params.add(new MDSParamObject("PREFIX", prefix));
+        }
+        if(windowname!=null) {
+            params.add(new MDSParamObject("WINDOWNAME", windowname));
+        }
+        if(filepath!=null) {
+            params.add(new MDSParamObject("FILEPATH", filepath));
+        }
 
         return new MDSParameters(params);
     }

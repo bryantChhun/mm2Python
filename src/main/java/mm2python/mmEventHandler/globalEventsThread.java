@@ -29,7 +29,7 @@ public class globalEventsThread implements Runnable {
 
         mm = mm_;
         dw = dw_;
-        reporter.set_report_area(true, false, "global events thread filename = "+Constants.tempFilePath);
+        reporter.set_report_area(true, false, false, "global events thread filename = "+Constants.tempFilePath);
     }
 
     /**
@@ -39,7 +39,7 @@ public class globalEventsThread implements Runnable {
     public void run() {
         // Currently, displayEvents are not used.
 
-        reporter.set_report_area(true, true, "registering datastore: "+dw.getName());
+        reporter.set_report_area(true, true, false, "registering datastore: "+dw.getName());
 
         datastoreEvents datastore_events = new datastoreEvents(mm, dw.getDatastore(), dw.getName());
         datastore_events.registerThisDatastore();

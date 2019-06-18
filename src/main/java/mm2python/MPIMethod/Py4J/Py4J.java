@@ -30,32 +30,32 @@ public class Py4J implements messengerInterface {
 
     @Override
     public void startConnection(int port) {
-        gatewayServer = new GatewayServer(new Py4jEntryPoint(mm), port);
+        gatewayServer = new GatewayServer(new Py4JEntryPoint(mm), port);
         gatewayServer.start();
 
-        reporter.set_report_area(false, false, "Gateway Started at IP:port = "+gatewayServer.getAddress()+":"+gatewayServer.getPort());
+        reporter.set_report_area(true, true, true,"Gateway Started at IP:port = "+gatewayServer.getAddress()+":"+gatewayServer.getPort());
     }
     
     @Override
     public void startConnection() {
-        gatewayServer = new GatewayServer(new Py4jEntryPoint(mm));
+        gatewayServer = new GatewayServer(new Py4JEntryPoint(mm));
         gatewayServer.start();
         int port = gatewayServer.getPort();
         Constants.ports.add(port);
-        reporter.set_report_area(false, false, "Gateway Started at IP:port = "+gatewayServer.getAddress()+":"+gatewayServer.getPort());
+        reporter.set_report_area(true, true, true,"Gateway Started at IP:port = "+gatewayServer.getAddress()+":"+gatewayServer.getPort());
     }
     
     @Override
     public void stopConnection(int port) {
         gatewayServer.shutdown();
-        reporter.set_report_area(false, false, String.format("Gateway at port %04d shut down", port));
+        reporter.set_report_area(true, true, true, String.format("Gateway at port %04d shut down", port));
     }
     
     @Override
     public void stopConnection() {
         Constants.ports.stream().forEach((port) -> {
             gatewayServer.shutdown();
-            reporter.set_report_area(false, false, String.format("Gateway at port %04d shut down", port));
+            reporter.set_report_area(true, true, true, String.format("Gateway at port %04d shut down", port));
         });
 
     }

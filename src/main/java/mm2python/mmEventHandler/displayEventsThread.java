@@ -57,7 +57,7 @@ public class displayEventsThread implements Runnable {
 //                reporter.set_report_area(true, false, "num_windows not incremented yet");
 //            }
 //        }
-        reporter.set_report_area(false, false, "displayevents not supported");
+        reporter.set_report_area(true, true, true, "displayevents not supported");
     }
     
 }

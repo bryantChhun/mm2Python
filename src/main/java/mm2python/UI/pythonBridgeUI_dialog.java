@@ -113,7 +113,7 @@ public class pythonBridgeUI_dialog extends JFrame {
                 fc.setCurrentDirectory(defaultTempPath);
             }
         } catch (OSTypeException ex) {
-            reporter.set_report_area(false, false, ex.toString());
+            reporter.set_report_area(true, true, true, ex.toString());
         }
     }
 
@@ -135,7 +135,7 @@ public class pythonBridgeUI_dialog extends JFrame {
         Constants.height = mm.getCMMCore().getImageHeight();
         Constants.width = mm.getCMMCore().getImageWidth();
         Constants.fixedMemMap = true;
-        reporter.set_report_area(true, false, "mm2python.UI INITIALIZATION filename = " + Constants.tempFilePath);
+        reporter.set_report_area(true, false, false, "mm2python.UI INITIALIZATION filename = " + Constants.tempFilePath);
 
         // initialize MetaDataStore Map
         new MDSMap();
@@ -148,7 +148,7 @@ public class pythonBridgeUI_dialog extends JFrame {
 
     private void createShutdownHook() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            reporter.set_report_area(false, false, "Shutdown Hook is running !");
+            reporter.set_report_area(true, true, true, "Shutdown Hook is running !");
             gate.stopConnection(ABORT);
             if (!Constants.getFixedMemMap()) {
                 clearTempPath.clearTempPathContents();
@@ -166,9 +166,9 @@ public class pythonBridgeUI_dialog extends JFrame {
             guiTempFilePath.setText(file.toString());
             Constants.tempFilePath = file.toString();
             defaultTempPath = file;
-            reporter.set_report_area(false, false, "Temp file path changed to: " + Constants.tempFilePath);
+            reporter.set_report_area(true, true, true, "Temp file path changed to: " + Constants.tempFilePath);
         } else {
-            reporter.set_report_area(false, false, "unable to set new path for temp file");
+            reporter.set_report_area(true, true, true, "unable to set new path for temp file");
         }
     }
 
@@ -186,16 +186,16 @@ public class pythonBridgeUI_dialog extends JFrame {
     private void start_monitor_global_eventsActionPerformed(ActionEvent evt) {
         reporter.set_report_area("monitoring global events");
         if (defaultTempPath.exists() || defaultTempPath.mkdirs()) {
-            reporter.set_report_area(false, false, "tempPath created or already exists");
+            reporter.set_report_area(true, true, true, "tempPath created or already exists");
         } else {
-            reporter.set_report_area(false, false, "WARNING: invalid temp path, no MMap files will be made");
+            reporter.set_report_area(true, true, true, "WARNING: invalid temp path, no MMap files will be made");
         }
 
         if (Constants.getFixedMemMap()) {
             try {
                 CircularFilenameQueue.createFilenames(200);
             } catch (FileNotFoundException fex) {
-                reporter.set_report_area(false, false, "exception creating circular memmaps: " + fex.toString());
+                reporter.set_report_area(true, true, true, "exception creating circular memmaps: " + fex.toString());
             }
         }
 
@@ -205,11 +205,13 @@ public class pythonBridgeUI_dialog extends JFrame {
     }
 
     private void stop_monitor_global_eventsActionPerformed(ActionEvent evt) {
-        reporter.set_report_area("STOP monitoring global events, clearing data store references");
         if (!Constants.getFixedMemMap()) {
             clearTempPath.clearTempPathContents();
         }
         gevents.unRegisterGlobalEvents();
+        gevents = null;
+        UI_logger_textArea.setText("");
+        reporter.set_report_area("STOP monitoring global events, clearing data store references");
 
     }
 
@@ -305,7 +307,7 @@ public class pythonBridgeUI_dialog extends JFrame {
         kafkaRadioButton = new JRadioButton();
         kafkaRadioButton.setEnabled(false);
         kafkaRadioButton.setText("Kafka");
-        Configuration.add(kafkaRadioButton, new GridConstraints(3, 0, 1, 3, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        Configuration.add(kafkaRadioButton, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         openMQRadioButton = new JRadioButton();
         openMQRadioButton.setEnabled(false);
         openMQRadioButton.setText("openMQ");
@@ -387,7 +389,7 @@ public class pythonBridgeUI_dialog extends JFrame {
         return contentPane;
     }
 
-//    public void setData(pythonBridgeUI_dialog data) {
+    //    public void setData(pythonBridgeUI_dialog data) {
 //    }
 //
 //    public void getData(pythonBridgeUI_dialog data) {

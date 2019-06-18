@@ -65,7 +65,7 @@ public class datastoreEventsThread implements Runnable {
             channel_name = channel_names[coord.getChannel()];
         } catch (NullPointerException nex) {
             channel_name = channel_name_;
-            reporter.set_report_area(false, false, "\nscript acquisition detected, channel name = "+channel_name);
+            reporter.set_report_area(true, true, true,"\nscript acquisition detected, channel name = "+channel_name);
         }
 
         // if using Circular MMapQueue, pick a filename
@@ -81,7 +81,7 @@ public class datastoreEventsThread implements Runnable {
 
         mq = new MDSQueue();
         pq = new PathQueue();
-        reporter.set_report_area(false, false, "constructed datastoreEventsThread");
+        reporter.set_report_area(true, true, true,"constructed datastoreEventsThread");
     }
     
     @Override
@@ -106,11 +106,11 @@ public class datastoreEventsThread implements Runnable {
         //Check for live vs MDA image, assign a filename
         if(window_name.equals("Snap/Live View")) {
             filename = Constants.tempFilePath +"/Snap-Live-Stream.dat";
-            reporter.set_report_area(false, false, "datastoreEventsThread: SNAPLIVE = "+filename);
+            reporter.set_report_area(true, true, true,"datastoreEventsThread: SNAPLIVE = "+filename);
         } else {
             filename = String.format(Constants.tempFilePath +"/%s_t%03d_p%03d_z%02d_c%02d.dat",
                     prefix, coord.getTime(), coord.getStagePosition(), coord.getZ(), coord.getChannel());
-            reporter.set_report_area(false, false, "datastoreEventsThread MDA = "+filename);
+            reporter.set_report_area(true, true, true,"datastoreEventsThread MDA = "+filename);
         }
         return filename;
     }
@@ -122,7 +122,7 @@ public class datastoreEventsThread implements Runnable {
                     prefix(prefix).windowname(window_name).channel_name(channel_name).
                     filepath(filename).buildMDS();
         } catch(IllegalAccessException ilex){
-            reporter.set_report_area(false, false, String.format("Fail to build MDS for c%d, z%d, p%d, t%d, filepath=%s",
+            reporter.set_report_area(true, true, true,String.format("Fail to build MDS for c%d, z%d, p%d, t%d, filepath=%s",
                     coord.getChannel(), coord.getZ(), coord.getStagePosition(), coord.getTime(), filename));
         }
         return null;
@@ -130,22 +130,22 @@ public class datastoreEventsThread implements Runnable {
 
     private void writeToMemMap() {
         try {
-            reporter.set_report_area(false, false, "datastoreEventsThread: writing memmap to =("+filename+", "+channel_name+")" );
+            reporter.set_report_area(true, true, true,"datastoreEventsThread: writing memmap to =("+filename+", "+channel_name+")" );
             memMapImage out = new memMapImage(temp_img, filename);
             out.writeToMemMap();
         } catch (NullPointerException ex) {
-            reporter.set_report_area(false, false, "null ptr exception in datastoreEvents Thread");
+            reporter.set_report_area(true, true, true,"null ptr exception in datastoreEvents Thread");
         } catch (NoImageException ex) {
-            reporter.set_report_area(false, false, ex.toString());
+            reporter.set_report_area(true, true, true,ex.toString());
         }
     }
 
     private void writeToHashMap() {
         try {
             fds.putMDS(mds);
-            reporter.set_report_area(false, false, "writing MetaDataStore to Map");
+            reporter.set_report_area(true, true, true,"writing MetaDataStore to Map");
         } catch (Exception ex) {
-            reporter.set_report_area(false, false, ex.toString());
+            reporter.set_report_area(true, true, true,ex.toString());
         }
     }
 
@@ -153,24 +153,24 @@ public class datastoreEventsThread implements Runnable {
         try {
             pq.putPath(filename);
             mq.putMDS(mds);
-            reporter.set_report_area(false, false, "writing to path and MDS queues");
+            reporter.set_report_area(true, true, true,"writing to path and MDS queues");
         } catch (NullPointerException ex) {
-            reporter.set_report_area(false, false, "null ptr exception writing to LinkedBlockingQueue");
+            reporter.set_report_area(true, true, true,"null ptr exception writing to LinkedBlockingQueue");
         } catch (Exception ex) {
-            reporter.set_report_area(false, false, ex.toString());
+            reporter.set_report_area(true, true, true,ex.toString());
         }
     }
 
     private void notifyListeners() {
         try {
-            reporter.set_report_area(true, false, "notifying py4j listeners");
+            reporter.set_report_area(true, false, false,"notifying py4j listeners");
             if (Constants.py4JRadioButton) {
                 Py4JListener.notifyAllListeners();
             }
         } catch (Py4JListenerException ex) {
-            reporter.set_report_area(true, false, "Exception in datastore events thread while notifying Py4J listeners: "+ex.toString());
+            reporter.set_report_area(true, false, false,"Exception in datastore events thread while notifying Py4J listeners: "+ex.toString());
         } catch (Exception ex) {
-            reporter.set_report_area(true, false, "General Exception while notifying Py4J listeners: "+ex.toString());
+            reporter.set_report_area(true, false, false,"General Exception while notifying Py4J listeners: "+ex.toString());
         }
     }
 

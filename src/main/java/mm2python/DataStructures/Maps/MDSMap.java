@@ -38,7 +38,7 @@ public class MDSMap {
             allData.put(m, m);
         } catch(NullPointerException e) {
             System.out.println("null MDS parameter" + e.toString());
-            reporter.set_report_area(false, false, "null MDS parameter "+e.toString());
+            reporter.set_report_area(true, true, true, "null MDS parameter "+e.toString());
         }
     }
 

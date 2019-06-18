@@ -28,10 +28,10 @@ public class MDSQueue {
         try {
             boolean result = mdsQueue.offer(mds_, 20, TimeUnit.MILLISECONDS);
             if(!result){
-                reporter.set_report_area(false, false, "failure to offer MDS into MDSQueue: "+mds_.toString());
+                reporter.set_report_area(true, true, true, "failure to offer MDS into MDSQueue: "+mds_.toString());
             }
         } catch (InterruptedException iex) {
-            reporter.set_report_area(false, false,
+            reporter.set_report_area(true, true, true,
                     "interrupted exception placing MDS in queue : "+ iex.toString());
         }
     }
