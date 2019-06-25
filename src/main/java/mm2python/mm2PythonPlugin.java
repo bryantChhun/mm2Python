@@ -12,8 +12,6 @@ package mm2python;
  */
 
 import mm2python.UI.pythonBridgeUI_dialog;
-//import mm2python.mmEventHandler.LocalCore;
-//import mm2python.mmEventHandler.LocalStudio;
 import mmcorej.CMMCore;
 import org.micromanager.MenuPlugin;
 import org.micromanager.Studio;
