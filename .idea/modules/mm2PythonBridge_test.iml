@@ -21,7 +21,88 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/logback-core-1.1.1.jar!/" />
+          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/formats-api-5.1.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/gentyref-1.1.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/MMAcqEngine.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/scijava-common-2.46.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/xalan-2.7.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/objenesis-2.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/serializer-2.7.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/joda-time-2.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/protobuf-java-2.5.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/guava-17.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -48,177 +129,6 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/formats-common-5.1.1.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/miglayout-swing-4.2.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/eventbus-1.4.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/minlog-1.2.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/MMJ_.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/ome-xml-5.1.1.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/jcommon-1.0.23.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/Projector.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/gentyref-1.1.0.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/gson-2.2.4.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/logback-classic-1.1.1.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/core.cache-0.6.2.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/bsh-2.0b6.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/jfreechart-1.0.19.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/ij-1.49h.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/Big.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/clojure-1.3.0.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/iconloader-GIT.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/xml-apis-1.3.04.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
           <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/core.memoize-0.5.2.jar!/" />
         </CLASSES>
         <JAVADOC />
@@ -237,15 +147,6 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/scijava-common-2.46.0.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
           <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/swingx-0.9.5.jar!/" />
         </CLASSES>
         <JAVADOC />
@@ -255,7 +156,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/TSFProto-SVN.jar!/" />
+          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/miglayout-swing-4.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -264,7 +165,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/serializer-2.7.1.jar!/" />
+          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/clojure-1.3.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -273,7 +174,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/rsyntaxtextarea-2.5.2.jar!/" />
+          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/ij-1.49h.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -282,16 +183,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/xalan-2.7.1.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/MMAcqEngine.jar!/" />
+          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/jcommon-1.0.23.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -309,7 +201,25 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/protobuf-java-2.5.0.jar!/" />
+          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/TSFProto-SVN.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/MMJ_.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/minlog-1.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -327,7 +237,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/objenesis-2.1.jar!/" />
+          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/Big.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -345,7 +255,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/guava-17.0.jar!/" />
+          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/core.cache-0.6.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -354,7 +264,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/formats-api-5.1.1.jar!/" />
+          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/jfreechart-1.0.19.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -363,7 +273,97 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/joda-time-2.2.jar!/" />
+          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/ome-xml-5.1.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/logback-core-1.1.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/Projector.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/xml-apis-1.3.04.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/gson-2.2.4.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/eventbus-1.4.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/logback-classic-1.1.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/iconloader-GIT.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/formats-common-5.1.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/bsh-2.0b6.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager/rsyntaxtextarea-2.5.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
