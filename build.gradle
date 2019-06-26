@@ -35,12 +35,12 @@ sourceSets
 
 
 
-//configurations {
-//    compile
-//    core_libs
+configurations {
+    compile
+    core_libs
 //    plugin_libs
 //    complete_libs
-//}
+}
 
 import org.gradle.internal.os.OperatingSystem
 
@@ -82,9 +82,12 @@ dependencies {
 
     //Py4J
     compile group: 'net.sf.py4j', name: 'py4j', version: '0.10.8.1'
+    core_libs group: 'net.sf.py4j', name: 'py4j', version: '0.10.8.1'
 
     // IntelliJ mm2python.UI Designer
     compile group: 'com.intellij', name: 'forms_rt', version: '7.0.3'
+    core_libs group: 'com.intellij', name: 'forms_rt', version: '7.0.3'
+
 
 }
 
