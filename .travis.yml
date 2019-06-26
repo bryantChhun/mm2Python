@@ -10,8 +10,10 @@
 #gem 'coveralls', require: false
 
 language: java
-script: "gradle build"
+install: true
+
 jdk:
   - oraclejdk8
-  - oraclejdk7
-install: gradle assemble --stacktrace
+
+script:
+  - ./gradlew build --scan -s
