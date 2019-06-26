@@ -35,12 +35,12 @@ sourceSets
 
 
 
-configurations {
-    compile
-    core_libs
-    plugin_libs
-    complete_libs
-}
+//configurations {
+//    compile
+//    core_libs
+//    plugin_libs
+//    complete_libs
+//}
 
 import org.gradle.internal.os.OperatingSystem
 
