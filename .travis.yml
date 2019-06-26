@@ -7,4 +7,4 @@ env:
 after_success:
 - ./gradlew test jacocoTestReport coveralls
 
-gem 'coveralls', require: false
+#gem 'coveralls', require: false
