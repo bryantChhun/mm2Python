@@ -16,4 +16,6 @@ jdk:
   - oraclejdk8
 
 script:
-  - ./gradlew build --scan -s
+  - ./gradlew build --scan -s --full-stacktrace
+
+install: ./gradlew assemble --stacktrace

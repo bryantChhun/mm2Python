@@ -34,7 +34,6 @@ sourceSets
 //targetCompatibility = 1.7
 
 
-
 configurations {
     compile
     core_libs
