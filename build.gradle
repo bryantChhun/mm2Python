@@ -8,10 +8,9 @@ plugins {
 }
 
 apply plugin: 'java'
-apply plugin: 'eclipse'
 apply plugin: 'idea'
-apply plugin: 'maven'
-apply plugin: 'maven-publish'
+//apply plugin: 'maven'
+//apply plugin: 'maven-publish'
 apply plugin: 'jacoco'
 
 version = '1.0'
@@ -30,7 +29,7 @@ sourceSets
                     }
         }
 
-//sourceCompatibility = 1.7
+sourceCompatibility = 1.8
 //targetCompatibility = 1.7
 
 
