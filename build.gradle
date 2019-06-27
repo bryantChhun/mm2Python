@@ -70,10 +70,10 @@ dependencies {
     compile group: 'org.junit.vintage', name: 'junit-vintage-engine', version: '5.2.0'
 
     // Micromanager core jars
-    compile fileTree(include: ['*.jar'], exclude: 'mm2Python.jar', dir: core_plugin_path)
+//    compile fileTree(include: ['*.jar'], exclude: 'mm2Python.jar', dir: core_plugin_path)
 
     // ImageJ
-    compile fileTree(include: ['*.jar'], dir: app_path+'/ij.jar')
+//    compile fileTree(include: ['*.jar'], dir: app_path+'/ij.jar')
 
     //zeroMQ
     // compile group: 'org.zeromq', name: 'jzmq', version: '2.1.0'
