@@ -1,44 +1,22 @@
-
+buildscript {
+    dependencies {
+        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4"
+    }
+}
 
 plugins {
-    // Apply the java-library plugin to add support for Java Library
     id 'java-library'
-
-    id 'jacoco'
+    id "com.jfrog.bintray" version "1.8.3"
+    id 'java'
 }
 
 apply plugin: 'java'
 apply plugin: 'idea'
-//apply plugin: 'maven'
-//apply plugin: 'maven-publish'
-apply plugin: 'jacoco'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
 
-version = '1.0'
-
-sourceSets
-        {
-            main
-                    {
-                        java
-                                { srcDir 'src/main/java' }
-                    }
-            test
-                    {
-                        java
-                                { srcDir 'src/test/java' }
-                    }
-        }
-
-sourceCompatibility = 1.8
-//targetCompatibility = 1.7
-
-
-configurations {
-    compile
-    core_libs
-//    plugin_libs
-//    complete_libs
-}
+// *****************************************************************************************
+// Paths to local micro-manager files
 
 import org.gradle.internal.os.OperatingSystem
 
@@ -57,9 +35,48 @@ if(OperatingSystem.current().isMacOsX()) {
     app_path = 'C:\\Applications\\Micro-Manager-2.0.0-beta3-20181001'
 }
 
+// *****************************************************************************************
+// Java Code Building
+
+sourceSets
+        {
+            main
+                    {
+                        java
+                                { srcDir 'src/main/java' }
+                    }
+            test
+                    {
+                        java
+                                { srcDir 'src/test/java' }
+                    }
+        }
+
+configurations {
+    compile
+    core_libs
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+test {
+    useJUnitPlatform()
+
+    testLogging.showStandardStreams = true
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+
+    exclude '**/demo/**'
+
+    maxHeapSize = "4G"
+}
+
+
 dependencies {
     // This dependency is exported to consumers, that is to say found on their compile classpath.
-    api 'org.apache.commons:commons-math3:3.6.1'
+//    api 'org.apache.commons:commons-math3:3.6.1'
 
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation 'com.google.guava:guava:23.0'
@@ -70,13 +87,15 @@ dependencies {
     compile group: 'org.junit.vintage', name: 'junit-vintage-engine', version: '5.2.0'
 
     // Micromanager core jars
-//    compile fileTree(include: ['*.jar'], exclude: 'mm2Python.jar', dir: core_plugin_path)
-
-    // ImageJ
-//    compile fileTree(include: ['*.jar'], dir: app_path+'/ij.jar')
+    // somehow, micro-manager depends critically on this distributed scijava .jar
+    compile fileTree(include: ['MMCoreJ.jar', 'MMJ_.jar', 'scijava-common-2.46.0.jar'], exclude: 'mm2Python.jar', dir: core_plugin_path)
 
     //zeroMQ
     // compile group: 'org.zeromq', name: 'jzmq', version: '2.1.0'
+
+    //scijava-common
+//    compile group: 'org.scijava', name: 'scijava-common', version: '2.46.0'
+//    core_libs group: 'org.scijava', name: 'scijava-common', version: '2.46.0'
 
     //Py4J
     compile group: 'net.sf.py4j', name: 'py4j', version: '0.10.8.1'
@@ -86,97 +105,75 @@ dependencies {
     compile group: 'com.intellij', name: 'forms_rt', version: '7.0.3'
     core_libs group: 'com.intellij', name: 'forms_rt', version: '7.0.3'
 
-
 }
+
 
 repositories {
     mavenCentral()
     jcenter()
-}
-
-jacoco {
-    toolVersion = "0.8.3"
-//    reportsDir = file("${buildDir}/customJacocoReportDir")
-}
-
-jacocoTestReport {
-    reports {
-        xml.enabled = true
-        csv.enabled = true
-        html.enabled = true
-//        html.destination file("${buildDir}/jacocoHtml")
+    maven {
+        url  "https://computational-microscopy.bintray.com/mmtest"
     }
-}
-
-test {
-    testLogging.showStandardStreams = true
-    testLogging {
-        events "passed", "skipped", "failed"
-    }
-
-    exclude '**/demo/**'
-    exclude 'ConstantsTests'
-
-    maxHeapSize = "16G"
 }
 
 
 jar {
-    archiveName = "mm2Python.jar"
+    archiveName = "mm2python.jar"
     from {
         configurations.core_libs.collect {it.isDirectory() ? it : zipTree(it) }
     }
-    project.logger.lifecycle("creating Core Jar with dependencies")
 }
 
 
 task copyCoreToMM(type: Copy) {
     if(OperatingSystem.current().isMacOsX()) {
         from 'build/libs/mm2Python.jar'
-        into core_plugin_path
-        project.logger.lifecycle("moving CORE jar to micro-manager root")
+        into app_path + "/plugins/Micro-Manager"
     }
     else if(OperatingSystem.current().isWindows()) {
         from 'build/libs/mm2Python.jar'
-        into core_plugin_path
-        project.logger.lifecycle("moving CORE jar to micro-manager root")
+        into app_path + "\\plugins\\Micro-Manager"
+    } else {
+        println "unsupported OS"
     }
 }
 
-
-
-
-//task codeCoverageReport(type: JacocoReport) {
-//    executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
-//
-//    subprojects.each {
-//        sourceSets it.sourceSets.main
-//    }
-//
-//    reports {
-//        xml.enabled true
-//        html.enabled false
-//        csv.enabled false
-//    }
-//}
-
-
+//***********************************************************************************
 // PUBLISHING
 
-//group   = project.ext.groupname
-//version = project.ext.versionsMap[project.name]
-//
-//artifacts
-//        {
-//            archives sourcesJar
-//            archives javadocJar
-//        }
-//
-//publishing {
-//    publications {
-//        maven(MavenPublication) {
-//            from components.java
-//            artifact sourcesJar { classifier "sources" }
-//        }
-//    }
-//}
+archivesBaseName = 'mm2python'
+group = 'org.bryantchhun'
+version = '0.0.1'
+description = 'desc. for mm2python'
+
+publishing {
+    publications {
+        MyPublication(MavenPublication) {
+            from components.java
+            groupId = project.group
+            artifactId = project.archivesBaseName
+            version = project.version
+        }
+    }
+}
+
+bintray {
+    user = System.getenv('BINTRAY_USER')
+    key = System.getenv('BINTRAY_KEY')
+    publications = ['MyPublication']
+    publish = true
+    pkg {
+        repo = 'mmtest'
+        name = 'mm2python'
+        userOrg = 'computational-microscopy'
+        licenses = ['BSD-3-Clause']
+        vcsUrl = 'https://github.com/czbiohub/mm2python.git'
+        version {
+            name = project.version
+            desc = 'my first bintray upload'
+            released = new Date()
+//            vcsTag = '0.0.1'
+//            attributes = ['']
+        }
+    }
+}
