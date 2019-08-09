@@ -8,17 +8,21 @@ package mm2python.mmEventHandler;
 import mm2python.DataStructures.*;
 import mm2python.DataStructures.Builders.MDSBuilder;
 import mm2python.DataStructures.Maps.MDSMap;
-import mm2python.DataStructures.Queues.CircularFilenameQueue;
+import mm2python.DataStructures.Queues.FixedMemMapReferenceQueue;
+import mm2python.DataStructures.Queues.DynamicMemMapReferenceQueue;
 import mm2python.DataStructures.Queues.MDSQueue;
-import mm2python.DataStructures.Queues.PathQueue;
 import mm2python.mmDataHandler.Exceptions.NoImageException;
 import mm2python.MPIMethod.Py4J.Exceptions.Py4JListenerException;
 import mm2python.MPIMethod.Py4J.Py4JListener;
-import mm2python.mmDataHandler.memMapImage;
+import mm2python.mmDataHandler.memMapFromBuffer;
 import mm2python.UI.reporter;
 import org.micromanager.data.Coords;
 import org.micromanager.data.Datastore;
 import org.micromanager.data.Image;
+
+import java.nio.MappedByteBuffer;
+
+// todo: add more metadata values: file index, buffer_position, length
 
 /**
  * immediately writes data to outputs based on the type of backend.
@@ -26,32 +30,40 @@ import org.micromanager.data.Image;
  * @author bryant.chhun
  */
 public class datastoreEventsThread implements Runnable {
+    // variables from micro-manager
     private final Image temp_img;
     private final Coords coord;
     private final String prefix;
-    private String filename;
     private final String window_name;
-//    private String[] channel_names;
     private String channel_name;
 
+    // variables for MetaDataStorage
     private final MetaDataStore mds;
     private final MDSMap fds;
-
     private final MDSQueue mq;
-    private final PathQueue pq;
+
+    // variables taken from circular queue
+    private MappedByteBuffer buffer;
+    private String filename;
+    private int buffer_position = 0;
 
     /**
      * Executes sequence of tasks run by executor:
      *  1) assigns a filename based on metadata
      *  2) writes the file as memory mapped image
-     *  3) registers file metadata in static repository
+     *  3) registers file metadata in static repository (queue and map)
      *  4) notifies any py4j listeners
-     * //@param mm_ : Studio object inherited from UI
-     * @param data_ : Most recent Datastore
-     * @param c_ : coordinates
-     * @param window_name_ : window from which this datastore originates
+     * @param data_ : Datastore associated with triggered event
+     * @param c_ : Coords associated with triggered event
+     * @param channel_name_ : configuration channel name
+     * @param prefix_ : MDA experiment prefix
+     * @param window_name_ : display window that triggered event
      */
-    datastoreEventsThread(Datastore data_, Coords c_, String channel_name_, String prefix_, String window_name_) throws Exception {
+    datastoreEventsThread(Datastore data_,
+                          Coords c_,
+                          String channel_name_,
+                          String prefix_,
+                          String window_name_) {
         // assigning parameters
         temp_img = data_.getImage(c_);
         coord = c_;
@@ -65,14 +77,24 @@ public class datastoreEventsThread implements Runnable {
             channel_name = channel_names[coord.getChannel()];
         } catch (NullPointerException nex) {
             channel_name = channel_name_;
-            reporter.set_report_area(true, true, true,"\nscript acquisition detected, channel name = "+channel_name);
+            reporter.set_report_area("\nscript acquisition detected, channel name = "+channel_name);
+        } catch (ArrayIndexOutOfBoundsException arrayex) {
+            channel_name=channel_name_;
         }
 
-        // if using Circular MMapQueue, pick a filename
+        if(channel_name == null){
+            reporter.set_report_area("\nNO CHANNEL NAME FOUND\n");
+        }
+
+        // assign filename based on type of queue or data source
+        filename = getFileName();
+
+        //
         if(Constants.getFixedMemMap()){
-            filename = CircularFilenameQueue.getNextFilename();
+            buffer = FixedMemMapReferenceQueue.getNextBuffer();
         } else {
-            filename = assignFileName();
+            buffer = DynamicMemMapReferenceQueue.getCurrentBuffer();
+            buffer_position = DynamicMemMapReferenceQueue.getCurrentPosition();
         }
 
         //create MetaDataStore for this object
@@ -80,8 +102,7 @@ public class datastoreEventsThread implements Runnable {
         fds = new MDSMap();
 
         mq = new MDSQueue();
-        pq = new PathQueue();
-        reporter.set_report_area(true, true, true,"constructed datastoreEventsThread");
+        reporter.set_report_area("constructed datastoreEventsThread");
     }
     
     @Override
@@ -102,27 +123,41 @@ public class datastoreEventsThread implements Runnable {
         
     }
 
-    private String assignFileName() {
+    private String getFileName() {
         //Check for live vs MDA image, assign a filename
-        if(window_name.equals("Snap/Live View")) {
-            filename = Constants.tempFilePath +"/Snap-Live-Stream.dat";
-            reporter.set_report_area(true, true, true,"datastoreEventsThread: SNAPLIVE = "+filename);
-        } else {
-            filename = String.format(Constants.tempFilePath +"/%s_t%03d_p%03d_z%02d_c%02d.dat",
-                    prefix, coord.getTime(), coord.getStagePosition(), coord.getZ(), coord.getChannel());
-            reporter.set_report_area(true, true, true,"datastoreEventsThread MDA = "+filename);
-        }
+//        if(window_name.equals("Snap/Live View")) {
+//            filename = Constants.tempFilePath +"/Snap-Live-Stream.dat";
+//            reporter.set_report_area("datastoreEventsThread: SNAPLIVE = "+filename);
+//        } else {
+
+        if(Constants.getFixedMemMap()) {
+                filename = FixedMemMapReferenceQueue.getNextFileName();
+            } else {
+                filename = DynamicMemMapReferenceQueue.getCurrentFileName();
+            }
+            reporter.set_report_area("datastoreEventsThread MDA = "+filename);
+//        }
         return filename;
     }
 
     private MetaDataStore makeMDS() {
         try {
-            return new MDSBuilder().position(coord.getStagePosition()).time(coord.getTime()).z(coord.getZ()).channel(coord.getChannel()).
-                    xRange(temp_img.getWidth()).yRange(temp_img.getHeight()).bitDepth(temp_img.getBytesPerPixel() * 8).
-                    prefix(prefix).windowname(window_name).channel_name(channel_name).
-                    filepath(filename).buildMDS();
+            return new MDSBuilder()
+                    .position(coord.getStagePosition())
+                    .time(coord.getTime())
+                    .z(coord.getZ())
+                    .channel(coord.getChannel())
+                    .xRange(temp_img.getWidth())
+                    .yRange(temp_img.getHeight())
+                    .bitDepth(temp_img.getBytesPerPixel() * 8)
+                    .prefix(prefix)
+                    .windowname(window_name)
+                    .channel_name(channel_name)
+                    .filepath(filename)
+                    .buffer_position(buffer_position)
+                    .buildMDS();
         } catch(IllegalAccessException ilex){
-            reporter.set_report_area(true, true, true,String.format("Fail to build MDS for c%d, z%d, p%d, t%d, filepath=%s",
+            reporter.set_report_area(String.format("Fail to build MDS for c%d, z%d, p%d, t%d, filepath=%s",
                     coord.getChannel(), coord.getZ(), coord.getStagePosition(), coord.getTime(), filename));
         }
         return null;
@@ -130,47 +165,60 @@ public class datastoreEventsThread implements Runnable {
 
     private void writeToMemMap() {
         try {
-            reporter.set_report_area(true, true, true,"datastoreEventsThread: writing memmap to =("+filename+", "+channel_name+")" );
-            memMapImage out = new memMapImage(temp_img, filename);
-            out.writeToMemMap();
+            reporter.set_report_area("datastoreEventsThread: writing memmap to =("+filename+", "+channel_name+")" );
+
+//            // old style
+//            memMapImage out = new memMapImage(temp_img, filename);
+//            out.writeToMemMap();
+
+            if(Constants.getFixedMemMap()){
+                memMapFromBuffer out = new memMapFromBuffer(temp_img, buffer);
+                out.writeToMemMap();
+            } else {
+                memMapFromBuffer out = new memMapFromBuffer(temp_img, buffer);
+                out.writeToMemMapAt(buffer_position);
+            }
+
         } catch (NullPointerException ex) {
-            reporter.set_report_area(true, true, true,"null ptr exception in datastoreEvents Thread");
+            reporter.set_report_area("null ptr exception in datastoreEvents Thread");
         } catch (NoImageException ex) {
-            reporter.set_report_area(true, true, true,ex.toString());
+            reporter.set_report_area(ex.toString());
+        } catch (Exception ex) {
+            reporter.set_report_area("EXCEPTION IN WRITE TO MEMMAP: "+ex.toString());
         }
     }
 
     private void writeToHashMap() {
         try {
             fds.putMDS(mds);
-            reporter.set_report_area(true, true, true,"writing MetaDataStore to Map");
+            reporter.set_report_area("writing MetaDataStore to Map");
         } catch (Exception ex) {
-            reporter.set_report_area(true, true, true,ex.toString());
+            reporter.set_report_area(ex.toString());
         }
     }
 
     private void writeToQueues() {
         try {
-            pq.putPath(filename);
+//            pq.putPath(filename);
             mq.putMDS(mds);
-            reporter.set_report_area(true, true, true,"writing to path and MDS queues");
+            reporter.set_report_area("writing to path and MDS queues");
         } catch (NullPointerException ex) {
-            reporter.set_report_area(true, true, true,"null ptr exception writing to LinkedBlockingQueue");
+            reporter.set_report_area("null ptr exception writing to LinkedBlockingQueue");
         } catch (Exception ex) {
-            reporter.set_report_area(true, true, true,ex.toString());
+            reporter.set_report_area(ex.toString());
         }
     }
 
     private void notifyListeners() {
         try {
-            reporter.set_report_area(true, false, false,"notifying py4j listeners");
-            if (Constants.py4JRadioButton) {
+            reporter.set_report_area("notifying py4j listeners");
+            if (Constants.getPy4JRadioButton()) {
                 Py4JListener.notifyAllListeners();
             }
         } catch (Py4JListenerException ex) {
-            reporter.set_report_area(true, false, false,"Exception in datastore events thread while notifying Py4J listeners: "+ex.toString());
+            reporter.set_report_area("Exception in datastoreEventsThread notifying Py4J listeners: "+ex.toString());
         } catch (Exception ex) {
-            reporter.set_report_area(true, false, false,"General Exception while notifying Py4J listeners: "+ex.toString());
+            reporter.set_report_area("General Exception while notifying Py4J listeners: "+ex.toString());
         }
     }
 

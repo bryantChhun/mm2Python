@@ -112,7 +112,8 @@ public class datastoreEvents {
 //            reporter.set_report_area(true, true, true,"event Image in Datastore at coords : \t"+event.getDatastore().getImage(event.getCoords()).toString());
 
 //            mmExecutor.execute(new datastoreEventsThread(mm, event.getDatastore(), event.getCoords(), window_name));
-            mmExecutor.execute(new datastoreEventsThread(event.getDatastore(),
+            mmExecutor.execute(new datastoreEventsThread(
+                    event.getDatastore(),
                     event.getCoords(),
                     mm.getCMMCore().getCurrentConfig("Channel"),
                     mm.acquisitions().getAcquisitionSettings().prefix,

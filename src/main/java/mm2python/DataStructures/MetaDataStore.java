@@ -19,14 +19,17 @@ public class MetaDataStore {
 
     private String filepath;
 
+    private Integer buffer_position;
+
     // package private constructor
     public MetaDataStore(final Integer z_, Integer pos_, Integer time_, Integer channel_,
                   Integer x_dim_, Integer y_dim_, Integer bitDepth_,
                          String channel_name_, String prefix_, String windowname_,
-                         String filepath_)
+                         String filepath_, Integer buffer_position_)
     {
         if((z_!=null && z_<0) || (pos_!=null && pos_<0) || (time_!=null && time_<0) || (channel_!=null && channel_<0)
-                || (x_dim_!=null && x_dim_<0) || (y_dim_!=null && y_dim_<0) || (bitDepth_!=null && bitDepth_ <0)){
+                || (x_dim_!=null && x_dim_<0) || (y_dim_!=null && y_dim_<0) || (bitDepth_!=null && bitDepth_ <0) ||
+                (buffer_position_!=null && buffer_position_ < 0)){
             throw new IllegalArgumentException("MDS param must be positive");
         }
         if(time_!=null) {this.time = time_;}
@@ -40,6 +43,7 @@ public class MetaDataStore {
         if(prefix_!=null) {this.prefix = prefix_;}
         if(windowname_!=null) {this.windowname = windowname_;}
         if(filepath_!=null) {this.filepath = filepath_;}
+        if(buffer_position_!=null) {this.buffer_position = buffer_position_;}
     }
 
     public Integer getZ() { return this.z;}
@@ -71,6 +75,8 @@ public class MetaDataStore {
     public String getWindowName() { return this.windowname;}
 
     public String getFilepath() { return this.filepath;}
+
+    public Integer getBufferPosition() { return this.buffer_position;}
 
 
     /**

@@ -85,8 +85,6 @@ public interface DataMapInterface {
     // get first meta by t
     public MetaDataStore getFirstMetaByTime(int time) throws IllegalAccessException;
 
-    //
-
     // extras
     //  get parameter builder
     public MDSParamBuilder getParameterBuilder();
@@ -94,37 +92,4 @@ public interface DataMapInterface {
     //  get by parameters
     public ArrayList<MetaDataStore> getMetaByParameters(MDSParameters mdsp);
 
-
-//    public String getFile(String channel_name);
-//
-//    public String getFile(MetaDataStore store);
-//
-//    public MetaDataStore getStore(String channel_name);
-
-//    public boolean storeByIndexExists(int time, int stage, int z);
-//
-//    public boolean removeByIndex();
-
-//    public boolean storeExists(String channel_name);
-//
-//    public boolean fileExists(String channel_name);
-//
-//    public boolean fileExists(MetaDataStore store);
-
-//    public boolean removeByChannelName(String channel_name);
-    
-//    public Boolean isEmpty();
-
-//        public String popData();
-//
-//    public String popMetaData();
-//
-//    public String viewData();
-//
-//    public String viewMetaData();
-
-//    public boolean doesStoreExist(MetaDataStore store_);
-//
-//    public String getStorePath(MetaDataStore store_);
-    
 }

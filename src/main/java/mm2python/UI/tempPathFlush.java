@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package mm2python.mmDataHandler.ramDisk;
+package mm2python.UI;
 
 import mm2python.DataStructures.Constants;
+import mm2python.DataStructures.Queues.DynamicMemMapReferenceQueue;
 import org.micromanager.Studio;
 
 import javax.swing.JOptionPane;
@@ -47,25 +48,15 @@ public class tempPathFlush {
             }
         }
 
+        if(!Constants.getFixedMemMap()) {
+            DynamicMemMapReferenceQueue.resetAll();
+        }
+
         JOptionPane.showMessageDialog(panel,
                 String.format("Removing files from %s\n" +
                 "%s files removed\n"+
                 "%s files skipped", Constants.tempFilePath, count, skipped));
 
-        //        String OS = System.getProperty("os.name").toLowerCase();
-
-//        if (OS.contains("mac")) {
-//            String command = String.format("rm %s/*.dat", Constants.tempFilePath);
-//            try {
-//                Process p = Runtime.getRuntime().exec(new String[]{"bash", "-c", command});
-//            } catch (Exception ex) {
-//                reporter.set_report_area(false, true, ex.toString());
-//                reporter.set_report_area(true, false, "error while trying to clear all temp files in RAM_disk");
-//            }
-//        } else if (OS.contains("win")) {
-//            String command = String.format("diskutil erasevolume HFS+ '%s' `hdiutil attach -nomount ram://8388608`", "RAM_disk");
-//            reporter.set_report_area(command);
-//        }
     }
     
 }

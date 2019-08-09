@@ -170,5 +170,25 @@ public class serializedImage {
         }
         return storeOfByteBuffers;
     }
+
+    /**
+    * Serialize the data for passing over MPI
+    */
+    private byte[] convertToByteViaOutputStream(Image tempImg_) {
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
+             ObjectOutputStream oos = new ObjectOutputStream(bos);
+        )
+        {
+            byte[] bytes;
+            bos.reset();
+            oos.writeObject(tempImg_.getRawPixels());
+            oos.flush();
+            bytes = bos.toByteArray();
+            return bytes;
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
+        return null;
+    }
     
 }

@@ -5,9 +5,7 @@
  */
 package mm2python.mmDataHandler;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.ObjectOutputStream;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -18,7 +16,8 @@ import java.nio.channels.FileChannel;
 import mm2python.UI.reporter;
 import mm2python.mmDataHandler.Exceptions.NoImageException;
 import org.micromanager.data.Image;
-
+//todo: write serializable method separate from this method
+//todo: consider writing a base class too
 /**
  *
  * @author bryant.chhun
@@ -87,25 +86,6 @@ public class memMapImage {
         return null;
     }
 
-    /*
-    Serialize the data for passing over MPI
-     */
-    private byte[] convertToByteViaOutputStream(Image tempImg_) {
-        try (   ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                ObjectOutputStream oos = new ObjectOutputStream(bos);
-                )
-        {
-            byte[] bytes;
-            bos.reset();
-            oos.writeObject(tempImg_.getRawPixels());
-            oos.flush();
-            bytes = bos.toByteArray();
-            return bytes;
-        } catch (Exception ex) {
-            System.out.println(ex);
-        }
-        return null;
-    }
 }
 
 

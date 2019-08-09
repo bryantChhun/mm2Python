@@ -20,7 +20,7 @@ import org.scijava.plugin.SciJavaPlugin;
 
 @Plugin(type = MenuPlugin.class)
 public class mm2PythonPlugin implements MenuPlugin, SciJavaPlugin{
-    private static final String menuName = "mm2Python_v0.0.1";
+    private static final String menuName = "mm2python_v0.0.1";
     private static final String tooltipDescription = "Establishes a Py4J gateway for Python control of Micro-Manager and access to data";
     private static final String version =  "0.0.1";
     private static final String copyright = "CZ Biohub";
@@ -38,7 +38,7 @@ public class mm2PythonPlugin implements MenuPlugin, SciJavaPlugin{
 
     @Override
     public String getSubMenu() {
-        return "mm2Python";
+        return "mm2python";
     }
 
     @Override

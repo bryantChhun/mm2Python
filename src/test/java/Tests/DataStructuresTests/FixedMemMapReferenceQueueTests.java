@@ -1,7 +1,7 @@
-package Tests;
+package Tests.DataStructuresTests;
 
 import mm2python.DataStructures.Constants;
-import mm2python.DataStructures.Queues.CircularFilenameQueue;
+import mm2python.DataStructures.Queues.FixedMemMapReferenceQueue;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -16,7 +16,7 @@ import java.util.concurrent.Future;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class CircularFilenameQueueTests {
+class FixedMemMapReferenceQueueTests {
 
     /**
      * to delete generated temp files and temp directory
@@ -45,7 +45,7 @@ class CircularFilenameQueueTests {
         Constants.bitDepth=16;
         Constants.width=2048;
         Constants.height=2048;
-        switch(Constants.OS) {
+        switch(Constants.getOS()) {
             case "win":
                 Constants.tempFilePath = "C:\\mm2pythonTemp";
                 break;
@@ -68,12 +68,12 @@ class CircularFilenameQueueTests {
         initializeConstants();
 
         try {
-            CircularFilenameQueue.createFilenames(10);
+            FixedMemMapReferenceQueue.createFileNames(10);
         } catch (Exception ex) {
             fail(ex);
         }
 
-        assertTrue(CircularFilenameQueue.nextFilenameExists());
+        assertTrue(FixedMemMapReferenceQueue.nextFileNameExists());
         clearTempFiles();
 
     }
@@ -86,14 +86,14 @@ class CircularFilenameQueueTests {
         initializeConstants();
 
         try {
-            CircularFilenameQueue.createFilenames(10);
+            FixedMemMapReferenceQueue.createFileNames(10);
         } catch (Exception ex) {
             fail(ex);
         }
 
-        assertTrue(CircularFilenameQueue.nextFilenameExists());
-        CircularFilenameQueue.resetQueue();
-        assertFalse(CircularFilenameQueue.nextFilenameExists());
+        assertTrue(FixedMemMapReferenceQueue.nextFileNameExists());
+        FixedMemMapReferenceQueue.resetQueue();
+        assertFalse(FixedMemMapReferenceQueue.nextFileNameExists());
         clearTempFiles();
     }
 
@@ -105,13 +105,13 @@ class CircularFilenameQueueTests {
         initializeConstants();
 
         try {
-            CircularFilenameQueue.createFilenames(10);
+            FixedMemMapReferenceQueue.createFileNames(10);
         } catch (Exception ex) {
             fail(ex);
         }
 
-        assertTrue(CircularFilenameQueue.nextFilenameExists());
-        String next = CircularFilenameQueue.getNextFilename();
+        assertTrue(FixedMemMapReferenceQueue.nextFileNameExists());
+        String next = FixedMemMapReferenceQueue.getNextFileName();
         assertEquals(String.class, next.getClass());
         clearTempFiles();
     }
@@ -125,36 +125,38 @@ class CircularFilenameQueueTests {
         int num = 10;
 
         try {
-            CircularFilenameQueue.createFilenames(num);
+            FixedMemMapReferenceQueue.createFileNames(num);
         } catch (Exception ex) {
             fail(ex);
         }
 
-        assertTrue(CircularFilenameQueue.nextFilenameExists());
+        assertTrue(FixedMemMapReferenceQueue.nextFileNameExists());
         for(int i = 0; i<(2*num); i++) {
-            String next = CircularFilenameQueue.getNextFilename();
+            String next = FixedMemMapReferenceQueue.getNextFileName();
             assertEquals(String.class, next.getClass());
         }
         clearTempFiles();
     }
 
     /**
-     * test looping and concurrency
-     *      can cycle twice and show that we have 2*number of unique names
+     * test looping and concurrency: finite number of filenames
+     *  - retrieves 2*num filenames from queue
+     *  - latch forces all "getNextFileNames" to occur simultaneously
+     *  - should observe exactly 10 unique names even though 20 are retrieved
      */
     @Test
-    void testGetNextConcurrent() {
+    void testGetNextConcurrent_finite() {
         // follow: https://dzone.com/articles/how-i-test-my-java-classes-for-thread-safety
         initializeConstants();
         int num = 10;
 
         try {
-            CircularFilenameQueue.createFilenames(num);
+            FixedMemMapReferenceQueue.createFileNames(num);
         } catch (Exception ex) {
             fail(ex);
         }
 
-        // create threads and submit getNextFilename
+        // create threads and submit getNextFileName
         CountDownLatch latch = new CountDownLatch(1);
         ExecutorService service = Executors.newFixedThreadPool(num);
         Collection<Future<String>> futures = new ArrayList<>(num);
@@ -163,7 +165,7 @@ class CircularFilenameQueueTests {
             futures.add(service.submit(
                     () -> {
                         latch.await();
-                        return CircularFilenameQueue.getNextFilename();
+                        return FixedMemMapReferenceQueue.getNextFileName();
                     }
             ));
         }
@@ -183,6 +185,53 @@ class CircularFilenameQueueTests {
         // importantly, we do not have fewer than 10 unique IDs
         assertEquals(ids.size(), num);
         assertEquals(2*ids.size(), retrievals);
+        clearTempFiles();
+    }
+
+    /**
+     * test looping and concurrency: 10 unique names retrieved
+     *  - concurrent threads will not retrieve the same name
+     *
+     */
+    @Test
+    void testGetNextConcurrent_order() {
+        // follow: https://dzone.com/articles/how-i-test-my-java-classes-for-thread-safety
+        initializeConstants();
+        int num = 20;
+
+        try {
+            FixedMemMapReferenceQueue.createFileNames(num);
+        } catch (Exception ex) {
+            fail(ex);
+        }
+
+        // create threads and submit getNextFileName
+        CountDownLatch latch = new CountDownLatch(1);
+        ExecutorService service = Executors.newFixedThreadPool(num);
+        Collection<Future<String>> futures = new ArrayList<>(num);
+        int retrievals = num/2;
+        for (int t = 0; t < retrievals; ++t) {
+            futures.add(service.submit(
+                    () -> {
+                        latch.await();
+                        return FixedMemMapReferenceQueue.getNextFileName();
+                    }
+            ));
+        }
+        latch.countDown();
+
+        // retrieve number of unique hashes from futures
+        Set<String> ids = new HashSet<>();
+        for (Future<String> f : futures) {
+            try {
+                ids.add(f.get());
+            } catch (Exception ex) {
+                System.out.println("exception checking unique threads "+ex);
+            }
+        }
+
+        assertEquals(ids.size(), num/2);
+
         clearTempFiles();
     }
 

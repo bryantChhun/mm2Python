@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import mm2python.DataStructures.Exceptions.OSTypeException;
+import mm2python.UI.reporter;
 
 /**
  *
@@ -26,14 +27,18 @@ public class Constants {
 
     public static List<Integer> ports;
 
-    public static boolean fixedMemMap;
+    private static boolean fixedMemMap;
 
-    public static boolean py4JRadioButton;
+    private static boolean py4JRadioButton;
 
-    public static final String OS;
+    private static String OS;
 
     static {
-        OS = getOSandHandle();
+        try {
+            OS = setOS();
+        } catch (OSTypeException osx) {
+            reporter.set_report_area("error getting OS type: "+osx);
+        }
     }
 
     public Constants() {
@@ -42,16 +47,7 @@ public class Constants {
         }
     }
 
-    private static String getOSandHandle() {
-        try {
-            return getOS();
-        } catch(OSTypeException osx) {
-            System.out.println("String osx");
-        }
-        return null;
-    }
-
-    public static String getOS() throws OSTypeException {
+    private static String setOS() throws OSTypeException {
         String OS = System.getProperty("os.name").toLowerCase();
         if (OS.contains("win")) {
             return("win");
@@ -60,6 +56,10 @@ public class Constants {
         } else {
             throw new OSTypeException("OS type is not implemented.  Must use Mac or Windows");
         }
+    }
+
+    public static String getOS() {
+        return OS;
     }
 
     /**

@@ -1,4 +1,4 @@
-package Tests;
+package Tests.DataStructuresTests;
 
 import mm2python.DataStructures.Builders.MDSBuilder;
 import mm2python.DataStructures.Builders.MDSParameters;
@@ -20,6 +20,11 @@ public class MDSQueueTests {
         mdsq = new MDSQueue();
     }
 
+    /**
+     * create MDS entries that differ only by timepoint
+     * @param entries : number of timepoints to add
+     * @throws IllegalAccessException :
+     */
     private void buildQueue(int entries) throws IllegalAccessException {
         for(int i=0; i< entries; i++) {
             mds = new MDSBuilder().time(i).buildMDS();
@@ -41,7 +46,6 @@ public class MDSQueueTests {
             assertEquals(i, mds.getTime().intValue());
             i++;
         }
-        System.out.println(String.format("traversed %03d timepoints", i));
         clearMDSQueue();
     }
 
@@ -54,8 +58,16 @@ public class MDSQueueTests {
             mds = mdsq.getLastMDS();
             assertEquals(i-1, mds.getTime().intValue());
             i--;
-            System.out.println(i);
         }
         clearMDSQueue();
+    }
+
+    @Test
+    void testResetQueue() throws IllegalAccessException {
+        buildQueue(20);
+
+        mdsq.resetQueue();
+
+//        assertTrue(mdsq.isMDSQueueEmpty());
     }
 }

@@ -26,7 +26,7 @@ public class MDSQueue {
     // methods to add/remove MetaDataStores from lbd
     public void putMDS(MetaDataStore mds_) {
         try {
-            boolean result = mdsQueue.offer(mds_, 20, TimeUnit.MILLISECONDS);
+            boolean result = mdsQueue.offer(mds_, 10, TimeUnit.MILLISECONDS);
             if(!result){
                 reporter.set_report_area(true, true, true, "failure to offer MDS into MDSQueue: "+mds_.toString());
             }

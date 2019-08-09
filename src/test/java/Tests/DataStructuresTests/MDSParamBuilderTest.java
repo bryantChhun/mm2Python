@@ -1,4 +1,4 @@
-package Tests;
+package Tests.DataStructuresTests;
 
 import mm2python.DataStructures.Builders.MDSParamBuilder;
 import mm2python.DataStructures.Builders.MDSParamObject;

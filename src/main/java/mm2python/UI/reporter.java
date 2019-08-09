@@ -21,6 +21,9 @@ public class reporter {
 
     private static JTextArea reportArea;
     private static Studio mm;
+    static boolean systemout;
+    static boolean mmlogs;
+    static boolean console;
     
     public reporter(JTextArea reportArea_, Studio mm_) {
         if (reportArea == null) {
@@ -29,16 +32,19 @@ public class reporter {
         if (mm == null) {
             mm = mm_;
         }
+        systemout = false;
+        mmlogs = false;
+        console = false;
     }
 
-    public static void set_report_area(boolean systemout, boolean mmlogs, boolean console, String report) {
-        if (systemout) {
+    public static void set_report_area(boolean systemout_, boolean mmlogs_, boolean console_, String report) {
+        if (systemout_) {
             System.out.println(report);
         }
-        if (mmlogs) {
+        if (mmlogs_) {
             mm.logs().logMessage(report);
         }
-        if (console) {
+        if (console_) {
             String newline = "\n";
             reportArea.append(newline+report);
             reportArea.setCaretPosition(reportArea.getDocument().getLength());
@@ -50,9 +56,20 @@ public class reporter {
      * @param report String message
      */
     public static void set_report_area(String report) {
-        String newline = "\n";
-        reportArea.append(newline+report);
-        reportArea.setCaretPosition(reportArea.getDocument().getLength());
+        if (systemout) {
+            System.out.println(report);
+        }
+        if (mmlogs) {
+            mm.logs().logMessage(report);
+        }
+        if (console) {
+            String newline = "\n";
+            reportArea.append(newline+report);
+            reportArea.setCaretPosition(reportArea.getDocument().getLength());
+        }
+//        String newline = "\n";
+//        reportArea.append(newline+report);
+//        reportArea.setCaretPosition(reportArea.getDocument().getLength());
     }
 
     /**

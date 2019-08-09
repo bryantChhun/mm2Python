@@ -1,4 +1,4 @@
-package Tests;
+package Tests.DataStructuresTests;
 
 import mm2python.DataStructures.Builders.MDSParamObject;
 import org.junit.jupiter.api.Test;

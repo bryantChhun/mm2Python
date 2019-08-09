@@ -55,8 +55,16 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
     public int getHeight() {return (int) Constants.height;}
 
     public int getWidth() {return (int) Constants.width;}
+
+    //============== provide utility functions for system management ====//
+
+    public void clearQueue(){
+        MDSQueue m = new MDSQueue();
+        m.resetQueue();
+    }
     
     //============== Data Map interface methods ====================//
+    //== For retrieving MetaDataStore objects ======================//
 
     // Map retrieval interface methods
     @Override
@@ -210,7 +218,7 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
         return m.getFirstMDS();
     }
 
-    // extras
+    // Methods to return metadatastores based on arbitrary parameters//
     /**
      * get the parameter builder to search on custom subset of parameters
      *  useful if you want to search on 2 or more parameters
@@ -234,9 +242,12 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
     }
 
     //============== Data Path interface methods ====================//
+    //== For retrieving Filepaths to mmap files =====================//
+
 
     // Path retrieval interface methods
 
+    @Override
     public String getLastFileByChannelName(String channelName) throws IllegalAccessException{
         MDSParameters params = new MDSParamBuilder().channel_name(channelName).buildMDSParams();
         MDSQueue m = new MDSQueue();
@@ -244,6 +255,7 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
     }
 
     // get last file by channel
+    @Override
     public String getLastFileByChannelIndex(int channelIndex) throws IllegalAccessException {
         MDSParameters params = new MDSParamBuilder().channel(channelIndex).buildMDSParams();
         MDSQueue m = new MDSQueue();
@@ -251,6 +263,7 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
     }
 
     // get last file by z
+    @Override
     public String getLastFileByZ(int z) throws IllegalAccessException {
         MDSParameters params = new MDSParamBuilder().z(z).buildMDSParams();
         MDSQueue m = new MDSQueue();
@@ -258,6 +271,7 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
     }
 
     // get last file by p
+    @Override
     public String getLastFileByPosition(int pos) throws IllegalAccessException {
         MDSParameters params = new MDSParamBuilder().position(pos).buildMDSParams();
         MDSQueue m = new MDSQueue();
@@ -265,6 +279,7 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
     }
 
     // get last file by t
+    @Override
     public String getLastFileByTime(int time) throws IllegalAccessException {
         MDSParameters params = new MDSParamBuilder().time(time).buildMDSParams();
         MDSQueue m = new MDSQueue();
@@ -272,6 +287,7 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
     }
 
     // get first file by channel_name
+    @Override
     public String getFirstFileByChannelName(String channelName) throws IllegalAccessException {
         MDSParameters params = new MDSParamBuilder().channel_name(channelName).buildMDSParams();
         MDSQueue m = new MDSQueue();
@@ -279,6 +295,7 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
     }
 
     // get first file by channel
+    @Override
     public String getFirstFileByChannelIndex(int channelIndex) throws IllegalAccessException {
         MDSParameters params = new MDSParamBuilder().channel(channelIndex).buildMDSParams();
         MDSQueue m = new MDSQueue();
@@ -286,6 +303,7 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
     }
 
     // get first file by z
+    @Override
     public String getFirstFileByZ(int z) throws IllegalAccessException {
         MDSParameters params = new MDSParamBuilder().z(z).buildMDSParams();
         MDSQueue m = new MDSQueue();
@@ -293,6 +311,7 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
     }
 
     // get first file by p
+    @Override
     public String getFirstFileByPosition(int pos) throws IllegalAccessException {
         MDSParameters params = new MDSParamBuilder().position(pos).buildMDSParams();
         MDSQueue m = new MDSQueue();
@@ -300,11 +319,11 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
     }
 
     // get first file by t
+    @Override
     public String getFirstFileByTime(int time) throws IllegalAccessException {
         MDSParameters params = new MDSParamBuilder().time(time).buildMDSParams();
         MDSQueue m = new MDSQueue();
         return m.getLastFilenameByParam(params);
     }
-
 
 }

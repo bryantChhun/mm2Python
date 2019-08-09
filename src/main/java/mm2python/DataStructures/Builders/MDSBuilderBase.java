@@ -18,6 +18,8 @@ abstract public class MDSBuilderBase {
 
     String filepath;
 
+    Integer buffer_position;
+
     public MDSBuilderBase time(int t) {
         this.time = t;
         return this;
@@ -70,6 +72,11 @@ abstract public class MDSBuilderBase {
 
     public MDSBuilderBase filepath(String fp) {
         this.filepath = fp;
+        return this;
+    }
+
+    public MDSBuilderBase buffer_position(Integer buf_pos) {
+        this.buffer_position = buf_pos;
         return this;
     }
 
