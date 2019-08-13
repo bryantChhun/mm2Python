@@ -174,7 +174,7 @@ public class datastoreEventsThread implements Runnable {
 
             if(Constants.getFixedMemMap()){
                 memMapFromBuffer out = new memMapFromBuffer(temp_img, buffer);
-                out.writeToMemMap();
+                out.writeToMemMapAt(buffer_position);
             } else {
                 memMapFromBuffer out = new memMapFromBuffer(temp_img, buffer);
                 out.writeToMemMapAt(buffer_position);
