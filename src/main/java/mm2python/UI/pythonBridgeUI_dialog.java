@@ -15,6 +15,7 @@ import mm2python.DataStructures.Queues.DynamicMemMapReferenceQueue;
 import mm2python.MPIMethod.Py4J.Py4J;
 import mm2python.mmDataHandler.ramDisk.ramDiskConstructor;
 import mm2python.mmDataHandler.ramDisk.ramDiskDestructor;
+import mm2python.mmEventHandler.Executor.main_executor;
 import mm2python.mmEventHandler.globalEvents;
 
 // mm libraries
@@ -29,6 +30,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 
 
 public class pythonBridgeUI_dialog extends JFrame {
@@ -210,9 +213,32 @@ public class pythonBridgeUI_dialog extends JFrame {
         }
         gevents.unRegisterGlobalEvents();
         gevents = null;
+
+        shutdownAndAwaitTermination();
+
         UI_logger_textArea.setText("");
         reporter.set_report_area("STOP monitoring global events, clearing data store references");
 
+    }
+
+    /**
+     * shutdown procedure taken from:
+     * https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/ExecutorService.html
+     */
+    private void shutdownAndAwaitTermination() {
+        ExecutorService mmExecutor = new main_executor().getExecutor();
+        mmExecutor.shutdown();
+        try {
+            if(!mmExecutor.awaitTermination(5, TimeUnit.SECONDS)){
+                mmExecutor.shutdownNow();
+                if(!mmExecutor.awaitTermination(5, TimeUnit.SECONDS)) {
+                    System.err.println("Executor thread pool did not terminate");
+                }
+            }
+        } catch (InterruptedException ie) {
+            mmExecutor.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
     }
 
     private void create_circular_map_reference(int num_) {
@@ -280,19 +306,25 @@ public class pythonBridgeUI_dialog extends JFrame {
 
     private void consoleRadioButtonActionPerformed(ActionEvent evt) {
         if (consoleRadioButton.isSelected()) {
-            reporter.console = !reporter.console;
+            reporter.console = true;
+        } else {
+            reporter.console = false;
         }
     }
 
     private void MMCoreLogsRadioButtonActionPerformed(ActionEvent evt) {
         if (MMCoreLogsRadioButton.isSelected()) {
-            reporter.mmlogs = !reporter.mmlogs;
+            reporter.mmlogs = true;
+        } else {
+            reporter.mmlogs = false;
         }
     }
 
     private void systemOutRadioButtonActionPerformed(ActionEvent evt) {
         if (systemOutRadioButton.isSelected()) {
-            reporter.systemout = !reporter.systemout;
+            reporter.systemout = true;
+        } else {
+            reporter.systemout = false;
         }
     }
 

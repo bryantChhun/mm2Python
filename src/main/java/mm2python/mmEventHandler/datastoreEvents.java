@@ -39,7 +39,7 @@ public class datastoreEvents {
         data = data_;
         window_name = window_name_;
         mmExecutor = new main_executor().getExecutor();
-        reporter.set_report_area(true, true, false, String.format("window %s registered", window_name));
+        reporter.set_report_area(String.format("window %s registered", window_name));
     }
     
     void registerThisDatastore(){
@@ -58,13 +58,13 @@ public class datastoreEvents {
 //
 //        } else {
         data.registerForEvents(this);
-        reporter.set_report_area(true, true, false, "datastoreEvent: registered this MDA datastore, prefix: "+data.toString()+" "+prefix_);
+        reporter.set_report_area("datastoreEvent: registered this MDA datastore, prefix: "+data.toString()+" "+prefix_);
 
         // writes any data existing in window before draw.
         if(data.getNumImages() > 0){
             Iterable<Coords> itercoords = data.getUnorderedImageCoords();
             for (Coords c: itercoords) {
-                reporter.set_report_area(true, true, true,  "datastoreEvent: existing images in datastore before window rendered: "+c.toString());
+                reporter.set_report_area("datastoreEvent: existing images in datastore before window rendered: "+c.toString());
                 try {
                     mmExecutor.execute(new datastoreEventsThread(data,
                             c,
@@ -83,15 +83,15 @@ public class datastoreEvents {
     
     @Subscribe
     public void monitor_DatastoreFrozenEvent(DatastoreFrozenEvent event) {
-        reporter.set_report_area(true, false, false, "DatastoreFrozen event");
-        reporter.set_report_area(true, false, false, "num images in this datastore = "+data.getNumImages());
+        reporter.set_report_area("DatastoreFrozen event");
+        reporter.set_report_area("num images in this datastore = "+data.getNumImages());
         data.unregisterForEvents(this);
     }
     
     @Subscribe
     public void monitor_DatastoreSavePathEvent(DatastoreSavePathEvent event) {
-        reporter.set_report_area(true, false, false, "Datastore save path event");
-        reporter.set_report_area(true, false, false, "num images in this datastore = "+data.getNumImages());
+        reporter.set_report_area("Datastore save path event");
+        reporter.set_report_area("num images in this datastore = "+data.getNumImages());
         data.unregisterForEvents(this);
     }
 
@@ -103,12 +103,12 @@ public class datastoreEvents {
     @Subscribe
     public void monitor_NewImageEvent(NewImageEvent event){
         try {
-            reporter.set_report_area(true, true, true,"\nNewImageEvent event detected");
-            reporter.set_report_area(true, true, true,"\nevent : \t"+event.toString());
-            reporter.set_report_area(true, true, true,"event Image  : \t" +event.getImage().toString());
-            reporter.set_report_area(true, true, true,"event datastore : \t"+event.getDatastore().toString());
-            reporter.set_report_area(true, true, true,"event coords : \t"+event.getCoords().toString());
-            reporter.set_report_area(true, true, true,"window name : \t"+window_name);
+            reporter.set_report_area("\nNewImageEvent event detected");
+            reporter.set_report_area("\nevent : \t"+event.toString());
+            reporter.set_report_area("event Image  : \t" +event.getImage().toString());
+            reporter.set_report_area("event datastore : \t"+event.getDatastore().toString());
+            reporter.set_report_area("event coords : \t"+event.getCoords().toString());
+            reporter.set_report_area("window name : \t"+window_name);
 //            reporter.set_report_area(true, true, true,"event Image in Datastore at coords : \t"+event.getDatastore().getImage(event.getCoords()).toString());
 
 //            mmExecutor.execute(new datastoreEventsThread(mm, event.getDatastore(), event.getCoords(), window_name));
@@ -121,15 +121,15 @@ public class datastoreEvents {
             );
 
         } catch (NullPointerException ex) {
-            reporter.set_report_area(true, true, true,"null ptr exception in newImageeventMonitor");
+            reporter.set_report_area("null ptr exception in newImageeventMonitor");
 
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
             ex.printStackTrace(pw);
 
-            reporter.set_report_area(true, true, true,"\n"+sw.toString());
+            reporter.set_report_area("\n"+sw.toString());
         } catch (Exception ex) {
-            reporter.set_report_area(true, true, true,"new image event exception = "+ex);
+            reporter.set_report_area("new image event exception = "+ex);
         }
     }
     

@@ -92,6 +92,7 @@ public class datastoreEventsThread implements Runnable {
         //
         if(Constants.getFixedMemMap()){
             buffer = FixedMemMapReferenceQueue.getNextBuffer();
+            buffer_position = 0;
         } else {
             buffer = DynamicMemMapReferenceQueue.getCurrentBuffer();
             buffer_position = DynamicMemMapReferenceQueue.getCurrentPosition();
