@@ -33,6 +33,10 @@ public class Constants {
 
     private static String OS;
 
+    public static long max;
+    public static long min;
+    public static int init;
+
     static {
         try {
             OS = setOS();

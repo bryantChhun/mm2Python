@@ -129,6 +129,8 @@ public class pythonBridgeUI_dialog extends JFrame {
 
         // initialize Constants
         new Constants();
+        new MovingAverage(10);
+
         if (py4JRadioButton.isSelected()) {
             Constants.setPy4JRadioButton(true);
         }
@@ -233,6 +235,7 @@ public class pythonBridgeUI_dialog extends JFrame {
                 mmExecutor.shutdownNow();
                 if(!mmExecutor.awaitTermination(5, TimeUnit.SECONDS)) {
                     System.err.println("Executor thread pool did not terminate");
+                    reporter.set_report_area("Executor thread pool did not terminate");
                 }
             }
         } catch (InterruptedException ie) {

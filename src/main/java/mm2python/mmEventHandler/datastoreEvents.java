@@ -102,6 +102,8 @@ public class datastoreEvents {
      */
     @Subscribe
     public void monitor_NewImageEvent(NewImageEvent event){
+        long start = System.nanoTime();
+
         try {
             reporter.set_report_area("\nNewImageEvent event detected");
             reporter.set_report_area("\nevent : \t"+event.toString());

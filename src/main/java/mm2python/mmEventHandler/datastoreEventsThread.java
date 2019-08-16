@@ -22,6 +22,7 @@ import org.micromanager.data.Image;
 
 import java.nio.MappedByteBuffer;
 
+import mm2python.DataStructures.MovingAverage;
 // todo: add more metadata values: file index, buffer_position, length
 
 /**
@@ -103,14 +104,18 @@ public class datastoreEventsThread implements Runnable {
         fds = new MDSMap();
 
         mq = new MDSQueue();
-        reporter.set_report_area("constructed datastoreEventsThread");
+//        reporter.set_report_area("constructed datastoreEventsThread");
     }
     
     @Override
     public void run() {
 
+        long start = System.nanoTime();
+
         // Write memory mapped image
         writeToMemMap();
+
+        long stop = System.nanoTime();
 
         // Write to concurrent hashmap
         writeToHashMap();
@@ -118,10 +123,24 @@ public class datastoreEventsThread implements Runnable {
         // write filename to queue
         // write MetaDataStore to queue
         writeToQueues();
-        
+
         // notify Listeners
-        notifyListeners();
-        
+//        notifyListeners();
+
+
+        if(stop-start < Constants.min && Constants.init > 5) {
+            Constants.min = (stop-start);
+        }
+        if(stop-start >Constants.max && Constants.init > 5) {
+            Constants.max = (stop-start);
+        }
+        Constants.init += 1;
+
+        reporter.set_report_area("Time elapsed for writes (ns): "+Long.toString(stop-start));
+//        reporter.set_report_area("Max time elapsed for run (ns):"+Long.toString(Constants.max));
+//        reporter.set_report_area("Min time elapsed for run (ns):"+Long.toString(Constants.min));
+        reporter.set_report_area("max average over 10 frame window (ns):"+Long.toString(MovingAverage.next(stop-start)));
+
     }
 
     private String getFileName() {
@@ -174,7 +193,13 @@ public class datastoreEventsThread implements Runnable {
 
             if(Constants.getFixedMemMap()){
                 memMapFromBuffer out = new memMapFromBuffer(temp_img, buffer);
+
+//                out.verifyMemMapAt(buffer_position);
+
                 out.writeToMemMapAt(buffer_position);
+
+//                out.verifyMemMapAt(buffer_position);
+
             } else {
                 memMapFromBuffer out = new memMapFromBuffer(temp_img, buffer);
                 out.writeToMemMapAt(buffer_position);

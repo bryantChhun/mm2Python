@@ -41,10 +41,12 @@ public class MDSQueue {
     }
 
     public MetaDataStore getFirstMDS() {
+        // should we use takeFirst()?  This will wait till mds available, while poll returns null
         return mdsQueue.pollFirst();
     }
 
     public MetaDataStore getLastMDS() {
+        // should we use takeLast()?  This will wait till mds available, while poll returns null
         return mdsQueue.pollLast();
     }
 

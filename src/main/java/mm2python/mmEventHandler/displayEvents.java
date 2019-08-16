@@ -55,17 +55,17 @@ public class displayEvents {
         window.unregisterForEvents(this);
     }
     
-    @Subscribe
+//    @Subscribe
     public void monitor_NewDisplaySettingsEvent(NewDisplaySettingsEvent event) throws NotImplementedException{
         throw new NotImplementedException("NewDisplaySettingsEvent not implemented");
     }
     
-    @Subscribe
+//    @Subscribe
     public void monitor_NewImagePlusEvent(NewImagePlusEvent event) throws NotImplementedException{
         throw new NotImplementedException("NewImagePlusEvent not implemented");
     }
     
-    @Subscribe
+//    @Subscribe
     public void monitor_PixelsSetEvent(PixelsSetEvent event) throws NotImplementedException{
         throw new NotImplementedException("PixelsSetEvent not implemented");
     }

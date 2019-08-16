@@ -8,6 +8,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.MappedByteBuffer;
 import java.nio.ShortBuffer;
+import java.util.Arrays;
 
 
 /**
@@ -53,6 +54,19 @@ public class memMapFromBuffer {
         } catch (Exception ex) {
             reporter.set_report_area("!! Exception !! during write to memmap = "+ex);
             throw ex;
+        }
+    }
+
+    public void verifyMemMapAt(int position) {
+        byte[] byteimg;
+        byteimg = convertToByte(temp_img);
+        byte[] buf_bytes = new byte[buffer.capacity()];
+        buffer.position(position);
+        buffer.get(buf_bytes, 0, buf_bytes.length);
+        if(!Arrays.equals(byteimg,buf_bytes)) {
+            reporter.set_report_area("BYTE IMAGE NOT EQUAL");
+        } else {
+            reporter.set_report_area("IMAGE EQUALS BYTE BUFFER!");
         }
     }
 
