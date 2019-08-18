@@ -16,15 +16,19 @@ import java.util.concurrent.Executors;
 /**
  * Singleton executor for window and data creation threads
  */
-public class main_executor {
+public class MainExecutor {
     
     private static ExecutorService mmExecutor;
     
-    public ExecutorService getExecutor(){
+    public static ExecutorService getExecutor(){
         if(mmExecutor == null) {
             mmExecutor = Executors.newFixedThreadPool(50);
         }
         return mmExecutor;
+    }
+
+    public static void resetExecutor() {
+        mmExecutor = null;
     }
     
 }

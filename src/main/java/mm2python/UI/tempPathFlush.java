@@ -29,7 +29,7 @@ public class tempPathFlush {
      * memory mapped files can not be deleted while the micro-manager process is open
      * Nor can memory mapped files be unmapped until after the process closes
      *
-     * This method should be called to clear old memmap file names from earlier runs
+     * This method should be called to resetQueue old memmap file names from earlier runs
      */
     public void clearTempPathContents() {
         File index = new File(Constants.tempFilePath);

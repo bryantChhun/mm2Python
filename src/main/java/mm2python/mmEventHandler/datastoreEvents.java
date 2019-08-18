@@ -5,6 +5,7 @@
  */
 package mm2python.mmEventHandler;
 
+import mm2python.DataStructures.Maps.RegisteredDatastores;
 import mm2python.UI.reporter;
 
 import org.micromanager.Studio;
@@ -16,7 +17,7 @@ import org.micromanager.data.DatastoreSavePathEvent;
 
 import com.google.common.eventbus.Subscribe;
 import java.util.concurrent.ExecutorService;
-import mm2python.mmEventHandler.Executor.main_executor;
+import mm2python.mmEventHandler.Executor.MainExecutor;
 import org.micromanager.acquisition.SequenceSettings;
 
 import java.io.StringWriter;
@@ -32,17 +33,25 @@ public class datastoreEvents {
     private final Datastore data;
     private final String window_name;
     private String prefix_;
-    private final ExecutorService mmExecutor;
+    private static final ExecutorService mmExecutor;
+
+    static {
+        mmExecutor = MainExecutor.getExecutor();
+    }
 
     datastoreEvents(Studio mm_, Datastore data_, String window_name_) {
         mm = mm_;
         data = data_;
         window_name = window_name_;
-        mmExecutor = new main_executor().getExecutor();
+//        registerThisDatastore();
         reporter.set_report_area(String.format("window %s registered", window_name));
     }
-    
-    void registerThisDatastore(){
+
+    /**
+     * registers datastore for events
+     * puts this datastore in concurrent map for later unregistration
+     */
+    public void registerThisDatastore(){
 
         SequenceSettings seq = mm.acquisitions().getAcquisitionSettings();
         if(seq.prefix != null) {
@@ -57,7 +66,10 @@ public class datastoreEvents {
 //            reporter.set_report_area(true, true, false, "datastoreEvent: registered this SNAPLIVE datastore, prefix: "+data.toString()+" "+prefix_);
 //
 //        } else {
+
         data.registerForEvents(this);
+        RegisteredDatastores.put(data, this);
+
         reporter.set_report_area("datastoreEvent: registered this MDA datastore, prefix: "+data.toString()+" "+prefix_);
 
         // writes any data existing in window before draw.
@@ -77,8 +89,11 @@ public class datastoreEvents {
                 }
             }
         }
-//        }
         
+    }
+
+    public void unRegisterThisDatastore() {
+        data.unregisterForEvents(this);
     }
     
     @Subscribe

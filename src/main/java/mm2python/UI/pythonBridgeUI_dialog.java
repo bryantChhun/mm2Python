@@ -7,20 +7,22 @@ import com.intellij.uiDesigner.core.Spacer;
 
 // mm2python libraries
 import mm2python.DataStructures.*;
-import mm2python.DataStructures.Exceptions.OSTypeException;
 import mm2python.DataStructures.Maps.MDSMap;
+import mm2python.DataStructures.Maps.RegisteredDatastores;
 import mm2python.DataStructures.Queues.FixedMemMapReferenceQueue;
 import mm2python.DataStructures.Queues.MDSQueue;
 import mm2python.DataStructures.Queues.DynamicMemMapReferenceQueue;
 import mm2python.MPIMethod.Py4J.Py4J;
 import mm2python.mmDataHandler.ramDisk.ramDiskConstructor;
 import mm2python.mmDataHandler.ramDisk.ramDiskDestructor;
-import mm2python.mmEventHandler.Executor.main_executor;
+import mm2python.mmEventHandler.Executor.MainExecutor;
+import mm2python.mmEventHandler.datastoreEvents;
 import mm2python.mmEventHandler.globalEvents;
 
 // mm libraries
 import mmcorej.CMMCore;
 import org.micromanager.Studio;
+import org.micromanager.data.Datastore;
 
 // java libraries
 import javax.swing.*;
@@ -30,6 +32,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -189,51 +195,106 @@ public class pythonBridgeUI_dialog extends JFrame {
         gate.stopConnection(ABORT);
     }
 
+    /**
+     * Startup procedure:
+     * 1) Check filepaths exist
+     * 2) create MDS Map/Queue instances
+     * 3) create memmap queue instances
+     * 4) create memmap files
+     * 5) create Executor instance
+     * 6) register global events
+     *
+     * @param evt
+     */
     private void start_monitor_global_eventsActionPerformed(ActionEvent evt) {
         reporter.set_report_area("monitoring global events");
+
+        //1
         if (defaultTempPath.exists() || defaultTempPath.mkdirs()) {
             reporter.set_report_area("tempPath created or already exists");
         } else {
             reporter.set_report_area("WARNING: invalid temp path, no MMap files will be made");
         }
 
-        // CREATE FIXED CIRCULAR REFERENCE
-        int num = Integer.parseInt(maxNumberOfFilesTextField.getText());
-        create_circular_map_reference(num);
+        //2
+        new MDSMap();
+        new MDSQueue();
 
-        // CREATE DYNAMIC REFERENCE
-        create_dynamic_map_reference();
+        //3
+        new FixedMemMapReferenceQueue();
+        new DynamicMemMapReferenceQueue();
 
+        //4
+        if (Constants.getFixedMemMap()) {
+            // CREATE FIXED CIRCULAR REFERENCE
+            int num = Integer.parseInt(maxNumberOfFilesTextField.getText());
+            create_circular_map_reference(num);
+            reporter.set_report_area("creating fixed memory maps");
+        } else {
+            // CREATE DYNAMIC REFERENCE
+            create_dynamic_map_reference();
+            reporter.set_report_area("creating dynamic memory maps");
+        }
+
+        //5
+        MainExecutor.getExecutor();
+
+        //6
         if (gevents == null) {
+            reporter.set_report_area("new global events");
             gevents = new globalEvents(mm);
         }
     }
 
+    /**
+     * Shutdown procedure:
+     * 1) unregister events
+     * 2) shutdown threads (not implemented)
+     * 2b) unregister datastores
+     * 3) call reset executors
+     * 4) resetQueue MDSqueues and MDSmaps
+     * 5) resetQueue memmap filesnames and references
+     *
+     * @param evt
+     */
     private void stop_monitor_global_eventsActionPerformed(ActionEvent evt) {
-        if (!Constants.getFixedMemMap()) {
-            clearTempPath.clearTempPathContents();
-        }
-        gevents.unRegisterGlobalEvents();
-        gevents = null;
-
-        shutdownAndAwaitTermination();
-
         UI_logger_textArea.setText("");
         reporter.set_report_area("STOP monitoring global events, clearing data store references");
 
+        //1
+        if (gevents != null) {
+            gevents.unRegisterGlobalEvents();
+        }
+        gevents = null;
+        //2
+//        shutdownAndAwaitTermination();
+        //2b
+        unregisterDatastores(RegisteredDatastores.RegisteredStores);
+        //3
+        MainExecutor.resetExecutor();
+        //4
+        MDSQueue.resetQueue();
+        MDSMap.clearMap();
+        //5
+        FixedMemMapReferenceQueue.resetQueue();
+        DynamicMemMapReferenceQueue.resetAll();
+        clearTempPath.clearTempPathContents();
+        mm.live().getDisplay().requestToClose();
     }
 
     /**
      * shutdown procedure taken from:
      * https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/ExecutorService.html
+     * *** shutdown causes problems upon restart, all submitted threads will be rejected ***
      */
     private void shutdownAndAwaitTermination() {
-        ExecutorService mmExecutor = new main_executor().getExecutor();
+        ExecutorService mmExecutor = MainExecutor.getExecutor();
         mmExecutor.shutdown();
         try {
-            if(!mmExecutor.awaitTermination(5, TimeUnit.SECONDS)){
+//            mmExecutor.shutdownNow();
+            if (!mmExecutor.awaitTermination(5, TimeUnit.SECONDS)) {
                 mmExecutor.shutdownNow();
-                if(!mmExecutor.awaitTermination(5, TimeUnit.SECONDS)) {
+                if (!mmExecutor.awaitTermination(5, TimeUnit.SECONDS)) {
                     System.err.println("Executor thread pool did not terminate");
                     reporter.set_report_area("Executor thread pool did not terminate");
                 }
@@ -241,6 +302,13 @@ public class pythonBridgeUI_dialog extends JFrame {
         } catch (InterruptedException ie) {
             mmExecutor.shutdownNow();
             Thread.currentThread().interrupt();
+        }
+    }
+
+    private void unregisterDatastores(ConcurrentHashMap<Datastore, datastoreEvents> t) {
+        ArrayList<datastoreEvents> l = new ArrayList<>(t.values());
+        for (datastoreEvents de : l) {
+            de.unRegisterThisDatastore();
         }
     }
 
@@ -259,12 +327,12 @@ public class pythonBridgeUI_dialog extends JFrame {
             try {
                 int num_channels = mm.acquisitions().getAcquisitionSettings().channels.size();
                 int num_z = mm.acquisitions().getAcquisitionSettings().slices.size();
-                new DynamicMemMapReferenceQueue(4, 30);
+                DynamicMemMapReferenceQueue.createFileNames(4, 30);
             } catch (Exception ex) {
                 reporter.set_report_area("\t\tEXCEPTION RETRIEVING CHANNELS AND Z FOR DYNAMIC MMMAP");
                 int num_channels = 4;
                 int num_z = 30;
-                new DynamicMemMapReferenceQueue(num_channels, num_z);
+                DynamicMemMapReferenceQueue.createFileNames(num_channels, num_z);
             }
         }
     }
@@ -479,15 +547,4 @@ public class pythonBridgeUI_dialog extends JFrame {
     public JComponent $$$getRootComponent$$$() {
         return contentPane;
     }
-
-    //    public void setData(pythonBridgeUI_dialog data) {
-//    }
-//
-//    public void getData(pythonBridgeUI_dialog data) {
-//    }
-
-//    public boolean isModified(pythonBridgeUI_dialog data) {
-//        return false;
-//    }
-
 }

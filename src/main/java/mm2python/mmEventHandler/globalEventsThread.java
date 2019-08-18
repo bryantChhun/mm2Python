@@ -10,6 +10,8 @@ import mm2python.UI.reporter;
 import org.micromanager.Studio;
 import org.micromanager.display.DisplayWindow;
 
+import java.util.concurrent.locks.LockSupport;
+
 /**
  *
  * @author bryant.chhun
@@ -38,11 +40,22 @@ public class globalEventsThread implements Runnable {
     @Override
     public void run() {
         // Currently, displayEvents are not used.
-
         reporter.set_report_area(true, true, false, "registering datastore: "+dw.getName());
 
         datastoreEvents datastore_events = new datastoreEvents(mm, dw.getDatastore(), dw.getName());
         datastore_events.registerThisDatastore();
+
+//        while(!Thread.currentThread().isInterrupted()) {
+//            try {
+//                LockSupport.parkNanos(1000);
+//            } catch (InterruptedException ie) {
+//                datastore_events.unRegisterThisDatastore();
+//            }
+//        }
+
+//        datastoreEvents datastore_events = new datastoreEvents(mm, dw.getDatastore(), dw.getName());
+//        datastore_events.registerThisDatastore();
+
     }
 
     

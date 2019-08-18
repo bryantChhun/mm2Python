@@ -198,7 +198,7 @@ public class datastoreEventsThread implements Runnable {
 
                 out.writeToMemMapAt(buffer_position);
 
-//                out.verifyMemMapAt(buffer_position);
+                out.verifyMemMapAt(buffer_position);
 
             } else {
                 memMapFromBuffer out = new memMapFromBuffer(temp_img, buffer);

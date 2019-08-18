@@ -21,6 +21,10 @@ public class MDSMap {
     private static final ConcurrentHashMap<MetaDataStore, MetaDataStore> allData
             = new ConcurrentHashMap<>(100, 0.75f, 30);
 
+    public static void clearMap() {
+        allData.clear();
+    }
+
     public int getSize() {
         return allData.size();
     }

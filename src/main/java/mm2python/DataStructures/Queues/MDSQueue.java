@@ -19,7 +19,7 @@ public class MDSQueue {
 
     private static final LinkedBlockingDeque<MetaDataStore> mdsQueue = new LinkedBlockingDeque<>();
 
-    public void resetQueue() {
+    public static void resetQueue() {
         mdsQueue.clear();
     }
 

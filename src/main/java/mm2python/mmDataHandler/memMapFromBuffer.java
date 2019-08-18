@@ -3,6 +3,7 @@ package mm2python.mmDataHandler;
 import mm2python.UI.reporter;
 import mm2python.mmDataHandler.Exceptions.NoImageException;
 import org.micromanager.data.Image;
+import mm2python.DataStructures.Constants;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -65,6 +66,8 @@ public class memMapFromBuffer {
         buffer.get(buf_bytes, 0, buf_bytes.length);
         if(!Arrays.equals(byteimg,buf_bytes)) {
             reporter.set_report_area("BYTE IMAGE NOT EQUAL");
+            Constants.data_mismatches += 1;
+            reporter.set_report_area("Constants mismatches = "+Integer.toString(Constants.data_mismatches));
         } else {
             reporter.set_report_area("IMAGE EQUALS BYTE BUFFER!");
         }

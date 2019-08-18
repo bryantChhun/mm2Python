@@ -30,7 +30,17 @@ public class DynamicMemMapReferenceQueue {
 
     private static Queue<Integer> positions = new ConcurrentLinkedQueue<>();
 
-    public DynamicMemMapReferenceQueue(int num_channels_, int num_z_) {
+    public static void resetQueue() {
+//        current_buf.position(0);
+        positions.clear();
+    }
+
+    public static void resetAll() {
+        resetQueue();
+        index = 0;
+    }
+
+    public static void createFileNames(int num_channels_, int num_z_) {
 
         num_channels = num_channels_;
         num_z = num_z_;
@@ -101,15 +111,6 @@ public class DynamicMemMapReferenceQueue {
         return dynamicMapname;
     }
 
-    public static void clear() {
-//        current_buf.position(0);
-        positions.clear();
-    }
-
-    public static void resetAll() {
-        clear();
-        index = 0;
-    }
 
     /**
      * create blank MMap based on supplied byte length.

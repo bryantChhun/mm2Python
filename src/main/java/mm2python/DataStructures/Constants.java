@@ -36,6 +36,7 @@ public class Constants {
     public static long max;
     public static long min;
     public static int init;
+    public static volatile int data_mismatches;
 
     static {
         try {
@@ -43,6 +44,8 @@ public class Constants {
         } catch (OSTypeException osx) {
             reporter.set_report_area("error getting OS type: "+osx);
         }
+
+        bitDepth = 16;
     }
 
     public Constants() {

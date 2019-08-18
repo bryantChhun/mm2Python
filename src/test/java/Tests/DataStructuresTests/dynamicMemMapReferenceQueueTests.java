@@ -19,7 +19,7 @@ import java.nio.MappedByteBuffer;
 
 //todo: write data placement tests
 //todo: rewrite offset tests
-class DynamicMemMapReferenceQueueTests {
+class dynamicMemMapReferenceQueueTests {
 
     private int NUM_CHANNELS = 2;
     private int NUM_Z = 10;
@@ -77,7 +77,8 @@ class DynamicMemMapReferenceQueueTests {
         initializeConstants();
 
         try {
-            new DynamicMemMapReferenceQueue(NUM_CHANNELS, NUM_Z);
+            new DynamicMemMapReferenceQueue();
+            DynamicMemMapReferenceQueue.createFileNames(NUM_CHANNELS, NUM_Z);
         } catch (Exception ex) {
             fail(ex);
         }
@@ -98,12 +99,13 @@ class DynamicMemMapReferenceQueueTests {
         initializeConstants();
 
         try {
-            new DynamicMemMapReferenceQueue(NUM_CHANNELS, NUM_Z);
+            new DynamicMemMapReferenceQueue();
+            DynamicMemMapReferenceQueue.createFileNames(NUM_CHANNELS, NUM_Z);
         } catch (Exception ex) {
             fail(ex);
         }
 
-        DynamicMemMapReferenceQueue.clear();
+        DynamicMemMapReferenceQueue.resetQueue();
         assertTrue(DynamicMemMapReferenceQueue.isEmpty());
 
         clearTempFiles();
@@ -117,7 +119,8 @@ class DynamicMemMapReferenceQueueTests {
         initializeConstants();
 
         try {
-            new DynamicMemMapReferenceQueue(NUM_CHANNELS, NUM_Z);
+            new DynamicMemMapReferenceQueue();
+            DynamicMemMapReferenceQueue.createFileNames(NUM_CHANNELS, NUM_Z);
         } catch (Exception ex) {
             fail(ex);
         }
@@ -136,7 +139,8 @@ class DynamicMemMapReferenceQueueTests {
         initializeConstants();
 
         try {
-            new DynamicMemMapReferenceQueue(NUM_CHANNELS, NUM_Z);
+            new DynamicMemMapReferenceQueue();
+            DynamicMemMapReferenceQueue.createFileNames(NUM_CHANNELS, NUM_Z);
         } catch (Exception ex) {
             fail(ex);
         }
@@ -162,7 +166,8 @@ class DynamicMemMapReferenceQueueTests {
         initializeConstants();
 
         try {
-            new DynamicMemMapReferenceQueue(NUM_CHANNELS, NUM_Z);
+            new DynamicMemMapReferenceQueue();
+            DynamicMemMapReferenceQueue.createFileNames(NUM_CHANNELS, NUM_Z);
         } catch (Exception ex) {
             fail(ex);
         }
@@ -188,7 +193,8 @@ class DynamicMemMapReferenceQueueTests {
         initializeConstants();
 
         try {
-            new DynamicMemMapReferenceQueue(NUM_CHANNELS, NUM_Z);
+            new DynamicMemMapReferenceQueue();
+            DynamicMemMapReferenceQueue.createFileNames(NUM_CHANNELS, NUM_Z);
         } catch (Exception ex) {
             fail(ex);
         }
@@ -219,8 +225,9 @@ class DynamicMemMapReferenceQueueTests {
         int num = 10;
 
         try {
-//            FixedMemMapReferenceQueue.createFileNames(num);
-            new DynamicMemMapReferenceQueue(NUM_CHANNELS, NUM_Z);
+//            FixedMemMapReferenceQueue.DynamicMemMapReferenceQueue(num);
+            new DynamicMemMapReferenceQueue();
+            DynamicMemMapReferenceQueue.createFileNames(NUM_CHANNELS, NUM_Z);
         } catch (Exception ex) {
             fail(ex);
         }

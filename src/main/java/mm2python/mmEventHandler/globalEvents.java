@@ -11,7 +11,7 @@ import org.micromanager.Studio;
 
 import com.google.common.eventbus.Subscribe;
 import java.util.concurrent.ExecutorService;
-import mm2python.mmEventHandler.Executor.main_executor;
+import mm2python.mmEventHandler.Executor.MainExecutor;
 import org.micromanager.events.DisplayAboutToShowEvent;
 
 
@@ -25,7 +25,7 @@ public class globalEvents {
     private static final ExecutorService mmExecutor;
 
     static {
-        mmExecutor = new main_executor().getExecutor();
+        mmExecutor = MainExecutor.getExecutor();
     }
 
     /**
@@ -54,7 +54,7 @@ public class globalEvents {
      */
     public void unRegisterGlobalEvents() {
         reporter.set_report_area(true, false, false,"shutting down event monitoring and clearing dequeue references");
-        reporter.set_report_area("shutting down event monitoring and clearing dequeue references");
+        reporter.set_report_area("shutting down global event monitoring");
         mm.events().unregisterForEvents(this);
     }
 
@@ -67,10 +67,14 @@ public class globalEvents {
      */
     @Subscribe
     public void monitor_aboutToShow(DisplayAboutToShowEvent event) {
-        reporter.set_report_area(true, true, true, "\n");
-        reporter.set_report_area("DisplayAboutToShowEvent event detected");
+        try {
+            reporter.set_report_area(true, true, true, "\n");
+            reporter.set_report_area("DisplayAboutToShowEvent event detected");
 
-        mmExecutor.execute(new globalEventsThread(mm, event.getDisplay()));
+            mmExecutor.execute(new globalEventsThread(mm, event.getDisplay()));
+        } catch (Exception ex) {
+            reporter.set_report_area(ex.toString());
+        }
     }
     
 }
