@@ -11,6 +11,7 @@ import mm2python.DataStructures.Maps.MDSMap;
 import mm2python.DataStructures.Queues.FixedMemMapReferenceQueue;
 import mm2python.DataStructures.Queues.DynamicMemMapReferenceQueue;
 import mm2python.DataStructures.Queues.MDSQueue;
+import mm2python.Utilities.MovingAverage;
 import mm2python.mmDataHandler.Exceptions.NoImageException;
 import mm2python.MPIMethod.Py4J.Exceptions.Py4JListenerException;
 import mm2python.MPIMethod.Py4J.Py4JListener;
@@ -22,7 +23,7 @@ import org.micromanager.data.Image;
 
 import java.nio.MappedByteBuffer;
 
-import mm2python.DataStructures.MovingAverage;
+import mm2python.Utilities.MovingAverageWindow;
 // todo: add more metadata values: file index, buffer_position, length
 
 /**
@@ -70,7 +71,6 @@ public class datastoreEventsThread implements Runnable {
         coord = c_;
         window_name = window_name_;
         prefix = prefix_;
-
         // if using MDA, SummaryMetadata contains channel names
         // if using script, assume "Channel" group is the channel name
         try {
@@ -104,21 +104,30 @@ public class datastoreEventsThread implements Runnable {
         fds = new MDSMap();
 
         mq = new MDSQueue();
-//        reporter.set_report_area("constructed datastoreEventsThread");
     }
     
     @Override
     public void run() {
 
-        long start = System.nanoTime();
+//        if(Constants.getFixedMemMap()){
+//            buffer = FixedMemMapReferenceQueue.getNextBuffer();
+//            buffer_position = 0;
+//        } else {
+//            buffer = DynamicMemMapReferenceQueue.getCurrentBuffer();
+//            buffer_position = DynamicMemMapReferenceQueue.getCurrentPosition();
+//        }
+
+//        long start = System.nanoTime();
 
         // Write memory mapped image
         writeToMemMap();
 
-        long stop = System.nanoTime();
+//        long map_stop = System.nanoTime();
 
         // Write to concurrent hashmap
         writeToHashMap();
+
+//        long hash_stop = System.nanoTime();
 
         // write filename to queue
         // write MetaDataStore to queue
@@ -127,19 +136,26 @@ public class datastoreEventsThread implements Runnable {
         // notify Listeners
 //        notifyListeners();
 
+//        long stop = System.nanoTime();
+//
+//
+//        if(stop-start < Constants.min && Constants.init > 5) {
+//            Constants.min = (stop-start);
+//        }
+//        if(stop-start >Constants.max && Constants.init > 5) {
+//            Constants.max = (stop-start);
+//        }
+//        Constants.init += 1;
 
-        if(stop-start < Constants.min && Constants.init > 5) {
-            Constants.min = (stop-start);
-        }
-        if(stop-start >Constants.max && Constants.init > 5) {
-            Constants.max = (stop-start);
-        }
-        Constants.init += 1;
-
-        reporter.set_report_area("Time elapsed for writes (ns): "+Long.toString(stop-start));
-//        reporter.set_report_area("Max time elapsed for run (ns):"+Long.toString(Constants.max));
-//        reporter.set_report_area("Min time elapsed for run (ns):"+Long.toString(Constants.min));
-        reporter.set_report_area("max average over 10 frame window (ns):"+Long.toString(MovingAverage.next(stop-start)));
+//        reporter.set_report_area("Total Time elapsed for writes (ns): "+Long.toString(MovingAverage.next(stop-start, "sum")));
+//        reporter.set_report_area("\tTime for memmap (ns): "+Long.toString(MovingAverage.next(map_stop-start, "mem_sum")));
+//        reporter.set_report_area("\tTime for hashmap (ns): "+Long.toString(MovingAverage.next(hash_stop-map_stop, "hash_sum")));
+//        reporter.set_report_area("\tTime for queues (ns): "+Long.toString(MovingAverage.next(stop-hash_stop, "queue_sum")));
+//
+////        reporter.set_report_area("Max time elapsed for run (ns):"+Long.toString(Constants.max));
+////        reporter.set_report_area("Min time elapsed for run (ns):"+Long.toString(Constants.min));
+//        reporter.set_report_area("average over 10 frame window (ns):"+Long.toString(MovingAverageWindow.next(stop-start)));
+//        reporter.set_report_area("average over all time        (ns):"+Long.toString(MovingAverage.next(stop-start, "sum")));
 
     }
 
@@ -197,8 +213,9 @@ public class datastoreEventsThread implements Runnable {
 //                out.verifyMemMapAt(buffer_position);
 
                 out.writeToMemMapAt(buffer_position);
+//                out.cast_writeToMemMapAt(buffer_position);
 
-                out.verifyMemMapAt(buffer_position);
+//                out.verifyMemMapAt(buffer_position);
 
             } else {
                 memMapFromBuffer out = new memMapFromBuffer(temp_img, buffer);
@@ -217,7 +234,7 @@ public class datastoreEventsThread implements Runnable {
     private void writeToHashMap() {
         try {
             fds.putMDS(mds);
-            reporter.set_report_area("writing MetaDataStore to Map");
+//            reporter.set_report_area("writing MetaDataStore to Map");
         } catch (Exception ex) {
             reporter.set_report_area(ex.toString());
         }
@@ -225,9 +242,8 @@ public class datastoreEventsThread implements Runnable {
 
     private void writeToQueues() {
         try {
-//            pq.putPath(filename);
             mq.putMDS(mds);
-            reporter.set_report_area("writing to path and MDS queues");
+//            reporter.set_report_area("writing to path and MDS queues");
         } catch (NullPointerException ex) {
             reporter.set_report_area("null ptr exception writing to LinkedBlockingQueue");
         } catch (Exception ex) {

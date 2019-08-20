@@ -13,6 +13,7 @@ import mm2python.DataStructures.Queues.FixedMemMapReferenceQueue;
 import mm2python.DataStructures.Queues.MDSQueue;
 import mm2python.DataStructures.Queues.DynamicMemMapReferenceQueue;
 import mm2python.MPIMethod.Py4J.Py4J;
+import mm2python.Utilities.MovingAverageWindow;
 import mm2python.mmDataHandler.ramDisk.ramDiskConstructor;
 import mm2python.mmDataHandler.ramDisk.ramDiskDestructor;
 import mm2python.mmEventHandler.Executor.MainExecutor;
@@ -33,8 +34,6 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -135,15 +134,15 @@ public class pythonBridgeUI_dialog extends JFrame {
 
         // initialize Constants
         new Constants();
-        new MovingAverage(10);
+        new MovingAverageWindow(10);
 
         if (py4JRadioButton.isSelected()) {
             Constants.setPy4JRadioButton(true);
         }
-        Constants.tempFilePath = guiTempFilePath.getText();
-        Constants.bitDepth = mm.getCMMCore().getImageBitDepth();
-        Constants.height = mm.getCMMCore().getImageHeight();
-        Constants.width = mm.getCMMCore().getImageWidth();
+//        Constants.tempFilePath = guiTempFilePath.getText();
+//        Constants.bitDepth = mm.getCMMCore().getImageBitDepth();
+//        Constants.height = mm.getCMMCore().getImageHeight();
+//        Constants.width = mm.getCMMCore().getImageWidth();
         Constants.setFixedMemMap(true);
         reporter.set_report_area("mm2python.UI INITIALIZATION filename = " + Constants.tempFilePath);
 
@@ -209,6 +208,11 @@ public class pythonBridgeUI_dialog extends JFrame {
     private void start_monitor_global_eventsActionPerformed(ActionEvent evt) {
         reporter.set_report_area("monitoring global events");
 
+        Constants.tempFilePath = guiTempFilePath.getText();
+//        Constants.bitDepth = mm.getCMMCore().getImageBitDepth();
+        Constants.height = mm.getCMMCore().getImageHeight();
+        Constants.width = mm.getCMMCore().getImageWidth();
+
         //1
         if (defaultTempPath.exists() || defaultTempPath.mkdirs()) {
             reporter.set_report_area("tempPath created or already exists");
@@ -269,7 +273,8 @@ public class pythonBridgeUI_dialog extends JFrame {
         //2
 //        shutdownAndAwaitTermination();
         //2b
-        unregisterDatastores(RegisteredDatastores.RegisteredStores);
+        unregisterDatastores(RegisteredDatastores.getMap());
+        RegisteredDatastores.reset();
         //3
         MainExecutor.resetExecutor();
         //4

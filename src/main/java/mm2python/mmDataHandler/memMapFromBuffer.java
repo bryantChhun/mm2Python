@@ -47,6 +47,7 @@ public class memMapFromBuffer {
         if (byteimg == null) {
             throw new NoImageException("image not converted to byte[]");
         }
+//        long start = System.nanoTime();
         try
         {
             buffer.position(position);
@@ -56,6 +57,30 @@ public class memMapFromBuffer {
             reporter.set_report_area("!! Exception !! during write to memmap = "+ex);
             throw ex;
         }
+//        long stop = System.nanoTime();
+//        reporter.set_report_area("Time elapsed for FORCE TO BUFFER (ns): "+Long.toString(stop-start));
+    }
+
+    public void cast_writeToMemMapAt(int position) throws NoImageException {
+        try {
+            byte[] bytes;
+            Object pixels = temp_img.getRawPixels();
+            if (pixels instanceof byte[]) {
+                bytes = (byte[]) pixels;
+            }
+            else if (pixels instanceof short[]) {
+                buffer.position(position);
+                ShortBuffer sbuff = buffer.asShortBuffer();
+                sbuff.put(
+                        (short[]) temp_img.getRawPixels(),
+                        0,
+                        temp_img.getBytesPerPixel() * temp_img.getHeight() * temp_img.getWidth() / 2);
+                buffer.force();
+            }
+        } catch(Exception ex) {
+            System.out.println(ex);
+        }
+
     }
 
     public void verifyMemMapAt(int position) {
@@ -69,11 +94,13 @@ public class memMapFromBuffer {
             Constants.data_mismatches += 1;
             reporter.set_report_area("Constants mismatches = "+Integer.toString(Constants.data_mismatches));
         } else {
-            reporter.set_report_area("IMAGE EQUALS BYTE BUFFER!");
+            reporter.set_report_area("Data verified = "+Integer.toString(Constants.data_mismatches));
         }
     }
 
     private byte[] convertToByte(Image tempImg_) throws UnsupportedOperationException {
+//        long start = System.nanoTime();
+
         try
         {
             byte[] bytes;
@@ -87,15 +114,22 @@ public class memMapFromBuffer {
                 ShortBuffer shortDest = dest.asShortBuffer();
                 shortDest.put(shortPixels);
                 bytes = dest.array();
+
             }
             else {
                 throw new UnsupportedOperationException("Unsupported pixel type");
             }
+//            long stop = System.nanoTime();
+//            reporter.set_report_area("Time elapsed for CONVERT TO BYTE (cast) (ns): "+Long.toString(stop-start));
+
             return bytes;
 
         } catch (Exception ex) {
             System.out.println(ex);
         }
+//        long stop = System.nanoTime();
+//        reporter.set_report_area("Time elapsed for CONVERT TO BYTE (null) (ns): "+Long.toString(stop-start));
+
         return null;
     }
 

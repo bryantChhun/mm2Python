@@ -1,4 +1,4 @@
-package mm2python.DataStructures;
+package mm2python.Utilities;
 
 import java.util.concurrent.ConcurrentLinkedDeque;
 
@@ -6,13 +6,13 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 /**
  * sliding window moving average
  */
-public class MovingAverage {
+public class MovingAverageWindow {
     public static long sum;
     public static int size;
     public static ConcurrentLinkedDeque<Long> list;
 
     /** Initialize your data structure here. */
-    public MovingAverage(int window_size) {
+    public MovingAverageWindow(int window_size) {
         list = new ConcurrentLinkedDeque<>();
         size = window_size;
     }

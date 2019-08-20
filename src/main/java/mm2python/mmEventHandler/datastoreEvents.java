@@ -117,18 +117,14 @@ public class datastoreEvents {
      */
     @Subscribe
     public void monitor_NewImageEvent(NewImageEvent event){
-        long start = System.nanoTime();
 
         try {
             reporter.set_report_area("\nNewImageEvent event detected");
             reporter.set_report_area("\nevent : \t"+event.toString());
             reporter.set_report_area("event Image  : \t" +event.getImage().toString());
-            reporter.set_report_area("event datastore : \t"+event.getDatastore().toString());
             reporter.set_report_area("event coords : \t"+event.getCoords().toString());
             reporter.set_report_area("window name : \t"+window_name);
-//            reporter.set_report_area(true, true, true,"event Image in Datastore at coords : \t"+event.getDatastore().getImage(event.getCoords()).toString());
 
-//            mmExecutor.execute(new datastoreEventsThread(mm, event.getDatastore(), event.getCoords(), window_name));
             mmExecutor.execute(new datastoreEventsThread(
                     event.getDatastore(),
                     event.getCoords(),

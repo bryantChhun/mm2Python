@@ -19,12 +19,13 @@ import java.util.concurrent.ConcurrentLinkedDeque;
  */
 public class FixedMemMapReferenceQueue {
 
-    private static final Queue<String> mmap_filename_queue = new ConcurrentLinkedDeque<>();
+    private static Queue<String> mmap_filename_queue = new ConcurrentLinkedDeque<>();
 
-    private static final Queue<MappedByteBuffer> mmap_buffer_queue = new ConcurrentLinkedDeque<>();
+    private static Queue<MappedByteBuffer> mmap_buffer_queue = new ConcurrentLinkedDeque<>();
 
     public static void resetQueue() {
         mmap_filename_queue.clear();
+        mmap_buffer_queue.clear();
     }
 
     /**
