@@ -77,9 +77,11 @@ public class datastoreEventsThread implements Runnable {
             final String[] channel_names = data_.getSummaryMetadata().getChannelNames();
             channel_name = channel_names[coord.getChannel()];
         } catch (NullPointerException nex) {
+            reporter.set_report_area(true, true, true, "UNABLE TO RETRIEVE CHANNEL NAME FROM SUMMARY METADATA");
             channel_name = channel_name_;
             reporter.set_report_area("\nscript acquisition detected, channel name = "+channel_name);
         } catch (ArrayIndexOutOfBoundsException arrayex) {
+            reporter.set_report_area(true, true, true, "ARRAY INDEX ERROR WHEN RETRIEVING CHANNEL NAME FROM SUMMARY METADATA");
             channel_name=channel_name_;
         }
 

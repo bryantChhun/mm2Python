@@ -119,6 +119,20 @@ public class datastoreEvents {
             reporter.set_report_area("event coords : \t"+event.getCoords().toString());
             reporter.set_report_area("window name : \t"+window_name);
 
+            String channelgroup = mm.getCMMCore().getChannelGroup();
+            String currentconfig = mm.getCMMCore().getCurrentConfig(channelgroup);
+
+            // try retrieving channel name 100 times every 100 us for 1 ms
+            if(currentconfig.isEmpty()){
+                for(int count=0; count<100; count++){
+                    currentconfig = mm.getCMMCore().getCurrentConfig(channelgroup);
+                    if(!currentconfig.isEmpty()){
+                        break;
+                    }
+                    Thread.sleep(0,100000);
+                }
+            }
+
             mmExecutor.execute(new datastoreEventsThread(
                     event.getDatastore(),
                     event.getCoords(),
