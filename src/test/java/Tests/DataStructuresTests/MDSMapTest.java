@@ -1,10 +1,10 @@
 package Tests.DataStructuresTests;
 
-import mm2python.DataStructures.*;
-import mm2python.DataStructures.Builders.MDSBuilder;
-import mm2python.DataStructures.Builders.MDSParamBuilder;
-import mm2python.DataStructures.Builders.MDSParameters;
-import mm2python.DataStructures.Maps.MDSMap;
+import org.mm2python.DataStructures.*;
+import org.mm2python.DataStructures.Builders.MDSBuilder;
+import org.mm2python.DataStructures.Builders.MDSParamBuilder;
+import org.mm2python.DataStructures.Builders.MDSParameters;
+import org.mm2python.DataStructures.Maps.MDSMap;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;

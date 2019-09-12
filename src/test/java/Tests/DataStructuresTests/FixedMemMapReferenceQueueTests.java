@@ -1,7 +1,7 @@
 package Tests.DataStructuresTests;
 
-import mm2python.DataStructures.Constants;
-import mm2python.DataStructures.Queues.FixedMemMapReferenceQueue;
+import org.mm2python.DataStructures.Constants;
+import org.mm2python.DataStructures.Queues.FixedMemMapReferenceQueue;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;

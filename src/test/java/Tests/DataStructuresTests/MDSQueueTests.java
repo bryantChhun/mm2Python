@@ -1,9 +1,9 @@
 package Tests.DataStructuresTests;
 
-import mm2python.DataStructures.Builders.MDSBuilder;
-import mm2python.DataStructures.Builders.MDSParameters;
-import mm2python.DataStructures.MetaDataStore;
-import mm2python.DataStructures.Queues.MDSQueue;
+import org.mm2python.DataStructures.Builders.MDSBuilder;
+import org.mm2python.DataStructures.Builders.MDSParameters;
+import org.mm2python.DataStructures.MetaDataStore;
+import org.mm2python.DataStructures.Queues.MDSQueue;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -41,7 +41,7 @@ public class MDSQueueTests {
         buildQueue(40);
 
         int i = 0;
-        while(!mdsq.isMDSQueueEmpty()) {
+        while(!mdsq.isQueueEmpty()) {
             mds = mdsq.getFirstMDS();
             assertEquals(i, mds.getTime().intValue());
             i++;
@@ -54,7 +54,7 @@ public class MDSQueueTests {
         int i = 40;
         buildQueue(i);
 
-        while(!mdsq.isMDSQueueEmpty()) {
+        while(!mdsq.isQueueEmpty()) {
             mds = mdsq.getLastMDS();
             assertEquals(i-1, mds.getTime().intValue());
             i--;

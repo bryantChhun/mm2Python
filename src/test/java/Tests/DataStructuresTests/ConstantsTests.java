@@ -1,6 +1,6 @@
 package Tests.DataStructuresTests;
 
-import mm2python.DataStructures.Constants;
+import org.mm2python.DataStructures.Constants;
 import org.junit.jupiter.api.Test;
 
 import static junit.framework.TestCase.assertTrue;
