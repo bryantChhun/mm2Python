@@ -15,6 +15,8 @@ import org.mm2python.UI.pythonBridgeUI_dialog;
 import mmcorej.CMMCore;
 import org.micromanager.MenuPlugin;
 import org.micromanager.Studio;
+import org.mm2python.UI.run_ui;
+import org.mm2python.mmEventHandler.Executor.MainExecutor;
 import org.scijava.plugin.Plugin;
 import org.scijava.plugin.SciJavaPlugin;
 
@@ -43,19 +45,17 @@ public class mm2PythonPlugin implements MenuPlugin, SciJavaPlugin{
 
     @Override
     public void onPluginSelected() {
-        if (myFrame_ == null) {
-            try {
-//                LocalStudio ls = new LocalStudio(mm_);
-//                LocalCore lc = new LocalCore(mmc_);
-//                myFrame_ = new pythonBridgeUI_dialog(ls.getStudio(), lc.getCore());
-                myFrame_ = new pythonBridgeUI_dialog(mm_, mmc_);
-                mm_.events().registerForEvents(myFrame_);
-            } catch (Exception e) {
-                mm_.logs().showError(e);
-            }
-        }
-        myFrame_.pack();
-        myFrame_.setVisible(true);
+//        if (myFrame_ == null) {
+//            try {
+//                myFrame_ = new pythonBridgeUI_dialog(mm_, mmc_);
+//                mm_.events().registerForEvents(myFrame_);
+//            } catch (Exception e) {
+//                mm_.logs().showError(e);
+//            }
+//        }
+//        myFrame_.pack();
+//        myFrame_.setVisible(true);
+        MainExecutor.getExecutor().execute(new run_ui(mm_, mmc_));
     }
 
     @Override

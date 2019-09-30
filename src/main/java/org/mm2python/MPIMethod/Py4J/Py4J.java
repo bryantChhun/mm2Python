@@ -22,20 +22,20 @@ public class Py4J implements messengerInterface {
     private static Studio mm;
     private static GatewayServer gatewayServer;
 
+    /**
+     * Constructor sets classloading strategy.
+     * micro-manager plugin system has its own classloading strategy, which interferes with py4j
+     * @param mm_ : Studio
+     */
     public Py4J(Studio mm_) {
         mm = mm_;
         RootClassLoadingStrategy rmmClassLoader = new RootClassLoadingStrategy();
         ReflectionUtil.setClassLoadingStrategy(rmmClassLoader);
     }
 
-    @Override
-    public void startConnection(int port) {
-        gatewayServer = new GatewayServer(new Py4JEntryPoint(mm), port);
-        gatewayServer.start();
-
-        reporter.set_report_area(true, true, true,"Gateway Started at IP:port = "+gatewayServer.getAddress()+":"+gatewayServer.getPort());
-    }
-    
+    /**
+     * Open ports using py4j for python process
+     */
     @Override
     public void startConnection() {
         gatewayServer = new GatewayServer(new Py4JEntryPoint(mm));
@@ -44,19 +44,24 @@ public class Py4J implements messengerInterface {
         Constants.ports.add(port);
         reporter.set_report_area(true, true, true,"Gateway Started at IP:port = "+gatewayServer.getAddress()+":"+gatewayServer.getPort());
     }
-    
-    @Override
-    public void stopConnection(int port) {
-        gatewayServer.shutdown();
-        reporter.set_report_area(true, true, true, String.format("Gateway at port %04d shut down", port));
-    }
-    
+
+    /**
+     * close default port
+     */
     @Override
     public void stopConnection() {
-        Constants.ports.stream().forEach((port) -> {
-            gatewayServer.shutdown();
-            reporter.set_report_area(true, true, true, String.format("Gateway at port %04d shut down", port));
-        });
-
+        gatewayServer.shutdown();
+        reporter.set_report_area(true, true, true, "Gateway at default port shut down");
     }
+
+//    /**
+//     * close ports for
+//     * @param port
+//     */
+//    @Override
+//    public void stopConnection(int port) {
+//        gatewayServer.shutdown();
+//        reporter.set_report_area(true, true, true, String.format("Gateway at port %04d shut down", port));
+//    }
+
 }

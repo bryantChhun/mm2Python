@@ -18,6 +18,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FixedMemMapReferenceQueueTests {
 
+    private FixedMemMapReferenceQueue fixed;
+    //TODO: mock the file names
+
     /**
      * to delete generated temp files and temp directory
      */
@@ -60,12 +63,17 @@ class FixedMemMapReferenceQueueTests {
         }
     }
 
+    private void setUp() {
+        fixed = new FixedMemMapReferenceQueue();
+    }
+
     /**
      * test creation of memory maps
      */
     @Test
     void testCreateMMap() {
         initializeConstants();
+        setUp();
 
         try {
             FixedMemMapReferenceQueue.createFileNames(10);
@@ -73,17 +81,18 @@ class FixedMemMapReferenceQueueTests {
             fail(ex);
         }
 
-        assertTrue(FixedMemMapReferenceQueue.nextFileNameExists());
+        assertTrue(fixed.nextFileNameExists());
         clearTempFiles();
 
     }
 
     /**
-     * test resetQueue
+     * test resetQueues
      */
     @Test
     void testClear() {
         initializeConstants();
+        setUp();
 
         try {
             FixedMemMapReferenceQueue.createFileNames(10);
@@ -91,9 +100,9 @@ class FixedMemMapReferenceQueueTests {
             fail(ex);
         }
 
-        assertTrue(FixedMemMapReferenceQueue.nextFileNameExists());
-        FixedMemMapReferenceQueue.resetQueue();
-        assertFalse(FixedMemMapReferenceQueue.nextFileNameExists());
+        assertTrue(fixed.nextFileNameExists());
+        FixedMemMapReferenceQueue.resetQueues();
+        assertFalse(fixed.nextFileNameExists());
         clearTempFiles();
     }
 
@@ -103,6 +112,7 @@ class FixedMemMapReferenceQueueTests {
     @Test
     void testGetNext() {
         initializeConstants();
+        setUp();
 
         try {
             FixedMemMapReferenceQueue.createFileNames(10);
@@ -110,8 +120,8 @@ class FixedMemMapReferenceQueueTests {
             fail(ex);
         }
 
-        assertTrue(FixedMemMapReferenceQueue.nextFileNameExists());
-        String next = FixedMemMapReferenceQueue.getNextFileName();
+        assertTrue(fixed.nextFileNameExists());
+        String next = fixed.getNextFileName();
         assertEquals(String.class, next.getClass());
         clearTempFiles();
     }
@@ -122,6 +132,7 @@ class FixedMemMapReferenceQueueTests {
     @Test
     void testGetNextCircular() {
         initializeConstants();
+        setUp();
         int num = 10;
 
         try {
@@ -130,9 +141,9 @@ class FixedMemMapReferenceQueueTests {
             fail(ex);
         }
 
-        assertTrue(FixedMemMapReferenceQueue.nextFileNameExists());
+        assertTrue(fixed.nextFileNameExists());
         for(int i = 0; i<(2*num); i++) {
-            String next = FixedMemMapReferenceQueue.getNextFileName();
+            String next = fixed.getNextFileName();
             assertEquals(String.class, next.getClass());
         }
         clearTempFiles();
@@ -148,6 +159,8 @@ class FixedMemMapReferenceQueueTests {
     void testGetNextConcurrent_finite() {
         // follow: https://dzone.com/articles/how-i-test-my-java-classes-for-thread-safety
         initializeConstants();
+        setUp();
+
         int num = 10;
 
         try {
@@ -165,7 +178,7 @@ class FixedMemMapReferenceQueueTests {
             futures.add(service.submit(
                     () -> {
                         latch.await();
-                        return FixedMemMapReferenceQueue.getNextFileName();
+                        return fixed.getNextFileName();
                     }
             ));
         }
@@ -197,6 +210,7 @@ class FixedMemMapReferenceQueueTests {
     void testGetNextConcurrent_order() {
         // follow: https://dzone.com/articles/how-i-test-my-java-classes-for-thread-safety
         initializeConstants();
+        setUp();
         int num = 20;
 
         try {
@@ -214,7 +228,7 @@ class FixedMemMapReferenceQueueTests {
             futures.add(service.submit(
                     () -> {
                         latch.await();
-                        return FixedMemMapReferenceQueue.getNextFileName();
+                        return fixed.getNextFileName();
                     }
             ));
         }

@@ -1,21 +1,21 @@
 <!--[![Build Status](https://travis-ci.org/java-native-access/jna.svg?branch=master)](https://travis-ci.org/java-native-access/jna)-->
 
-# mm2python
+# org.mm2python
 micro-manager 2.0 plugin that enables python control using Py4j remote procedure calls and IPC data transfer using memory mapped files
 
 # dependencies
-mm2python is a plugin for the open-source microscopy control project Micro-Manager (https://micro-manager.org/) (https://github.com/micro-manager/micro-manager)
+org.mm2python is a plugin for the open-source microscopy control project Micro-Manager (https://micro-manager.org/) (https://github.com/micro-manager/micro-manager)
 Please download and install version 2.0 from that site.
 
-mm2python depends on the Py4j project (https://www.py4j.org/).  It is included as a dependency in the gradle build
+org.mm2python depends on the Py4j project (https://www.py4j.org/).  It is included as a dependency in the gradle build
 
 # getting started
 For micro-manager users:
-> copy the mm2python .jar file from build/libs folder to your micro-manager plugin directory.
+> copy the org.mm2python .jar file from build/libs folder to your micro-manager plugin directory.
 > The next time you start micro-manager, it should be selectable from the menu.
 
 For developers:
-> mm2python uses the gradle build system to manage tests, dependencies and build.
+> org.mm2python uses the gradle build system to manage tests, dependencies and build.
 >
 > Additionally, it was developed in IntelliJ and includes .idea files to help manage debugging configurations.
 > The package .jar can be built by running the "Jar" configuration.  Then that .jar can be copied to your micro-manager directory by running "copyCoreToMM" configuration.
@@ -25,7 +25,7 @@ For developers:
 >
 
 # how to use
-mm2python has a simple UI with three tabs:
+org.mm2python has a simple UI with three tabs:
 > 1) Main Pane:  Contains a console to display events.  Initiate the bridge to python (using py4j) by clicking the "create python bridge" button.  Initiate the event monitor to track data generation by clicking the "START monitor" button
 
 > 2) Configuration:  Currently, there is only one implemented messenger interface: Py4j.  You can select one of two temp-file management systems: fixed or dynamic.
@@ -48,7 +48,7 @@ For most users, you will simply use default values.  Then the only need is to cl
 > gate = gateway.entry_point
 > ```
 >
-> 3 - to access data using mm2python (method 1):
+> 3 - to access data using org.mm2python (method 1):
 > ``` buildoutcfg
 > # if you want the newest data
 > meta = gate.getLastMeta()
@@ -63,7 +63,7 @@ For most users, you will simply use default values.  Then the only need is to cl
 > ```
 > "dat" is an ndarray-like object that can be used interchangeably with numpy arrays.
 >
-> 4 - to access data using mm2python (method 2):
+> 4 - to access data using org.mm2python (method 2):
 > ``` buildoutcfg
 > # to retrieve any data based on coordinates, or subset of coordinates, use the builder
 > paramBuilder = gate.getParameterBuilder()
@@ -107,8 +107,8 @@ For most users, you will simply use default values.  Then the only need is to cl
 > Be careful to use appropriate types when passing values.  Most micro-manager methods require float.
 
 # about
-> clicking "START monitor" causes mm2python to register for some global and datastore events (https://micro-manager.org/wiki/Version_2.0_API_Events).
-> Every time a "New Image Event" occurs, mm2python pulls a new thread to:
+> clicking "START monitor" causes org.mm2python to register for some global and datastore events (https://micro-manager.org/wiki/Version_2.0_API_Events).
+> Every time a "New Image Event" occurs, org.mm2python pulls a new thread to:
 > 1) create a MetaDataStore object that contains coordinate and additional information.
 > 2) write a memory mapped file, representing this data's location in system memory, to disk.
 > 3) write the MetaDataStore object in 1 to a concurrent hashmap and to a concurrent linked deque

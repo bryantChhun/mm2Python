@@ -5,6 +5,8 @@
  */
 package org.mm2python.mmEventHandler;
 
+import net.bytebuddy.build.Plugin;
+import org.micromanager.data.SummaryMetadata;
 import org.mm2python.DataStructures.*;
 import org.mm2python.DataStructures.Builders.MDSBuilder;
 import org.mm2python.DataStructures.Maps.MDSMap;
@@ -37,6 +39,7 @@ public class datastoreEventsThread implements Runnable {
     private final Coords coord;
     private final String prefix;
     private final String window_name;
+    private final SummaryMetadata summary;
     private String channel_name;
 
     // variables for MetaDataStorage
@@ -48,6 +51,8 @@ public class datastoreEventsThread implements Runnable {
     private MappedByteBuffer buffer;
     private String filename;
     private int buffer_position = 0;
+    private FixedMemMapReferenceQueue fixed;
+    private DynamicMemMapReferenceQueue dynamic;
 
     /**
      * Executes sequence of tasks run by executor:
@@ -57,49 +62,54 @@ public class datastoreEventsThread implements Runnable {
      *  4) notifies any py4j listeners
      * @param data_ : Datastore associated with triggered event
      * @param c_ : Coords associated with triggered event
-     * @param channel_name_ : configuration channel name
      * @param prefix_ : MDA experiment prefix
      * @param window_name_ : display window that triggered event
      */
-    datastoreEventsThread(Datastore data_,
-                          Coords c_,
-                          String channel_name_,
-                          String prefix_,
-                          String window_name_) {
+    public datastoreEventsThread(Datastore data_,
+                                 Coords c_,
+                                 Image i_,
+                                 SummaryMetadata summary_,
+                                 String current_channel_,
+                                 String prefix_,
+                                 String window_name_) {
         // assigning parameters
-        temp_img = data_.getImage(c_);
+        temp_img = i_;
         coord = c_;
+        summary = summary_;
+        channel_name = current_channel_;
         window_name = window_name_;
         prefix = prefix_;
+
+        // queues
+        fixed = new FixedMemMapReferenceQueue();
+        dynamic = new DynamicMemMapReferenceQueue();
+
         // if using MDA, SummaryMetadata contains channel names
         // if using script, assume "Channel" group is the channel name
         try {
-            final String[] channel_names = data_.getSummaryMetadata().getChannelNames();
+            final String[] channel_names = summary.getChannelNames();
             channel_name = channel_names[coord.getChannel()];
         } catch (NullPointerException nex) {
             reporter.set_report_area(true, true, true, "UNABLE TO RETRIEVE CHANNEL NAME FROM SUMMARY METADATA");
-            channel_name = channel_name_;
             reporter.set_report_area("\nscript acquisition detected, channel name = "+channel_name);
         } catch (ArrayIndexOutOfBoundsException arrayex) {
             reporter.set_report_area(true, true, true, "ARRAY INDEX ERROR WHEN RETRIEVING CHANNEL NAME FROM SUMMARY METADATA");
-            channel_name=channel_name_;
         }
 
-        if(channel_name == null){
+        if(channel_name.isEmpty()){
             reporter.set_report_area("\nNO CHANNEL NAME FOUND\n");
         }
 
-        // NO LONGER USED, USE BUFFERS INSTEAD
         // assign filename based on type of queue or data source
         filename = getFileName();
 
         //
         if(Constants.getFixedMemMap()){
-            buffer = FixedMemMapReferenceQueue.getNextBuffer();
+            buffer = fixed.getNextBuffer();
             buffer_position = 0;
         } else {
-            buffer = DynamicMemMapReferenceQueue.getCurrentBuffer();
-            buffer_position = DynamicMemMapReferenceQueue.getCurrentPosition();
+            buffer = dynamic.getCurrentBuffer();
+            buffer_position = dynamic.getCurrentPosition();
         }
 
         //create MetaDataStore for this object
@@ -155,9 +165,9 @@ public class datastoreEventsThread implements Runnable {
 
     private String getFileName() {
         if(Constants.getFixedMemMap()) {
-                filename = FixedMemMapReferenceQueue.getNextFileName();
+                filename = fixed.getNextFileName();
             } else {
-                filename = DynamicMemMapReferenceQueue.getCurrentFileName();
+                filename = dynamic.getCurrentFileName();
             }
             reporter.set_report_area("datastoreEventsThread MDA = "+filename);
 

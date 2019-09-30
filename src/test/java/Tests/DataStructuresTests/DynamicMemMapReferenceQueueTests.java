@@ -23,6 +23,7 @@ class DynamicMemMapReferenceQueueTests {
 
     private int NUM_CHANNELS = 2;
     private int NUM_Z = 10;
+    private DynamicMemMapReferenceQueue dynamic;
 
     // ========= SETUP CODE =====================
     /**
@@ -67,6 +68,10 @@ class DynamicMemMapReferenceQueueTests {
         }
     }
 
+    private void setUp() {
+        dynamic = new DynamicMemMapReferenceQueue();
+    }
+
     // ========= TESTS =====================
 
     /**
@@ -75,38 +80,38 @@ class DynamicMemMapReferenceQueueTests {
     @Test
     void testCreateMMap() {
         initializeConstants();
+        setUp();
 
         try {
-            new DynamicMemMapReferenceQueue();
-            DynamicMemMapReferenceQueue.createFileNames(NUM_CHANNELS, NUM_Z);
+            dynamic.createFileNames(NUM_CHANNELS, NUM_Z);
         } catch (Exception ex) {
             fail(ex);
         }
 
-        assertFalse(DynamicMemMapReferenceQueue.isEmpty());
-        assertEquals(0, DynamicMemMapReferenceQueue.getCurrentPosition());
-        assertEquals(16*2048*2048/8, DynamicMemMapReferenceQueue.getCurrentByteLength());
+        assertFalse(dynamic.isEmpty());
+        assertEquals(0, dynamic.getCurrentPosition());
+        assertEquals(16*2048*2048/8, dynamic.getCurrentByteLength());
 
         clearTempFiles();
 
     }
 
     /**
-     * test resetQueue
+     * test resetQueues
      */
     @Test
     void testClear() {
         initializeConstants();
+        setUp();
 
         try {
-            new DynamicMemMapReferenceQueue();
-            DynamicMemMapReferenceQueue.createFileNames(NUM_CHANNELS, NUM_Z);
+            dynamic.createFileNames(NUM_CHANNELS, NUM_Z);
         } catch (Exception ex) {
             fail(ex);
         }
 
-        DynamicMemMapReferenceQueue.resetQueue();
-        assertTrue(DynamicMemMapReferenceQueue.isEmpty());
+        dynamic.resetQueue();
+        assertTrue(dynamic.isEmpty());
 
         clearTempFiles();
     }
@@ -117,15 +122,15 @@ class DynamicMemMapReferenceQueueTests {
     @Test
     void testGetNextFileName() {
         initializeConstants();
+        setUp();
 
         try {
-            new DynamicMemMapReferenceQueue();
-            DynamicMemMapReferenceQueue.createFileNames(NUM_CHANNELS, NUM_Z);
+            dynamic.createFileNames(NUM_CHANNELS, NUM_Z);
         } catch (Exception ex) {
             fail(ex);
         }
 
-        String next = DynamicMemMapReferenceQueue.getCurrentFileName();
+        String next = dynamic.getCurrentFileName();
         assertEquals(String.class, next.getClass());
 
         clearTempFiles();
@@ -137,19 +142,19 @@ class DynamicMemMapReferenceQueueTests {
     @Test
     void testPositionIncrement() {
         initializeConstants();
+        setUp();
 
         try {
-            new DynamicMemMapReferenceQueue();
-            DynamicMemMapReferenceQueue.createFileNames(NUM_CHANNELS, NUM_Z);
+            dynamic.createFileNames(NUM_CHANNELS, NUM_Z);
         } catch (Exception ex) {
             fail(ex);
         }
 
-        int bytelength = DynamicMemMapReferenceQueue.getCurrentByteLength();
+        int bytelength = dynamic.getCurrentByteLength();
 
         int i = 0;
-        while(!DynamicMemMapReferenceQueue.isEmpty()) {
-            int off = DynamicMemMapReferenceQueue.getCurrentPosition();
+        while(!dynamic.isEmpty()) {
+            int off = dynamic.getCurrentPosition();
             assertEquals(i, off);
             i += bytelength;
         }
@@ -164,23 +169,23 @@ class DynamicMemMapReferenceQueueTests {
     @Test
     void testDynamicCreation() {
         initializeConstants();
+        setUp();
 
         try {
-            new DynamicMemMapReferenceQueue();
-            DynamicMemMapReferenceQueue.createFileNames(NUM_CHANNELS, NUM_Z);
+            dynamic.createFileNames(NUM_CHANNELS, NUM_Z);
         } catch (Exception ex) {
             fail(ex);
         }
 
         int position = -1;
-        String firstFileName = DynamicMemMapReferenceQueue.getCurrentFileName();
+        String firstFileName = dynamic.getCurrentFileName();
 
         for(int i =0; i < NUM_CHANNELS*NUM_Z + 1; i++) {
-            MappedByteBuffer buf = DynamicMemMapReferenceQueue.getCurrentBuffer();
-            position = DynamicMemMapReferenceQueue.getCurrentPosition();
+            MappedByteBuffer buf = dynamic.getCurrentBuffer();
+            position = dynamic.getCurrentPosition();
         }
         assertEquals(0, position);
-        assertNotEquals(firstFileName, DynamicMemMapReferenceQueue.getCurrentFileName());
+        assertNotEquals(firstFileName, dynamic.getCurrentFileName());
 
         clearTempFiles();
     }
@@ -191,17 +196,17 @@ class DynamicMemMapReferenceQueueTests {
     @Test
     void testDataPlacement() {
         initializeConstants();
+        setUp();
 
         try {
-            new DynamicMemMapReferenceQueue();
-            DynamicMemMapReferenceQueue.createFileNames(NUM_CHANNELS, NUM_Z);
+            dynamic.createFileNames(NUM_CHANNELS, NUM_Z);
         } catch (Exception ex) {
             fail(ex);
         }
 
         byte[] array = new byte[512*512];
-        MappedByteBuffer buf = DynamicMemMapReferenceQueue.getCurrentBuffer();
-        int pos = DynamicMemMapReferenceQueue.getCurrentPosition();
+        MappedByteBuffer buf = dynamic.getCurrentBuffer();
+        int pos = dynamic.getCurrentPosition();
         buf.put(array, 0 , pos);
         buf.force();
 
@@ -220,14 +225,13 @@ class DynamicMemMapReferenceQueueTests {
     void testGetNextConcurrent() {
         // follow: https://dzone.com/articles/how-i-test-my-java-classes-for-thread-safety
         initializeConstants();
+        setUp();
 
         // make sure num is < num_channels*num_z
         int num = 10;
 
         try {
-//            FixedMemMapReferenceQueue.DynamicMemMapReferenceQueue(num);
-            new DynamicMemMapReferenceQueue();
-            DynamicMemMapReferenceQueue.createFileNames(NUM_CHANNELS, NUM_Z);
+            dynamic.createFileNames(NUM_CHANNELS, NUM_Z);
         } catch (Exception ex) {
             fail(ex);
         }
@@ -240,7 +244,7 @@ class DynamicMemMapReferenceQueueTests {
             futures.add(service.submit(
                     () -> {
                         latch.await();
-                        return DynamicMemMapReferenceQueue.getCurrentPosition();
+                        return dynamic.getCurrentPosition();
                     }
             ));
         }

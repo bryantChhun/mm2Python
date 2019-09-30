@@ -73,7 +73,7 @@ public class globalEvents {
 
             mmExecutor.execute(new globalEventsThread(mm, event.getDisplay()));
         } catch (Exception ex) {
-            reporter.set_report_area(ex.toString());
+            reporter.set_report_area("EXCEPTION = "+ex.toString());
         }
     }
     

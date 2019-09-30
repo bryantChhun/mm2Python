@@ -10,13 +10,9 @@ package org.mm2python.MPIMethod;
  * @author bryant.chhun
  */
 public interface messengerInterface {
-    
-    public void startConnection(int port);
-    
+
     public void startConnection();
-    
-    public void stopConnection(int port);
-    
+
     public void stopConnection();
-    
+
 }

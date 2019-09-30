@@ -188,7 +188,8 @@ public class pythonBridgeUI_dialog extends JFrame {
     }
 
     private void shutdown_python_bridgeActionPerformed(ActionEvent evt) {
-        gate.stopConnection(ABORT);
+//        gate.stopConnection(ABORT);
+        gate.stopConnection();
     }
 
     /**
@@ -253,8 +254,8 @@ public class pythonBridgeUI_dialog extends JFrame {
      * 2) shutdown threads (not implemented)
      * 2b) unregister datastores
      * 3) call reset executors
-     * 4) resetQueue MDSqueues and MDSmaps
-     * 5) resetQueue memmap filesnames and references
+     * 4) resetQueues MDSqueues and MDSmaps
+     * 5) resetQueues memmap filesnames and references
      *
      * @param evt :
      */
@@ -278,7 +279,7 @@ public class pythonBridgeUI_dialog extends JFrame {
         MDSQueue.resetQueue();
         MDSMap.clearMap();
         //5
-        FixedMemMapReferenceQueue.resetQueue();
+        FixedMemMapReferenceQueue.resetQueues();
         DynamicMemMapReferenceQueue.resetAll();
         clearTempPath.clearTempPathContents();
         mm.live().getDisplay().requestToClose();

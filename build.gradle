@@ -81,27 +81,35 @@ dependencies {
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation 'com.google.guava:guava:23.0'
 
+    testImplementation 'org.mockito:mockito-inline:2.13.0'
+
     // JUnit 5
     compile group: 'org.junit.platform', name: 'junit-platform-commons', version: '1.2.0'
     compile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.2.0'
     compile group: 'org.junit.vintage', name: 'junit-vintage-engine', version: '5.2.0'
 
+    // Mockito
+    compile group: 'org.mockito', name: 'mockito-core', version: '3.0.0'
+//    compile group: 'org.mockito', name: 'mockito-junit-jupiter', version: '3.0.0'
+
+    // PowerMock
+//    compile group: 'org.powermock', name: 'powermock-api-mockito', version: '1.7.4'
+//    compile group: 'org.powermock', name: 'powermock-module-junit4', version: '2.0.2'
+
+
     // Micromanager core jars
     // somehow, micro-manager depends critically on this distributed scijava .jar
     compile fileTree(include: ['MMCoreJ.jar', 'MMJ_.jar', 'scijava-common-2.46.0.jar'], exclude: 'mm2Python.jar', dir: core_plugin_path)
+    compile fileTree(include: ['ij.jar'], dir: app_path)
 
     //zeroMQ
-    // compile group: 'org.zeromq', name: 'jzmq', version: '2.1.0'
-
-    //scijava-common
-//    compile group: 'org.scijava', name: 'scijava-common', version: '2.46.0'
-//    core_libs group: 'org.scijava', name: 'scijava-common', version: '2.46.0'
+    // compile group: 'org.zeromq', name: 'jeromq', version: '0.5.1'
 
     //Py4J
     compile group: 'net.sf.py4j', name: 'py4j', version: '0.10.8.1'
     core_libs group: 'net.sf.py4j', name: 'py4j', version: '0.10.8.1'
 
-    // IntelliJ mm2python.UI Designer
+    // IntelliJ org.mm2python.UI Designer
     compile group: 'com.intellij', name: 'forms_rt', version: '7.0.3'
     core_libs group: 'com.intellij', name: 'forms_rt', version: '7.0.3'
 
@@ -127,11 +135,11 @@ jar {
 
 task copyCoreToMM(type: Copy) {
     if(OperatingSystem.current().isMacOsX()) {
-        from 'build/libs/mm2Python.jar'
+        from 'build/libs/mm2python.jar'
         into app_path + "/plugins/Micro-Manager"
     }
     else if(OperatingSystem.current().isWindows()) {
-        from 'build/libs/mm2Python.jar'
+        from 'build/libs/mm2python.jar'
         into app_path + "\\plugins\\Micro-Manager"
     } else {
         println "unsupported OS"
@@ -142,7 +150,7 @@ task copyCoreToMM(type: Copy) {
 // PUBLISHING
 
 archivesBaseName = 'mm2python'
-group = 'org.bryantchhun'
+group = 'bryantchhun'
 version = '0.0.1'
 description = 'desc. for mm2python'
 
@@ -158,6 +166,7 @@ publishing {
 }
 
 bintray {
+    // DO NOT PUT YOUR KEY HERE.  Set your computer's system environment variable instead.
     user = System.getenv('BINTRAY_USER')
     key = System.getenv('BINTRAY_KEY')
     publications = ['MyPublication']

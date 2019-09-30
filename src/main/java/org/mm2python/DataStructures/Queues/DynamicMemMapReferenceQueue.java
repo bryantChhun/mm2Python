@@ -86,15 +86,15 @@ public class DynamicMemMapReferenceQueue {
     }
 
     // if called before getCurrentBuffer and positionQueue is empty, will fail.
-    public static int getCurrentPosition() {
+    public int getCurrentPosition() {
         return positions.remove();
     }
 
-    public static boolean isEmpty() {
+    public boolean isEmpty() {
         return positions.isEmpty();
     }
 
-    public static MappedByteBuffer getCurrentBuffer() {
+    public MappedByteBuffer getCurrentBuffer() {
         if(isEmpty()) {
             createDynamicMemMapStore();
             return current_buf;
@@ -103,11 +103,11 @@ public class DynamicMemMapReferenceQueue {
         }
     }
 
-    public static int getCurrentByteLength() {
+    public int getCurrentByteLength() {
         return bytelength;
     }
 
-    public static String getCurrentFileName() {
+    public String getCurrentFileName() {
         return dynamicMapname;
     }
 

@@ -5,15 +5,12 @@
  */
 package org.mm2python.mmEventHandler;
 
+import net.bytebuddy.build.Plugin;
+import org.micromanager.data.*;
 import org.mm2python.DataStructures.Maps.RegisteredDatastores;
 import org.mm2python.UI.reporter;
 
 import org.micromanager.Studio;
-import org.micromanager.data.Datastore;
-import org.micromanager.data.Coords;
-import org.micromanager.data.NewImageEvent;
-import org.micromanager.data.DatastoreFrozenEvent;
-import org.micromanager.data.DatastoreSavePathEvent;
 
 import com.google.common.eventbus.Subscribe;
 import java.util.concurrent.ExecutorService;
@@ -73,7 +70,9 @@ public class datastoreEvents {
                 try {
                     mmExecutor.execute(new datastoreEventsThread(data,
                             c,
-                            mm.getCMMCore().getCurrentConfig("Channel"),
+                            data.getImage(c),
+                            data.getSummaryMetadata(),
+                            "",
                             mm.acquisitions().getAcquisitionSettings().prefix,
                             window_name)
                     );
@@ -120,23 +119,31 @@ public class datastoreEvents {
             reporter.set_report_area("window name : \t"+window_name);
 
             String channelgroup = mm.getCMMCore().getChannelGroup();
-            String currentconfig = mm.getCMMCore().getCurrentConfig(channelgroup);
+            String currentchannel = mm.getCMMCore().getCurrentConfig(channelgroup);
 
             // try retrieving channel name 100 times every 100 us for 1 ms
-            if(currentconfig.isEmpty()){
+            if(currentchannel.isEmpty()){
                 for(int count=0; count<100; count++){
-                    currentconfig = mm.getCMMCore().getCurrentConfig(channelgroup);
-                    if(!currentconfig.isEmpty()){
+                    currentchannel = mm.getCMMCore().getCurrentConfig(channelgroup);
+                    if(!currentchannel.isEmpty()){
                         break;
                     }
                     Thread.sleep(0,100000);
                 }
             }
 
+            if(currentchannel.isEmpty()){
+                reporter.set_report_area(true, true, true, "UNABLE TO RETRIEVE CHANNEL FROM CORE");
+            }
+
+            SummaryMetadata summary = event.getDatastore().getSummaryMetadata();
+
             mmExecutor.execute(new datastoreEventsThread(
                     event.getDatastore(),
                     event.getCoords(),
-                    mm.getCMMCore().getCurrentConfig("Channel"),
+                    event.getImage(),
+                    summary,
+                    currentchannel,
                     mm.acquisitions().getAcquisitionSettings().prefix,
                     window_name)
             );

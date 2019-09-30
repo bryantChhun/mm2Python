@@ -4,7 +4,7 @@
 from py4j.java_gateway import JavaGateway, GatewayParameters
 import numpy as np
 
-# connect to mm2python
+# connect to org.mm2python
 gateway = JavaGateway(gateway_parameters=GatewayParameters(auto_field=True))
 
 # link to class
@@ -41,7 +41,7 @@ autosavestore.putImage(channel0)
 
 
 # ===========================================
-# ===== access mm2python MetaDataStores =====
+# ===== access org.mm2python MetaDataStores =====
 # ===========================================
 
 # retrieve MetaData object for the most recent image

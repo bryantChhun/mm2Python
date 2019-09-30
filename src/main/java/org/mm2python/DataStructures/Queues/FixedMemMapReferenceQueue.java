@@ -23,7 +23,7 @@ public class FixedMemMapReferenceQueue {
 
     private static Queue<MappedByteBuffer> mmap_buffer_queue = new ConcurrentLinkedDeque<>();
 
-    public static void resetQueue() {
+    public static void resetQueues() {
         mmap_filename_queue.clear();
         mmap_buffer_queue.clear();
     }
@@ -42,17 +42,15 @@ public class FixedMemMapReferenceQueue {
         }
 
         // create num amount of blank mmaps
-
         if (Constants.getFixedMemMap()) {
             for (int i = 0; i < num; i++) {
                 String fixedMapName = Constants.tempFilePath + "/mmap_fixed_" + i+".dat";
 
                 // write filename
-//                writeBlankToMemMap(fixedMapName, bytelength);
-                putMemMapQueue(fixedMapName);
+                mmap_filename_queue.add(fixedMapName);
 
                 MappedByteBuffer buf = initializeMemMapBuffers(fixedMapName, bytelength);
-                putMemMapBufferQueue(buf);
+                mmap_buffer_queue.add(buf);
 
             }
         }
@@ -64,7 +62,7 @@ public class FixedMemMapReferenceQueue {
      * check if is empty.  Should never be empty
      * @return : boolean
      */
-    public static boolean nextFileNameExists() {
+    public boolean nextFileNameExists() {
         return !mmap_filename_queue.isEmpty();
     }
 
@@ -73,7 +71,7 @@ public class FixedMemMapReferenceQueue {
      * for FILENAME
      * @return : String, head value
      */
-    public static String getNextFileName() {
+    public String getNextFileName() {
         String next = mmap_filename_queue.poll();
         mmap_filename_queue.offer(next);
         return next;
@@ -84,21 +82,10 @@ public class FixedMemMapReferenceQueue {
      * for MAPPED BYTE BUFFER
      * @return : MappedByteBuffer
      */
-    public static MappedByteBuffer getNextBuffer() {
+    public MappedByteBuffer getNextBuffer() {
         MappedByteBuffer buf = mmap_buffer_queue.poll();
         mmap_buffer_queue.offer(buf);
         return buf;
-    }
-
-    // =================== SETTERS for filename, buffer ===============
-
-
-    private static void putMemMapQueue(String mmap) {
-        mmap_filename_queue.add(mmap);
-    }
-
-    private static void putMemMapBufferQueue(MappedByteBuffer buf) {
-        mmap_buffer_queue.add(buf);
     }
 
     // =============== WRITE TO FILE METHODS ==================
