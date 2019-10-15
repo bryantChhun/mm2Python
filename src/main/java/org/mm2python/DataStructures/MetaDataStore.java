@@ -21,12 +21,15 @@ public class MetaDataStore {
 
     private Integer buffer_position;
 
+    private Object image;
+
     // package private constructor
-    public MetaDataStore(final Integer z_, Integer pos_, Integer time_, Integer channel_,
+    public MetaDataStore(Integer z_, Integer pos_, Integer time_, Integer channel_,
                          Integer x_dim_, Integer y_dim_, Integer bitDepth_,
                          String channel_name_, String prefix_, String windowname_,
-                         String filepath_, Integer buffer_position_)
+                         String filepath_, Integer buffer_position_, Object image_)
     {
+        // positivity check
         if(
                 (z_!=null && z_<0) ||
                 (pos_!=null && pos_<0) ||
@@ -38,8 +41,10 @@ public class MetaDataStore {
                 (buffer_position_!=null && buffer_position_ < 0)
                 )
         {
-            throw new IllegalArgumentException("MDS parameter must be positive");
+            throw new IllegalArgumentException("MDS parameter must be positive and not null");
         }
+
+        // if not null, assign value
         if(time_!=null) {this.time = time_;}
         if(pos_!=null) {this.pos = pos_;}
         if(z_!=null) {this.z = z_;}
@@ -52,6 +57,7 @@ public class MetaDataStore {
         if(windowname_!=null) {this.windowname = windowname_;}
         if(filepath_!=null) {this.filepath = filepath_;}
         if(buffer_position_!=null) {this.buffer_position = buffer_position_;}
+        if(image_!=null) {this.image = image_;}
     }
 
     public Integer getZ() { return this.z;}
@@ -85,6 +91,8 @@ public class MetaDataStore {
     public String getFilepath() { return this.filepath;}
 
     public Integer getBufferPosition() { return this.buffer_position;}
+
+    public Object getImage() {return this.image;}
 
 
     /**

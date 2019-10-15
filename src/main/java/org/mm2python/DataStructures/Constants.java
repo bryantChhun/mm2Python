@@ -31,6 +31,8 @@ public class Constants {
 
     private static boolean py4JRadioButton;
 
+    private static boolean zmqdata;
+
     private static String OS;
 
     public static long max;
@@ -91,6 +93,18 @@ public class Constants {
 
     public static boolean getPy4JRadioButton() {
         return py4JRadioButton;
+    }
+
+    /**
+     * whether to use the
+     * @param b : boolean
+     */
+    public static void setZMQData(boolean b) {
+        zmqdata = b;
+    }
+
+    public static boolean getZMQData() {
+        return zmqdata;
     }
 
 

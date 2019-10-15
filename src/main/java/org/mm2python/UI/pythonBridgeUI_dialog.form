@@ -3,7 +3,7 @@
   <grid id="cbd77" binding="contentPane" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="1" left="1" bottom="1" right="1"/>
     <constraints>
-      <xy x="48" y="54" width="525" height="501"/>
+      <xy x="48" y="54" width="525" height="533"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -11,7 +11,7 @@
       <tabbedpane id="c0070" binding="tabbedPane1" default-binding="true">
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
-            <preferred-size width="800" height="600"/>
+            <preferred-size width="1000" height="600"/>
           </grid>
         </constraints>
         <properties/>
@@ -75,7 +75,7 @@
               </component>
             </children>
           </grid>
-          <grid id="aca11" binding="Configuration" layout-manager="GridLayoutManager" row-count="14" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+          <grid id="aca11" binding="Configuration" layout-manager="GridLayoutManager" row-count="15" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
               <tabbedpane title="Configuration"/>
@@ -85,10 +85,10 @@
             <children>
               <component id="46ae4" class="javax.swing.JLabel" binding="selectMessengerInterfaceLabel">
                 <constraints>
-                  <grid row="0" column="0" row-span="1" col-span="4" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <text value="Select Messenger Interface"/>
+                  <text value="Select Communication Method"/>
                 </properties>
               </component>
               <component id="3d8e1" class="javax.swing.JRadioButton" binding="py4JRadioButton" default-binding="true">
@@ -100,42 +100,22 @@
                   <text value="Py4J"/>
                 </properties>
               </component>
-              <component id="12d95" class="javax.swing.JRadioButton" binding="openMQRadioButton" default-binding="true">
-                <constraints>
-                  <grid row="3" column="0" row-span="1" col-span="4" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false">
-                    <preferred-size width="406" height="23"/>
-                  </grid>
-                </constraints>
-                <properties>
-                  <enabled value="false"/>
-                  <text value="openMQ"/>
-                </properties>
-              </component>
               <component id="f540d" class="javax.swing.JLabel">
                 <constraints>
-                  <grid row="10" column="0" row-span="1" col-span="4" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="11" column="0" row-span="1" col-span="4" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <text value="Select memmap method"/>
+                  <text value="Select Memory Mapped File Mode"/>
                 </properties>
               </component>
               <vspacer id="6ae12">
                 <constraints>
-                  <grid row="9" column="0" row-span="1" col-span="4" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                  <grid row="10" column="0" row-span="1" col-span="4" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
                 </constraints>
               </vspacer>
-              <component id="f8651" class="javax.swing.JRadioButton" binding="arrowRadioButton" default-binding="true">
-                <constraints>
-                  <grid row="2" column="0" row-span="1" col-span="4" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <enabled value="false"/>
-                  <text value="Arrow"/>
-                </properties>
-              </component>
               <component id="e18aa" class="javax.swing.JRadioButton" binding="fixedRadioButton" default-binding="true">
                 <constraints>
-                  <grid row="11" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="12" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <selected value="true"/>
@@ -144,7 +124,7 @@
               </component>
               <component id="9eabe" class="javax.swing.JRadioButton" binding="dynamicRadioButton" default-binding="true">
                 <constraints>
-                  <grid row="12" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="13" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <text value="Dynamic"/>
@@ -152,29 +132,31 @@
               </component>
               <component id="1a186" class="javax.swing.JTextPane" binding="fixedWriteToATextPane" default-binding="true">
                 <constraints>
-                  <grid row="13" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                  <grid row="14" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="50"/>
                   </grid>
                 </constraints>
                 <properties>
+                  <editable value="false"/>
                   <selectionColor color="-8529665"/>
                   <text value="Fixed: &#10;Write to a fixed number of memory-mapped files (default 100).  Preserves disk space and has faster input-output speeds, but holds only the most recent 100 images"/>
                 </properties>
               </component>
               <component id="cdc08" class="javax.swing.JTextPane" binding="dynamicWriteToATextPane" default-binding="true">
                 <constraints>
-                  <grid row="13" column="1" row-span="1" col-span="2" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                  <grid row="14" column="1" row-span="1" col-span="2" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="50"/>
                   </grid>
                 </constraints>
                 <properties>
+                  <editable value="false"/>
                   <selectionColor color="-365"/>
                   <text value="Dynamic: &#10;Write to a growing number of memory-mapped files.  Every new image is mapped to its own file until cleared.  Occupies disk space and has slower input-output speeds, but allows data access of the whole acquisition."/>
                 </properties>
               </component>
               <component id="1cde1" class="javax.swing.JLabel">
                 <constraints>
-                  <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <text value="Logging"/>
@@ -182,7 +164,7 @@
               </component>
               <component id="f727c" class="javax.swing.JRadioButton" binding="consoleRadioButton" default-binding="true">
                 <constraints>
-                  <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <selected value="true"/>
@@ -191,7 +173,7 @@
               </component>
               <component id="ea761" class="javax.swing.JRadioButton" binding="MMCoreLogsRadioButton" default-binding="true">
                 <constraints>
-                  <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <selected value="false"/>
@@ -200,7 +182,7 @@
               </component>
               <component id="efd12" class="javax.swing.JRadioButton" binding="systemOutRadioButton" default-binding="true">
                 <constraints>
-                  <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <text value="System Out"/>
@@ -208,17 +190,42 @@
               </component>
               <vspacer id="e032d">
                 <constraints>
-                  <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                  <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
                 </constraints>
               </vspacer>
               <component id="eac01" class="javax.swing.JTextField" binding="maxNumberOfFilesTextField" default-binding="true">
                 <constraints>
-                  <grid row="11" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="4" fill="0" indent="0" use-parent-layout="false">
+                  <grid row="12" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="4" fill="0" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="-1"/>
                   </grid>
                 </constraints>
                 <properties>
                   <text value="100"/>
+                </properties>
+              </component>
+              <component id="94198" class="javax.swing.JRadioButton" binding="memoryMappedFilesRadioButton" default-binding="true">
+                <constraints>
+                  <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <selected value="true"/>
+                  <text value="Memory Mapped Files"/>
+                </properties>
+              </component>
+              <component id="d076a" class="javax.swing.JRadioButton" binding="zeroMQRadioButton" default-binding="true">
+                <constraints>
+                  <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="ZeroMQ"/>
+                </properties>
+              </component>
+              <component id="5a211" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Select Data Transfer Method"/>
                 </properties>
               </component>
             </children>

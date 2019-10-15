@@ -100,16 +100,19 @@ public class datastoreEventsThread implements Runnable {
             reporter.set_report_area("\nNO CHANNEL NAME FOUND\n");
         }
 
-        // assign filename based on type of queue or data source
-        filename = getFileName();
+        // evaluate data transfer method
+        if(!Constants.getZMQData()) {
+            // assign filename based on type of queue or data source
+            filename = getFileName();
 
-        //
-        if(Constants.getFixedMemMap()){
-            buffer = fixed.getNextBuffer();
-            buffer_position = 0;
-        } else {
-            buffer = dynamic.getCurrentBuffer();
-            buffer_position = dynamic.getCurrentPosition();
+            // evaluate fixed vs dynamic methods
+            if (Constants.getFixedMemMap()) {
+                buffer = fixed.getNextBuffer();
+                buffer_position = 0;
+            } else {
+                buffer = dynamic.getCurrentBuffer();
+                buffer_position = dynamic.getCurrentPosition();
+            }
         }
 
         //create MetaDataStore for this object
@@ -125,8 +128,9 @@ public class datastoreEventsThread implements Runnable {
 //        long start = System.nanoTime();
 
         // Write memory mapped image
-        writeToMemMap();
-
+        if(!Constants.getZMQData()) {
+            writeToMemMap();
+        }
 //        long map_stop = System.nanoTime();
 
         // Write to concurrent hashmap
@@ -139,7 +143,7 @@ public class datastoreEventsThread implements Runnable {
         writeToQueues();
 
         // notify Listeners
-//        notifyListeners();
+        notifyListeners();
 
 //        long stop = System.nanoTime();
 //
@@ -189,6 +193,7 @@ public class datastoreEventsThread implements Runnable {
                     .channel_name(channel_name)
                     .filepath(filename)
                     .buffer_position(buffer_position)
+                    .image(temp_img.getRawPixels())
                     .buildMDS();
         } catch(IllegalAccessException ilex){
             reporter.set_report_area(String.format("Fail to build MDS for c%d, z%d, p%d, t%d, filepath=%s",
@@ -204,11 +209,7 @@ public class datastoreEventsThread implements Runnable {
             if(Constants.getFixedMemMap()){
                 memMapFromBuffer out = new memMapFromBuffer(temp_img, buffer);
 
-//                out.verifyMemMapAt(buffer_position);
-
                 out.writeToMemMapAt(buffer_position);
-
-//                out.verifyMemMapAt(buffer_position);
 
             } else {
                 memMapFromBuffer out = new memMapFromBuffer(temp_img, buffer);

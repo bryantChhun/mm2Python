@@ -11,12 +11,19 @@ import org.mm2python.DataStructures.Constants;
 import org.mm2python.DataStructures.Maps.MDSMap;
 import org.mm2python.DataStructures.MetaDataStore;
 import org.mm2python.DataStructures.Queues.MDSQueue;
+import org.mm2python.MPIMethod.zeroMQ.zeroMQ;
+import org.mm2python.UI.reporter;
 import org.mm2python.mmDataHandler.DataPathInterface;
 import org.mm2python.mmDataHandler.DataMapInterface;
 import mmcorej.CMMCore;
 import org.micromanager.Studio;
+import org.micromanager.data.Image;
+import org.zeromq.SocketType;
+import org.zeromq.ZContext;
+import org.zeromq.ZMQ;
 
 import java.util.ArrayList;
+import java.util.EmptyStackException;
 
 
 /**
@@ -78,7 +85,28 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
         MDSQueue.resetQueue();
         MDSMap.clearData();
     }
-    
+
+    //============== zmq data retrieval methods ==================================//
+
+    public boolean getLastImage() {
+        MetaDataStore mds = this.getLastMeta();
+        Object rawpixels = mds.getImage();
+        String port = zeroMQ.getPort();
+        ZMQ.Socket socket;
+        ZContext context = zeroMQ.context;
+        socket = context.createSocket(zeroMQ.REQ);
+        socket.bind(String.format("tcp://*:%s", port));
+        byte[] data = zeroMQ.convertToByte(rawpixels);
+        socket.send(data);
+        return true;
+    }
+
+    public void getFirstImage() {
+        MetaDataStore mds = this.getFirstMeta();
+//        Object rawpixels = mds.getImage();
+//        zeroMQ.send(rawpixels);
+    }
+
     //============== Data Map interface methods ====================//
     //== For retrieving MetaDataStore objects and Filenames ======================//
 

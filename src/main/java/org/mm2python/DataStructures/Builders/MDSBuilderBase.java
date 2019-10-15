@@ -20,13 +20,15 @@ abstract public class MDSBuilderBase {
 
     Integer buffer_position;
 
+    Object image;
+
     public MDSBuilderBase time(int t) {
         this.time = t;
         return this;
     }
 
-    public MDSBuilderBase position(int pos) {
-        this.pos = pos;
+    public MDSBuilderBase position(int pos_) {
+        this.pos = pos_;
         return this;
     }
 
@@ -60,23 +62,28 @@ abstract public class MDSBuilderBase {
         return this;
     }
 
-    public MDSBuilderBase windowname(String wname_) {
-        this.windowname = wname_;
+    public MDSBuilderBase windowname(String wname) {
+        this.windowname = wname;
         return this;
     }
 
-    public MDSBuilderBase channel_name(String channel_name) {
-        this.channel_name = channel_name;
+    public MDSBuilderBase channel_name(String channel_name_) {
+        this.channel_name = channel_name_;
         return this;
     }
 
-    public MDSBuilderBase filepath(String fp) {
-        this.filepath = fp;
+    public MDSBuilderBase filepath(String fp_) {
+        this.filepath = fp_;
         return this;
     }
 
     public MDSBuilderBase buffer_position(Integer buf_pos) {
         this.buffer_position = buf_pos;
+        return this;
+    }
+
+    public MDSBuilderBase image(Object image_) {
+        this.image = image_;
         return this;
     }
 

@@ -1,4 +1,7 @@
 buildscript {
+    repositories {
+        jcenter()
+    }
     dependencies {
         classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4"
     }
@@ -6,7 +9,7 @@ buildscript {
 
 plugins {
     id 'java-library'
-    id "com.jfrog.bintray" version "1.8.3"
+    id "com.jfrog.bintray" version "1.8.4"
     id 'java'
 }
 
@@ -14,6 +17,7 @@ apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
 
 // *****************************************************************************************
 // Paths to local micro-manager files
@@ -75,9 +79,6 @@ test {
 
 
 dependencies {
-    // This dependency is exported to consumers, that is to say found on their compile classpath.
-//    api 'org.apache.commons:commons-math3:3.6.1'
-
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation 'com.google.guava:guava:23.0'
 
@@ -96,14 +97,13 @@ dependencies {
 //    compile group: 'org.powermock', name: 'powermock-api-mockito', version: '1.7.4'
 //    compile group: 'org.powermock', name: 'powermock-module-junit4', version: '2.0.2'
 
-
     // Micromanager core jars
     // somehow, micro-manager depends critically on this distributed scijava .jar
     compile fileTree(include: ['MMCoreJ.jar', 'MMJ_.jar', 'scijava-common-2.46.0.jar'], exclude: 'mm2Python.jar', dir: core_plugin_path)
     compile fileTree(include: ['ij.jar'], dir: app_path)
 
     //zeroMQ
-    // compile group: 'org.zeromq', name: 'jeromq', version: '0.5.1'
+    compile group: 'org.zeromq', name: 'jeromq', version: '0.5.1'
 
     //Py4J
     compile group: 'net.sf.py4j', name: 'py4j', version: '0.10.8.1'
@@ -126,7 +126,7 @@ repositories {
 
 
 jar {
-    archiveName = "mm2python.jar"
+    archiveName = "mm2python_v0.0.2.jar"
     from {
         configurations.core_libs.collect {it.isDirectory() ? it : zipTree(it) }
     }
@@ -149,21 +149,26 @@ task copyCoreToMM(type: Copy) {
 //***********************************************************************************
 // PUBLISHING
 
+//task sourcesJar(type: Jar, dependsOn: classes) {
+//    classifier = 'sources'
+//    from sourceSets.main.allSource
+//}
+
+//javadoc.failOnError = false
+//task javadocJar(type: Jar, dependsOn: javadoc) {
+//    classifier = 'javadoc'
+//    from javadoc.destinationDir
+//}
+
+//artifacts {
+//    archives sourcesJar
+////    archives javadocJar
+//}
+
 archivesBaseName = 'mm2python'
-group = 'bryantchhun'
+group = 'bryantchhungroup'
 version = '0.0.1'
 description = 'desc. for mm2python'
-
-publishing {
-    publications {
-        MyPublication(MavenPublication) {
-            from components.java
-            groupId = project.group
-            artifactId = project.archivesBaseName
-            version = project.version
-        }
-    }
-}
 
 bintray {
     // DO NOT PUT YOUR KEY HERE.  Set your computer's system environment variable instead.
@@ -173,8 +178,9 @@ bintray {
     publish = true
     pkg {
         repo = 'mmtest'
-        name = 'mm2python'
-        userOrg = 'computational-microscopy'
+        name = 'mm2pythonpkgname'
+//        userOrg = 'computational-microscopy'
+        userOrg = 'bryantchhun'
         licenses = ['BSD-3-Clause']
         vcsUrl = 'https://github.com/czbiohub/mm2python.git'
         version {
@@ -183,6 +189,17 @@ bintray {
             released = new Date()
 //            vcsTag = '0.0.1'
 //            attributes = ['']
+        }
+    }
+}
+
+publishing {
+    publications {
+        MyPublication(MavenPublication) {
+            from components.java
+            groupId = project.group
+            artifactId = project.archivesBaseName
+            version = project.version
         }
     }
 }

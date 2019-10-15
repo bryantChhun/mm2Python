@@ -13,6 +13,7 @@ import org.mm2python.DataStructures.Queues.FixedMemMapReferenceQueue;
 import org.mm2python.DataStructures.Queues.MDSQueue;
 import org.mm2python.DataStructures.Queues.DynamicMemMapReferenceQueue;
 import org.mm2python.MPIMethod.Py4J.Py4J;
+import org.mm2python.MPIMethod.zeroMQ.zeroMQ;
 import org.mm2python.Utilities.MovingAverageWindow;
 import org.mm2python.mmDataHandler.ramDisk.ramDiskConstructor;
 import org.mm2python.mmDataHandler.ramDisk.ramDiskDestructor;
@@ -48,8 +49,6 @@ public class pythonBridgeUI_dialog extends JFrame {
     private JButton stop_monitor_global_events;
     private JTextArea UI_logger_textArea;
     private JRadioButton py4JRadioButton;
-    private JRadioButton openMQRadioButton;
-    private JRadioButton arrowRadioButton;
     private JButton clear_temp_folder;
     private JButton create_ramdisk;
     private JTextField guiTempFilePath;
@@ -67,6 +66,8 @@ public class pythonBridgeUI_dialog extends JFrame {
     private JRadioButton MMCoreLogsRadioButton;
     private JRadioButton systemOutRadioButton;
     private JTextField maxNumberOfFilesTextField;
+    private JRadioButton memoryMappedFilesRadioButton;
+    private JRadioButton zeroMQRadioButton;
 
     private static Studio mm;
     private static CMMCore mmc;
@@ -92,6 +93,8 @@ public class pythonBridgeUI_dialog extends JFrame {
         consoleRadioButton.addActionListener(e -> consoleRadioButtonActionPerformed(e));
         MMCoreLogsRadioButton.addActionListener(e -> MMCoreLogsRadioButtonActionPerformed(e));
         systemOutRadioButton.addActionListener(e -> systemOutRadioButtonActionPerformed(e));
+        memoryMappedFilesRadioButton.addActionListener(e -> memoryMappedFilesRadioButtonActionPerformed(e));
+        zeroMQRadioButton.addActionListener(e -> zeroMQRadioButtonActionPerformed(e));
 
         guiTempFilePath.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent me) {
@@ -185,6 +188,12 @@ public class pythonBridgeUI_dialog extends JFrame {
         reporter.set_report_area("creating python bridge");
         gate = new Py4J(mm);
         gate.startConnection();
+
+        // create zeroMQ bridge if button is selected
+        if(Constants.getZMQData()) {
+            reporter.set_report_area("creating zeroMQ bridge");
+            new zeroMQ();
+        }
     }
 
     private void shutdown_python_bridgeActionPerformed(ActionEvent evt) {
@@ -358,6 +367,26 @@ public class pythonBridgeUI_dialog extends JFrame {
         }
     }
 
+    private void memoryMappedFilesRadioButtonActionPerformed(ActionEvent evt) {
+        if (memoryMappedFilesRadioButton.isSelected()) {
+            Constants.setZMQData(false);
+            zeroMQRadioButton.setSelected(false);
+        } else {
+            Constants.setZMQData(true);
+            zeroMQRadioButton.setSelected(true);
+        }
+    }
+
+    private void zeroMQRadioButtonActionPerformed(ActionEvent evt) {
+        if (zeroMQRadioButton.isSelected()) {
+            Constants.setZMQData(true);
+            memoryMappedFilesRadioButton.setSelected(false);
+        } else {
+            Constants.setZMQData(false);
+            memoryMappedFilesRadioButton.setSelected(true);
+        }
+    }
+
     private void fixedRadioButtonActionPerformed(ActionEvent evt) {
         if (fixedRadioButton.isSelected()) {
             Constants.setFixedMemMap(true);
@@ -420,7 +449,7 @@ public class pythonBridgeUI_dialog extends JFrame {
         contentPane = new JPanel();
         contentPane.setLayout(new GridLayoutManager(1, 2, new Insets(1, 1, 1, 1), -1, -1));
         tabbedPane1 = new JTabbedPane();
-        contentPane.add(tabbedPane1, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(800, 600), null, 0, false));
+        contentPane.add(tabbedPane1, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(1000, 600), null, 0, false));
         Console = new JPanel();
         Console.setLayout(new GridLayoutManager(3, 2, new Insets(0, 0, 0, 0), -1, -1));
         tabbedPane1.addTab("Main Pane", Console);
@@ -444,71 +473,73 @@ public class pythonBridgeUI_dialog extends JFrame {
         stop_monitor_global_events.setText("STOP monitor");
         Console.add(stop_monitor_global_events, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         Configuration = new JPanel();
-        Configuration.setLayout(new GridLayoutManager(14, 4, new Insets(0, 0, 0, 0), -1, -1));
+        Configuration.setLayout(new GridLayoutManager(15, 4, new Insets(0, 0, 0, 0), -1, -1));
         tabbedPane1.addTab("Configuration", Configuration);
         selectMessengerInterfaceLabel = new JLabel();
-        selectMessengerInterfaceLabel.setText("Select Messenger Interface");
-        Configuration.add(selectMessengerInterfaceLabel, new GridConstraints(0, 0, 1, 4, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        selectMessengerInterfaceLabel.setText("Select Communication Method");
+        Configuration.add(selectMessengerInterfaceLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         py4JRadioButton = new JRadioButton();
         py4JRadioButton.setSelected(true);
         py4JRadioButton.setText("Py4J");
         Configuration.add(py4JRadioButton, new GridConstraints(1, 0, 1, 4, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        openMQRadioButton = new JRadioButton();
-        openMQRadioButton.setEnabled(false);
-        openMQRadioButton.setText("openMQ");
-        Configuration.add(openMQRadioButton, new GridConstraints(3, 0, 1, 4, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(406, 23), null, 0, false));
         final JLabel label1 = new JLabel();
-        label1.setText("Select memmap method");
-        Configuration.add(label1, new GridConstraints(10, 0, 1, 4, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        label1.setText("Select Memory Mapped File Mode");
+        Configuration.add(label1, new GridConstraints(11, 0, 1, 4, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer1 = new Spacer();
-        Configuration.add(spacer1, new GridConstraints(9, 0, 1, 4, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
-        arrowRadioButton = new JRadioButton();
-        arrowRadioButton.setEnabled(false);
-        arrowRadioButton.setText("Arrow");
-        Configuration.add(arrowRadioButton, new GridConstraints(2, 0, 1, 4, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        Configuration.add(spacer1, new GridConstraints(10, 0, 1, 4, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         fixedRadioButton = new JRadioButton();
         fixedRadioButton.setSelected(true);
         fixedRadioButton.setText("Fixed");
-        Configuration.add(fixedRadioButton, new GridConstraints(11, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        Configuration.add(fixedRadioButton, new GridConstraints(12, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         dynamicRadioButton = new JRadioButton();
         dynamicRadioButton.setText("Dynamic");
-        Configuration.add(dynamicRadioButton, new GridConstraints(12, 0, 1, 3, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        Configuration.add(dynamicRadioButton, new GridConstraints(13, 0, 1, 3, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         fixedWriteToATextPane = new JTextPane();
         fixedWriteToATextPane.setSelectionColor(new Color(-8529665));
         fixedWriteToATextPane.setText("Fixed: \nWrite to a fixed number of memory-mapped files (default 100).  Preserves disk space and has faster input-output speeds, but holds only the most recent 100 images");
-        Configuration.add(fixedWriteToATextPane, new GridConstraints(13, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
+        Configuration.add(fixedWriteToATextPane, new GridConstraints(14, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
         dynamicWriteToATextPane = new JTextPane();
         dynamicWriteToATextPane.setSelectionColor(new Color(-365));
         dynamicWriteToATextPane.setText("Dynamic: \nWrite to a growing number of memory-mapped files.  Every new image is mapped to its own file until cleared.  Occupies disk space and has slower input-output speeds, but allows data access of the whole acquisition.");
-        Configuration.add(dynamicWriteToATextPane, new GridConstraints(13, 1, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
+        Configuration.add(dynamicWriteToATextPane, new GridConstraints(14, 1, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
         final JLabel label2 = new JLabel();
         label2.setText("Logging");
-        Configuration.add(label2, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        Configuration.add(label2, new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         consoleRadioButton = new JRadioButton();
         consoleRadioButton.setSelected(true);
         consoleRadioButton.setText("Console");
-        Configuration.add(consoleRadioButton, new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        Configuration.add(consoleRadioButton, new GridConstraints(7, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         MMCoreLogsRadioButton = new JRadioButton();
         MMCoreLogsRadioButton.setSelected(false);
         MMCoreLogsRadioButton.setText("MM Core Logs");
-        Configuration.add(MMCoreLogsRadioButton, new GridConstraints(7, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        Configuration.add(MMCoreLogsRadioButton, new GridConstraints(8, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         systemOutRadioButton = new JRadioButton();
         systemOutRadioButton.setText("System Out");
-        Configuration.add(systemOutRadioButton, new GridConstraints(8, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        Configuration.add(systemOutRadioButton, new GridConstraints(9, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer2 = new Spacer();
-        Configuration.add(spacer2, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        Configuration.add(spacer2, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         maxNumberOfFilesTextField = new JTextField();
         maxNumberOfFilesTextField.setText("100");
-        Configuration.add(maxNumberOfFilesTextField, new GridConstraints(11, 2, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        Configuration.add(maxNumberOfFilesTextField, new GridConstraints(12, 2, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        memoryMappedFilesRadioButton = new JRadioButton();
+        memoryMappedFilesRadioButton.setSelected(true);
+        memoryMappedFilesRadioButton.setText("Memory Mapped Files");
+        Configuration.add(memoryMappedFilesRadioButton, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        zeroMQRadioButton = new JRadioButton();
+        zeroMQRadioButton.setText("ZeroMQ");
+        Configuration.add(zeroMQRadioButton, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JLabel label3 = new JLabel();
+        label3.setText("Select Data Transfer Method");
+        Configuration.add(label3, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         DiskManagement = new JPanel();
         DiskManagement.setLayout(new GridLayoutManager(6, 3, new Insets(0, 0, 0, 0), -1, -1));
         tabbedPane1.addTab("Disk Management", DiskManagement);
         clear_temp_folder = new JButton();
         clear_temp_folder.setText("Clear Temp Folder");
         DiskManagement.add(clear_temp_folder, new GridConstraints(0, 1, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JLabel label3 = new JLabel();
-        label3.setText("RAM Disk");
-        DiskManagement.add(label3, new GridConstraints(3, 0, 3, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(58, 25), null, 0, false));
+        final JLabel label4 = new JLabel();
+        label4.setText("RAM Disk");
+        DiskManagement.add(label4, new GridConstraints(3, 0, 3, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(58, 25), null, 0, false));
         destroy_ramdisk = new JButton();
         destroy_ramdisk.setEnabled(false);
         destroy_ramdisk.setText("Destroy RAM disk");
@@ -520,9 +551,9 @@ public class pythonBridgeUI_dialog extends JFrame {
         guiTempFilePath = new JTextField();
         guiTempFilePath.setText("/");
         DiskManagement.add(guiTempFilePath, new GridConstraints(1, 1, 3, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        final JLabel label4 = new JLabel();
-        label4.setText("Tempfile Path");
-        DiskManagement.add(label4, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JLabel label5 = new JLabel();
+        label5.setText("Tempfile Path");
+        DiskManagement.add(label5, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**
