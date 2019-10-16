@@ -5,7 +5,6 @@
  */
 package org.mm2python.mmEventHandler;
 
-import net.bytebuddy.build.Plugin;
 import org.micromanager.data.SummaryMetadata;
 import org.mm2python.DataStructures.*;
 import org.mm2python.DataStructures.Builders.MDSBuilder;
@@ -13,7 +12,6 @@ import org.mm2python.DataStructures.Maps.MDSMap;
 import org.mm2python.DataStructures.Queues.FixedMemMapReferenceQueue;
 import org.mm2python.DataStructures.Queues.DynamicMemMapReferenceQueue;
 import org.mm2python.DataStructures.Queues.MDSQueue;
-import org.mm2python.Utilities.MovingAverage;
 import org.mm2python.mmDataHandler.Exceptions.NoImageException;
 import org.mm2python.MPIMethod.Py4J.Exceptions.Py4JListenerException;
 import org.mm2python.MPIMethod.Py4J.Py4JListener;
@@ -24,8 +22,6 @@ import org.micromanager.data.Datastore;
 import org.micromanager.data.Image;
 
 import java.nio.MappedByteBuffer;
-
-import org.mm2python.Utilities.MovingAverageWindow;
 // todo: add more metadata values: file index, buffer_position, length
 
 /**
@@ -101,7 +97,7 @@ public class datastoreEventsThread implements Runnable {
         }
 
         // evaluate data transfer method
-        if(!Constants.getZMQData()) {
+        if(!Constants.getZMQButton()) {
             // assign filename based on type of queue or data source
             filename = getFileName();
 
@@ -125,18 +121,13 @@ public class datastoreEventsThread implements Runnable {
     @Override
     public void run() {
 
-//        long start = System.nanoTime();
-
         // Write memory mapped image
-        if(!Constants.getZMQData()) {
+        if(!Constants.getZMQButton()) {
             writeToMemMap();
         }
-//        long map_stop = System.nanoTime();
 
         // Write to concurrent hashmap
         writeToHashMap();
-
-//        long hash_stop = System.nanoTime();
 
         // write filename to queue
         // write MetaDataStore to queue
@@ -144,26 +135,6 @@ public class datastoreEventsThread implements Runnable {
 
         // notify Listeners
         notifyListeners();
-
-//        long stop = System.nanoTime();
-//
-//        if(stop-start < Constants.min && Constants.init > 5) {
-//            Constants.min = (stop-start);
-//        }
-//        if(stop-start >Constants.max && Constants.init > 5) {
-//            Constants.max = (stop-start);
-//        }
-//        Constants.init += 1;
-
-//        reporter.set_report_area("Total Time elapsed for writes (ns): "+Long.toString(MovingAverage.next(stop-start, "sum")));
-//        reporter.set_report_area("\tTime for memmap (ns): "+Long.toString(MovingAverage.next(map_stop-start, "mem_sum")));
-//        reporter.set_report_area("\tTime for hashmap (ns): "+Long.toString(MovingAverage.next(hash_stop-map_stop, "hash_sum")));
-//        reporter.set_report_area("\tTime for queues (ns): "+Long.toString(MovingAverage.next(stop-hash_stop, "queue_sum")));
-//
-////        reporter.set_report_area("Max time elapsed for run (ns):"+Long.toString(Constants.max));
-////        reporter.set_report_area("Min time elapsed for run (ns):"+Long.toString(Constants.min));
-//        reporter.set_report_area("average over 10 frame window (ns):"+Long.toString(MovingAverageWindow.next(stop-start)));
-//        reporter.set_report_area("average over all time        (ns):"+Long.toString(MovingAverage.next(stop-start, "sum")));
 
     }
 

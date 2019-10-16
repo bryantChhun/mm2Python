@@ -35,14 +35,19 @@ public class Py4J implements messengerInterface {
 
     /**
      * Open ports using py4j for python process
+     * Allow only one port at a time
      */
     @Override
     public void startConnection() {
-        gatewayServer = new GatewayServer(new Py4JEntryPoint(mm));
-        gatewayServer.start();
-        int port = gatewayServer.getPort();
-        Constants.ports.add(port);
-        reporter.set_report_area(true, true, true,"Gateway Started at IP:port = "+gatewayServer.getAddress()+":"+gatewayServer.getPort());
+        if(gatewayServer == null) {
+            gatewayServer = new GatewayServer(new Py4JEntryPoint(mm));
+            gatewayServer.start();
+            int port = gatewayServer.getPort();
+            Constants.ports.add(port);
+            reporter.set_report_area(true, true, true, "Gateway Started at IP:port = " + gatewayServer.getAddress() + ":" + gatewayServer.getPort());
+        } else {
+            reporter.set_report_area(true, true, true, "Gateway already started at IP:port = " + gatewayServer.getAddress() + ":" + gatewayServer.getPort());
+        }
     }
 
     /**

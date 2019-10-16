@@ -106,10 +106,6 @@ public class pythonBridgeUI_dialog extends JFrame {
 
         initTempPath();
 
-        // shutdownhook is broken right now
-        // causes application freeze upon exit
-//        createShutdownHook();
-
     }
 
     private void initTempPath() {
@@ -158,18 +154,6 @@ public class pythonBridgeUI_dialog extends JFrame {
         reporter.systemout = true;
     }
 
-//    private void createShutdownHook() {
-//        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-//            reporter.set_report_area("Shutdown Hook is running !");
-//            gate.stopConnection(ABORT);
-//            if (!Constants.getFixedMemMap()) {
-//                clearTempPath.clearTempPathContents();
-//            }
-//            gevents.unRegisterGlobalEvents();
-//        }
-//        ));
-//    }
-
     private void temp_file_path_MousePerformed(MouseEvent evt) {
         int returnVal = fc.showOpenDialog(pythonBridgeUI_dialog.this);
 
@@ -190,14 +174,13 @@ public class pythonBridgeUI_dialog extends JFrame {
         gate.startConnection();
 
         // create zeroMQ bridge if button is selected
-        if(Constants.getZMQData()) {
+        if (Constants.getZMQButton()) {
             reporter.set_report_area("creating zeroMQ bridge");
             new zeroMQ();
         }
     }
 
     private void shutdown_python_bridgeActionPerformed(ActionEvent evt) {
-//        gate.stopConnection(ABORT);
         gate.stopConnection();
     }
 
@@ -369,20 +352,20 @@ public class pythonBridgeUI_dialog extends JFrame {
 
     private void memoryMappedFilesRadioButtonActionPerformed(ActionEvent evt) {
         if (memoryMappedFilesRadioButton.isSelected()) {
-            Constants.setZMQData(false);
+            Constants.setZMQButton(false);
             zeroMQRadioButton.setSelected(false);
         } else {
-            Constants.setZMQData(true);
+            Constants.setZMQButton(true);
             zeroMQRadioButton.setSelected(true);
         }
     }
 
     private void zeroMQRadioButtonActionPerformed(ActionEvent evt) {
         if (zeroMQRadioButton.isSelected()) {
-            Constants.setZMQData(true);
+            Constants.setZMQButton(true);
             memoryMappedFilesRadioButton.setSelected(false);
         } else {
-            Constants.setZMQData(false);
+            Constants.setZMQButton(false);
             memoryMappedFilesRadioButton.setSelected(true);
         }
     }
@@ -495,10 +478,12 @@ public class pythonBridgeUI_dialog extends JFrame {
         dynamicRadioButton.setText("Dynamic");
         Configuration.add(dynamicRadioButton, new GridConstraints(13, 0, 1, 3, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         fixedWriteToATextPane = new JTextPane();
+        fixedWriteToATextPane.setEditable(false);
         fixedWriteToATextPane.setSelectionColor(new Color(-8529665));
         fixedWriteToATextPane.setText("Fixed: \nWrite to a fixed number of memory-mapped files (default 100).  Preserves disk space and has faster input-output speeds, but holds only the most recent 100 images");
         Configuration.add(fixedWriteToATextPane, new GridConstraints(14, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
         dynamicWriteToATextPane = new JTextPane();
+        dynamicWriteToATextPane.setEditable(false);
         dynamicWriteToATextPane.setSelectionColor(new Color(-365));
         dynamicWriteToATextPane.setText("Dynamic: \nWrite to a growing number of memory-mapped files.  Every new image is mapped to its own file until cleared.  Occupies disk space and has slower input-output speeds, but allows data access of the whole acquisition.");
         Configuration.add(dynamicWriteToATextPane, new GridConstraints(14, 1, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));

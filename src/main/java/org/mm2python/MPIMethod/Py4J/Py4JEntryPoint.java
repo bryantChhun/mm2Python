@@ -12,18 +12,12 @@ import org.mm2python.DataStructures.Maps.MDSMap;
 import org.mm2python.DataStructures.MetaDataStore;
 import org.mm2python.DataStructures.Queues.MDSQueue;
 import org.mm2python.MPIMethod.zeroMQ.zeroMQ;
-import org.mm2python.UI.reporter;
 import org.mm2python.mmDataHandler.DataPathInterface;
 import org.mm2python.mmDataHandler.DataMapInterface;
 import mmcorej.CMMCore;
 import org.micromanager.Studio;
-import org.micromanager.data.Image;
-import org.zeromq.SocketType;
-import org.zeromq.ZContext;
-import org.zeromq.ZMQ;
 
 import java.util.ArrayList;
-import java.util.EmptyStackException;
 
 
 /**
@@ -36,51 +30,95 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
     private static Py4JListener listener;
 
     /**
-     * 
+     * constructor
      * @param mm_: the parent studio object.
      */
     Py4JEntryPoint(Studio mm_){
         mm = mm_;
         mmc = mm_.getCMMCore();
         listener = new Py4JListener();
+
     }
-    
+
+    /**
+     * retrieve the micro-manager GUI object
+     * @return : Studio
+     */
     public Studio getStudio() {
         return mm;
     }
-    
+
+    /**
+     * retrieve the micro-manager CORE object
+     * @return : CMMCore
+     */
     public CMMCore getCMMCore() {
         return mmc;
     }
 
+    /**
+     * retrieve the py4j listener object (for implementing java interfaces from python)
+     * @return : Py4JListener
+     */
     public Py4JListener getListener() {
         return listener;
     }
 
+    /**
+     * current camera's image bitdepth
+     * @return : int
+     */
     public int getBitDepth() {return (int)Constants.bitDepth;}
 
+    /**
+     * current camera's image height
+     * @return : int
+     */
     public int getHeight() {return (int) Constants.height;}
 
+    /**
+     * current camera's image width
+     * @return : int
+     */
     public int getWidth() {return (int) Constants.width;}
 
     //============== provide utility functions for system management ====//
 
+    /**
+     * utility for resetting the queue of acquired images
+     * useful when scripting acquisition
+     */
     public void clearQueue(){
         MDSQueue.resetQueue();
     }
 
+    /**
+     * query if acquired image queue is empty
+     * @return : boolean
+     */
     public boolean isQueueEmpty(){
         return MDSQueue.isQueueEmpty();
     }
 
+    /**
+     * clears the MDSMap store
+     *  the MDSMap store holds all acquired metadata in no particular order
+     */
     public void clearMaps() {
         MDSMap.clearData();
     }
 
+    /**
+     * query if MDSMap is empty
+     * @return : boolean
+     */
     public boolean isMapEmpty() {
         return MDSMap.isEmpty();
     }
 
+    /**
+     * clear both MDSQueue and MDSMaps
+     */
     public void clearAll() {
         MDSQueue.resetQueue();
         MDSMap.clearData();
@@ -88,23 +126,30 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
 
     //============== zmq data retrieval methods ==================================//
 
-    public boolean getLastImage() {
+    /**
+     * send the last image (as determined by MDS Queue) out via zeroMQ port
+     */
+    public void getLastImage() {
         MetaDataStore mds = this.getLastMeta();
         Object rawpixels = mds.getImage();
-        String port = zeroMQ.getPort();
-        ZMQ.Socket socket;
-        ZContext context = zeroMQ.context;
-        socket = context.createSocket(zeroMQ.REQ);
-        socket.bind(String.format("tcp://*:%s", port));
-        byte[] data = zeroMQ.convertToByte(rawpixels);
-        socket.send(data);
-        return true;
+        zeroMQ.send(rawpixels);
     }
 
+    /**
+     * send the first image (as determined by MDS Queue) out via zeroMQ port
+     */
     public void getFirstImage() {
         MetaDataStore mds = this.getFirstMeta();
-//        Object rawpixels = mds.getImage();
-//        zeroMQ.send(rawpixels);
+        Object rawpixels = mds.getImage();
+        zeroMQ.send(rawpixels);
+    }
+
+    /**
+     * get the zeroMQ port
+     * @return : String
+     */
+    public String getZMQPort() {
+        return zeroMQ.getPort();
     }
 
     //============== Data Map interface methods ====================//

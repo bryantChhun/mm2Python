@@ -31,7 +31,7 @@ public class Constants {
 
     private static boolean py4JRadioButton;
 
-    private static boolean zmqdata;
+    private static boolean zmqButton;
 
     private static String OS;
 
@@ -99,12 +99,12 @@ public class Constants {
      * whether to use the
      * @param b : boolean
      */
-    public static void setZMQData(boolean b) {
-        zmqdata = b;
+    public static void setZMQButton(boolean b) {
+        zmqButton = b;
     }
 
-    public static boolean getZMQData() {
-        return zmqdata;
+    public static boolean getZMQButton() {
+        return zmqButton;
     }
 
 

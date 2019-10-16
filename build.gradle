@@ -104,6 +104,7 @@ dependencies {
 
     //zeroMQ
     compile group: 'org.zeromq', name: 'jeromq', version: '0.5.1'
+    core_libs group: 'org.zeromq', name: 'jeromq', version: '0.5.1'
 
     //Py4J
     compile group: 'net.sf.py4j', name: 'py4j', version: '0.10.8.1'
@@ -135,11 +136,11 @@ jar {
 
 task copyCoreToMM(type: Copy) {
     if(OperatingSystem.current().isMacOsX()) {
-        from 'build/libs/mm2python.jar'
+        from 'build/libs/mm2python_v0.0.2.jar'
         into app_path + "/plugins/Micro-Manager"
     }
     else if(OperatingSystem.current().isWindows()) {
-        from 'build/libs/mm2python.jar'
+        from 'build/libs/mm2python_v0.0.2.jar'
         into app_path + "\\plugins\\Micro-Manager"
     } else {
         println "unsupported OS"

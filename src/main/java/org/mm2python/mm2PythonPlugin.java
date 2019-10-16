@@ -52,6 +52,7 @@ public class mm2PythonPlugin implements MenuPlugin, SciJavaPlugin{
         }
         myFrame_.pack();
         myFrame_.setVisible(true);
+
         /* if necessary, we can launch the mm2python plugin UI in another thread */
 //        MainExecutor.getExecutor().execute(new mm2pythonGUIRunnable(mm_, mmc_));
     }

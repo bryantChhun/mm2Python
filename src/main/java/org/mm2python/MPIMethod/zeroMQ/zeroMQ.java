@@ -1,78 +1,59 @@
 package org.mm2python.MPIMethod.zeroMQ;
 
-import org.mm2python.UI.reporter;
+import org.mm2python.mmEventHandler.Executor.MainExecutor;
 import org.zeromq.SocketType;
 import org.zeromq.ZMQ;
 import org.zeromq.ZContext;
-import org.zeromq.ZMQException;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.ShortBuffer;
+import java.util.concurrent.ExecutorService;
 
 public class zeroMQ {
 
-    private static ZMQ.Socket socket;
     private static String port;
-    public static ZContext context;
-    public static SocketType REP;
-    public static SocketType REQ;
+    private static ZContext context;
+    private static ZMQ.Socket socket;
 
+    /**
+     * create zeroMQ context and sockets in a PUSH-PULL pattern
+     */
     public zeroMQ() {
 
+        ExecutorService executor = MainExecutor.getExecutor();
         port = "5500";
         context = new ZContext();
-        REP = SocketType.REP;
-        REQ = SocketType.REQ;
-
-        try {
-            // Socket to talk to clients
-            socket = context.createSocket(SocketType.REP);
-            socket.bind(String.format("tcp://*:%s", port));
-            waitformessage();
-        } catch (Exception ex) {
-            reporter.set_report_area(ex.toString());
-        }
+        socket = context.createSocket(SocketType.PUSH);
+        socket.bind(String.format("tcp://*:%s", port));
 
     }
 
     /**
-     * not necessary if using py4j to fetch
+     * PUSH image data on this socket as a byte array
+     * @param rawpixels : Object.  Retrieved from micro-manager's Image data class
      */
-    private void waitformessage() {
-
-        try {
-
-            while (!Thread.currentThread().isInterrupted()) {
-
-                // Block until a message is received
-                // this comes from py4jEntryPOint
-                byte[] reply = socket.recv(0);
-                System.out.println("message received from py4j");
-
-                // call datastructure to send byte array
-                socket.send(reply, 0);
-
-            }
-        } catch (Exception e) {
-            System.out.println("Exception waiting for message "+e.toString());
-        }
+    public static void send(Object rawpixels) {
+        byte[] bytepixels = convertToByte(rawpixels);
+        socket.send(bytepixels);
     }
 
-//    private static void send(Object rawpixels) {
-//
-////        while (!Thread.currentThread().isInterrupted()) {
-//            System.out.println("sending data by zmq");
-//            byte[] data = convertToByte(rawpixels);
-//            socket.send(data, 0);
-////        }
-//    }
-
+    /**
+     * get the port this ZMQ socket is bound to
+     * @return : String
+     */
     public static String getPort() {
         return port;
     }
 
-    public static byte[] convertToByte(Object pixels) throws UnsupportedOperationException {
+    /**
+     * micro-manager Object can be a byte[] or short[].
+     * This method will convert to required byte[] for the zmq socket
+     * @param pixels : Object
+     * @return : byte[]
+     * @throws UnsupportedOperationException : if object is not byte[] or short[]
+     */
+    private static byte[] convertToByte(Object pixels) throws UnsupportedOperationException {
         try
         {
             byte[] bytes;
@@ -87,7 +68,7 @@ public class zeroMQ {
                 bytes = dest.array();
             }
             else {
-                throw new UnsupportedOperationException("Unsupported pixel type");
+                throw new UnsupportedOperationException("Image data is not of type byte[] or short[]");
             }
             return bytes;
 
