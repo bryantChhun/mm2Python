@@ -12,7 +12,8 @@ import org.micromanager.Studio;
 import com.google.common.eventbus.Subscribe;
 import java.util.concurrent.ExecutorService;
 import org.mm2python.mmEventHandler.Executor.MainExecutor;
-import org.micromanager.events.DisplayAboutToShowEvent;
+//import org.micromanager.events.DisplayAboutToShowEvent;
+import org.micromanager.events.NewDisplayEvent;
 
 
 /**
@@ -66,7 +67,7 @@ public class globalEvents {
      * @param event: micro-manager event type.
      */
     @Subscribe
-    public void monitor_aboutToShow(DisplayAboutToShowEvent event) {
+    public void monitor_aboutToShow(NewDisplayEvent event) {
         try {
             reporter.set_report_area(true, true, true, "\n");
             reporter.set_report_area(true, true, true,"DisplayAboutToShowEvent event detected");

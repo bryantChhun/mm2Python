@@ -5,7 +5,6 @@
  */
 package org.mm2python.mmEventHandler;
 
-import net.bytebuddy.build.Plugin;
 import org.micromanager.data.*;
 import org.mm2python.DataStructures.Maps.RegisteredDatastores;
 import org.mm2python.UI.reporter;
@@ -109,7 +108,7 @@ public class datastoreEvents {
      * @param event
      */
     @Subscribe
-    public void executeDatastoreThread(NewImageEvent event){
+    public void executeDatastoreThread(DataProviderHasNewImageEvent event){
 
         try {
             reporter.set_report_area("\nNewImageEvent event detected");
@@ -136,10 +135,10 @@ public class datastoreEvents {
                 reporter.set_report_area(true, true, true, "UNABLE TO RETRIEVE CHANNEL FROM CORE");
             }
 
-            SummaryMetadata summary = event.getDatastore().getSummaryMetadata();
+            SummaryMetadata summary = event.getDataProvider().getSummaryMetadata();
 
             mmExecutor.execute(new datastoreEventsThread(
-                    event.getDatastore(),
+                    event.getDataProvider(),
                     event.getCoords(),
                     event.getImage(),
                     summary,

@@ -47,28 +47,26 @@ public class displayEvents {
         window.registerForEvents(this);
     }
 
-    @Subscribe
-    public void monitor_DisplayDestroyedEvent(DisplayDestroyedEvent event){
-        reporter.set_report_area("display destroyed");
-//        Constants.current_window_count -= 1;
-        //textarea.set_report_area("window count after destuction= "+Constants.current_window_count);
-        window.unregisterForEvents(this);
-    }
+//    @Subscribe
+//    public void monitor_DisplayDestroyedEvent(DisplayDestroyedEvent event){
+//        reporter.set_report_area("display destroyed");
+//        window.unregisterForEvents(this);
+//    }
     
 //    @Subscribe
-    public void monitor_NewDisplaySettingsEvent(NewDisplaySettingsEvent event) throws NotImplementedException{
-        throw new NotImplementedException("NewDisplaySettingsEvent not implemented");
-    }
+//    public void monitor_NewDisplaySettingsEvent(NewDisplaySettingsEvent event) throws NotImplementedException{
+//        throw new NotImplementedException("NewDisplaySettingsEvent not implemented");
+//    }
     
 //    @Subscribe
-    public void monitor_NewImagePlusEvent(NewImagePlusEvent event) throws NotImplementedException{
-        throw new NotImplementedException("NewImagePlusEvent not implemented");
-    }
+//    public void monitor_NewImagePlusEvent(NewImagePlusEvent event) throws NotImplementedException{
+//        throw new NotImplementedException("NewImagePlusEvent not implemented");
+//    }
     
 //    @Subscribe
-    public void monitor_PixelsSetEvent(PixelsSetEvent event) throws NotImplementedException{
-        throw new NotImplementedException("PixelsSetEvent not implemented");
-    }
+//    public void monitor_PixelsSetEvent(PixelsSetEvent event) throws NotImplementedException{
+//        throw new NotImplementedException("PixelsSetEvent not implemented");
+//    }
 
 //    /**
 //     * RequestToDrawEvent appears in the online documentation: https://micro-manager.org/wiki/Version_2.0_API_Events

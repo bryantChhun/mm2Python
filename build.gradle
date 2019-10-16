@@ -32,10 +32,10 @@ String app_path
  * Privde the app_path to the installation used for testing
  */
 if(OperatingSystem.current().isMacOsX()) {
-    core_plugin_path = '/Applications/Micro-Manager-2.0.0-beta3-20181001/plugins/Micro-Manager'
-    app_path = '/Applications/Micro-Manager-2.0.0-beta3-20181001/'
+    core_plugin_path = '/Applications/Micro-Manager-2.0.0-gamma1-20190806/plugins/Micro-Manager'
+    app_path = '/Applications/Micro-Manager-2.0.0-gamma1-20190806/'
 } else if(OperatingSystem.current().isWindows()) {
-    core_plugin_path = 'C:\\Applications\\Micro-Manager-2.0.0-beta3-20181001\\plugins\\Micro-Manager'
+    core_plugin_path = 'C:\\Applications\\Micro-Manager-2.0.0-gamma1-20190806\\plugins\\Micro-Manager'
     app_path = 'C:\\Applications\\Micro-Manager-2.0.0-beta3-20181001'
 }
 
