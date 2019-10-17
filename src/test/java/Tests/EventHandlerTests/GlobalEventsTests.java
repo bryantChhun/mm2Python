@@ -1,7 +1,7 @@
 package Tests.EventHandlerTests;
 
-import org.micromanager.events.DisplayAboutToShowEvent;
 import org.micromanager.events.EventManager;
+import org.micromanager.events.NewDisplayEvent;
 import org.mm2python.mmEventHandler.globalEvents;
 import org.junit.jupiter.api.Test;
 import org.micromanager.Studio;
@@ -69,7 +69,7 @@ class GlobalEventsTests {
     @Test
     void testDisplayAboutToShow() {
 
-        DisplayAboutToShowEvent evt = mock(DisplayAboutToShowEvent.class);
+        NewDisplayEvent evt = mock(NewDisplayEvent.class);
 
         setUp();
 

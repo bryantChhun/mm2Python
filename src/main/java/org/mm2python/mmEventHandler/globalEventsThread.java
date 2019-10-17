@@ -40,7 +40,7 @@ public class globalEventsThread implements Runnable {
         // Currently, displayEvents are not used.
         reporter.set_report_area(true, true, false, "registering datastore: "+dw.getName());
 
-        datastoreEvents datastore_events = new datastoreEvents(mm, dw.getDatastore(), dw.getName());
+        datastoreEvents datastore_events = new datastoreEvents(mm, dw.getDataProvider(), dw.getName());
         datastore_events.registerThisDatastore();
 
     }

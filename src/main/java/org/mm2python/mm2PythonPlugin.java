@@ -45,7 +45,7 @@ public class mm2PythonPlugin implements MenuPlugin, SciJavaPlugin{
         if (myFrame_ == null) {
             try {
                 myFrame_ = new pythonBridgeUI_dialog(mm_, mmc_);
-                mm_.events().registerForEvents(myFrame_);
+//                mm_.events().registerForEvents(myFrame_);
             } catch (Exception e) {
                 mm_.logs().showError(e);
             }

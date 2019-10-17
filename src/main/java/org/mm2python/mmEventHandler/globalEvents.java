@@ -5,6 +5,7 @@
  */
 package org.mm2python.mmEventHandler;
 
+import org.micromanager.events.AcquisitionStartedEvent;
 import org.mm2python.DataStructures.Constants;
 import org.mm2python.UI.reporter;
 import org.micromanager.Studio;
@@ -12,7 +13,6 @@ import org.micromanager.Studio;
 import com.google.common.eventbus.Subscribe;
 import java.util.concurrent.ExecutorService;
 import org.mm2python.mmEventHandler.Executor.MainExecutor;
-//import org.micromanager.events.DisplayAboutToShowEvent;
 import org.micromanager.events.NewDisplayEvent;
 
 
@@ -47,11 +47,13 @@ public class globalEvents {
      * Register this class for notifications from micro-manager.
      */
     public void registerGlobalEvents() {
+        reporter.set_report_area(true, true, true, "global register");
         mm.events().registerForEvents(this);
+//        mm.getEventManager().registerForEvents(this);
     }
 
     /**
-     * Unregister this class for notificaitons from micro-manager
+     * Unregister this class for notifications from micro-manager
      */
     public void unRegisterGlobalEvents() {
         reporter.set_report_area(true, false, false,"shutting down event monitoring and clearing dequeue references");
@@ -68,6 +70,7 @@ public class globalEvents {
      */
     @Subscribe
     public void monitor_aboutToShow(NewDisplayEvent event) {
+        System.out.println("NewDisplayEvent detected");
         try {
             reporter.set_report_area(true, true, true, "\n");
             reporter.set_report_area(true, true, true,"DisplayAboutToShowEvent event detected");
@@ -76,6 +79,16 @@ public class globalEvents {
         } catch (Exception ex) {
             reporter.set_report_area("EXCEPTION = "+ex.toString());
         }
+    }
+
+    /**
+     * Test event registration
+     */
+    @Subscribe
+    public void testEvent(AcquisitionStartedEvent event) {
+        System.out.println("Acquisitionstartedevent detected");
+
+        System.out.println("DS = "+event.getDatastore().toString());
     }
     
 }

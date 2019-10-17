@@ -1,11 +1,14 @@
 package org.mm2python.UI;
 
 // intelliJ libraries
+import com.google.common.eventbus.Subscribe;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 
 // org.mm2python libraries
+import org.micromanager.data.DataProvider;
+import org.micromanager.events.AcquisitionStartedEvent;
 import org.mm2python.DataStructures.*;
 import org.mm2python.DataStructures.Maps.MDSMap;
 import org.mm2python.DataStructures.Maps.RegisteredDatastores;
@@ -238,6 +241,14 @@ public class pythonBridgeUI_dialog extends JFrame {
             reporter.set_report_area("new global events");
             gevents = new globalEvents(mm);
         }
+
+        mm.events().registerForEvents(this);
+        mm.getEventManager().registerForEvents(this);
+    }
+
+    @Subscribe
+    private void testcls(AcquisitionStartedEvent evt) {
+        reporter.set_report_area(true, true, true, "testcls triggered");
     }
 
     /**
@@ -300,7 +311,7 @@ public class pythonBridgeUI_dialog extends JFrame {
         }
     }
 
-    private void unregisterDatastores(ConcurrentHashMap<Datastore, datastoreEvents> t) {
+    private void unregisterDatastores(ConcurrentHashMap<DataProvider, datastoreEvents> t) {
         ArrayList<datastoreEvents> l = new ArrayList<>(t.values());
         for (datastoreEvents de : l) {
             de.unRegisterThisDatastore();

@@ -5,7 +5,7 @@
  */
 package org.mm2python.mmEventHandler;
 
-import org.micromanager.data.SummaryMetadata;
+import org.micromanager.data.*;
 import org.mm2python.DataStructures.*;
 import org.mm2python.DataStructures.Builders.MDSBuilder;
 import org.mm2python.DataStructures.Maps.MDSMap;
@@ -17,9 +17,6 @@ import org.mm2python.MPIMethod.Py4J.Exceptions.Py4JListenerException;
 import org.mm2python.MPIMethod.Py4J.Py4JListener;
 import org.mm2python.mmDataHandler.memMapFromBuffer;
 import org.mm2python.UI.reporter;
-import org.micromanager.data.Coords;
-import org.micromanager.data.Datastore;
-import org.micromanager.data.Image;
 
 import java.nio.MappedByteBuffer;
 // todo: add more metadata values: file index, buffer_position, length
@@ -61,7 +58,7 @@ public class datastoreEventsThread implements Runnable {
      * @param prefix_ : MDA experiment prefix
      * @param window_name_ : display window that triggered event
      */
-    public datastoreEventsThread(Datastore data_,
+    public datastoreEventsThread(DataProvider data_,
                                  Coords c_,
                                  Image i_,
                                  SummaryMetadata summary_,

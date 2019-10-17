@@ -4,9 +4,9 @@ import org.junit.jupiter.api.Test;
 import org.micromanager.Studio;
 import org.micromanager.acquisition.AcquisitionManager;
 import org.micromanager.acquisition.SequenceSettings;
+import org.micromanager.data.DataProviderHasNewImageEvent;
 import org.micromanager.data.Datastore;
 import org.micromanager.data.DatastoreFrozenEvent;
-import org.micromanager.data.NewImageEvent;
 import org.mm2python.DataStructures.Maps.RegisteredDatastores;
 import org.mm2python.mmEventHandler.datastoreEvents;
 
@@ -96,7 +96,7 @@ class DatastoreEventsTests {
     void testNewImageEvent() {
         setUp();
 
-        NewImageEvent nie = mock(NewImageEvent.class);
+        DataProviderHasNewImageEvent nie = mock(DataProviderHasNewImageEvent.class);
         datastoreEvents de = new datastoreEvents(mm, ds, "TEST: window name");
         de.registerThisDatastore();
 

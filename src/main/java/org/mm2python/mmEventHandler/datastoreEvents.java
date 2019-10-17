@@ -26,7 +26,7 @@ import java.io.PrintWriter;
  */
 public class datastoreEvents {
     private final Studio mm;
-    private final Datastore data;
+    private final DataProvider data;
     private final String window_name;
     private String prefix_;
     private static final ExecutorService mmExecutor;
@@ -35,7 +35,7 @@ public class datastoreEvents {
         mmExecutor = MainExecutor.getExecutor();
     }
 
-    public datastoreEvents(Studio mm_, Datastore data_, String window_name_) {
+    public datastoreEvents(Studio mm_, DataProvider data_, String window_name_) {
         mm = mm_;
         data = data_;
         window_name = window_name_;
@@ -120,14 +120,14 @@ public class datastoreEvents {
             String channelgroup = mm.getCMMCore().getChannelGroup();
             String currentchannel = mm.getCMMCore().getCurrentConfig(channelgroup);
 
-            // try retrieving channel name 100 times every 100 us for 1 ms
+            // try retrieving channel name 100 times every 10 us for 1 ms
             if(currentchannel.isEmpty()){
                 for(int count=0; count<100; count++){
                     currentchannel = mm.getCMMCore().getCurrentConfig(channelgroup);
                     if(!currentchannel.isEmpty()){
                         break;
                     }
-                    Thread.sleep(0,100000);
+                    Thread.sleep(0,10000);
                 }
             }
 

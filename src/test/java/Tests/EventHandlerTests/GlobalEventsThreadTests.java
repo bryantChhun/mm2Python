@@ -33,6 +33,7 @@ class GlobalEventsThreadTests {
         LogManager lm = mock(LogManager.class);
         when(mm.logs()).thenReturn(lm);
         doNothing().when(lm).logMessage(anyString());
+
         when(dw.getName()).thenReturn("TEST: window name");
         new reporter(jta, mm);
 

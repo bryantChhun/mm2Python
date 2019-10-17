@@ -99,7 +99,7 @@ dependencies {
 
     // Micromanager core jars
     // somehow, micro-manager depends critically on this distributed scijava .jar
-    compile fileTree(include: ['MMCoreJ.jar', 'MMJ_.jar', 'scijava-common-2.46.0.jar'], exclude: 'mm2Python.jar', dir: core_plugin_path)
+    compile fileTree(include: ['MMCoreJ.jar', 'MMJ_.jar', 'scijava-common-2.77.0.jar'], exclude: 'mm2Python.jar', dir: core_plugin_path)
     compile fileTree(include: ['ij.jar'], dir: app_path)
 
     //zeroMQ
