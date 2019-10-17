@@ -868,7 +868,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.Tests.EventHandlerTests in mm2PythonBridge_test">
+  <component name="RunManager" selected="JAR Application.Run_external_MM">
     <configuration name="PythonBridgeUI_Form" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="UI.PythonBridgeUI_Form" />
       <module name="mm2PythonBridge_main" />
@@ -928,6 +928,46 @@
         <option name="Gradle.BeforeRunTask" enabled="true" tasks="jar" externalProjectPath="$PROJECT_DIR$" vmOptions="" scriptParameters="" />
         <option name="Gradle.BeforeRunTask" enabled="true" tasks="copyCoreToMM" externalProjectPath="$PROJECT_DIR$" vmOptions="" scriptParameters="" />
       </method>
+    </configuration>
+    <configuration name="All in mm2PythonBridge_test" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="mm2PythonBridge_test" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="package" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <patterns />
+    </configuration>
+    <configuration name="GlobalEventsThreadTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="mm2PythonBridge_test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Tests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="Tests.EventHandlerTests" />
+      <option name="MAIN_CLASS_NAME" value="Tests.EventHandlerTests.GlobalEventsThreadTests" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <patterns />
     </configuration>
     <configuration name="Tests in mm2PythonBridge_test" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="mm2PythonBridge_test" />
@@ -1015,8 +1055,8 @@
       <patterns />
     </configuration>
     <configuration name="Run_external_MM" type="JarApplication" factoryName="JAR Application">
-      <option name="JAR_PATH" value="/Applications/Micro-Manager-2.0.0-beta3-20181001/ImageJ.app/Contents/Java/ij.jar" />
-      <option name="WORKING_DIRECTORY" value="/Applications/Micro-Manager-2.0.0-beta3-20181001" />
+      <option name="JAR_PATH" value="/Applications/Micro-Manager-2.0.0-gamma1-20190806/ij.jar" />
+      <option name="WORKING_DIRECTORY" value="/Applications/Micro-Manager-2.0.0-gamma1-20190806" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="ALTERNATIVE_JRE_PATH" value="1.8" />
       <method>
@@ -1039,42 +1079,6 @@
       <option name="additionalOptions" value="" />
       <option name="ipnbHost" value="127.0.0.1" />
       <option name="ipnbPort" value="8888" />
-    </configuration>
-    <configuration name="mm2python_snap_live_display" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="mm2PythonBridge" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/examples" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/examples/mm2python_snap_live_display.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-    </configuration>
-    <configuration name="mm2python_snap_live_display_monitor" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="mm2PythonBridge" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/examples" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/examples/mm2python_snap_live_display_monitor.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
     </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
@@ -1105,19 +1109,19 @@
       <item itemvalue="Groovy.build" />
       <item itemvalue="JAR Application.Run_external_MM" />
       <item itemvalue="Jupyter Notebook.mm2PythonBridge" />
-      <item itemvalue="Python.mm2python_snap_live_display" />
-      <item itemvalue="Python.mm2python_snap_live_display_monitor" />
       <item itemvalue="JUnit.Tests in mm2PythonBridge_test" />
       <item itemvalue="JUnit.Tests.DataStructuresTests in mm2PythonBridge_test" />
       <item itemvalue="JUnit.Tests.EventHandlerTests in mm2PythonBridge_test" />
+      <item itemvalue="JUnit.All in mm2PythonBridge_test" />
+      <item itemvalue="JUnit.GlobalEventsThreadTests" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.GlobalEventsThreadTests" />
+        <item itemvalue="JUnit.All in mm2PythonBridge_test" />
         <item itemvalue="JUnit.Tests.EventHandlerTests in mm2PythonBridge_test" />
         <item itemvalue="JUnit.Tests.DataStructuresTests in mm2PythonBridge_test" />
         <item itemvalue="JUnit.Tests in mm2PythonBridge_test" />
-        <item itemvalue="Python.mm2python_snap_live_display_monitor" />
-        <item itemvalue="Python.mm2python_snap_live_display" />
       </list>
     </recent_temporary>
   </component>
