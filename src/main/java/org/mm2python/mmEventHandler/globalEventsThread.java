@@ -5,6 +5,7 @@
  */
 package org.mm2python.mmEventHandler;
 
+import org.micromanager.display.DataViewer;
 import org.mm2python.DataStructures.Constants;
 import org.mm2python.UI.reporter;
 import org.micromanager.Studio;
@@ -16,7 +17,7 @@ import org.micromanager.display.DisplayWindow;
  */
 public class globalEventsThread implements Runnable {
     private final Studio mm;
-    private final DisplayWindow dw;
+    private final DataViewer dw;
 
     /**
      * Every micro-manager 'DisplayAboutToShowEvent' creates this thread,
@@ -25,7 +26,7 @@ public class globalEventsThread implements Runnable {
      * @param mm_: parent micro-manager Studio object
      * @param dw_: DisplayWindow whose construction triggered this class's construction
      */
-     public globalEventsThread(Studio mm_, DisplayWindow dw_) {
+     public globalEventsThread(Studio mm_, DataViewer dw_) {
 
         mm = mm_;
         dw = dw_;

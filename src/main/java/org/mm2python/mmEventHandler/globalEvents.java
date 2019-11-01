@@ -5,6 +5,8 @@
  */
 package org.mm2python.mmEventHandler;
 
+import org.micromanager.data.DataProviderHasNewImageEvent;
+import org.micromanager.display.internal.event.DataViewerAddedEvent;
 import org.micromanager.events.AcquisitionStartedEvent;
 import org.mm2python.DataStructures.Constants;
 import org.mm2python.UI.reporter;
@@ -49,6 +51,7 @@ public class globalEvents {
     public void registerGlobalEvents() {
         reporter.set_report_area(true, true, true, "global register");
         mm.events().registerForEvents(this);
+        mm.displays().registerForEvents(this);
 //        mm.getEventManager().registerForEvents(this);
     }
 
@@ -81,14 +84,17 @@ public class globalEvents {
         }
     }
 
-    /**
-     * Test event registration
-     */
     @Subscribe
-    public void testEvent(AcquisitionStartedEvent event) {
-        System.out.println("Acquisitionstartedevent detected");
+    public void newDataViewer(DataViewerAddedEvent event) {
+        System.out.println("NEW DATA VIEWER FROM GLOBAL ");
+        System.out.println("event = "+event.getDataViewer().toString());
+        mmExecutor.execute(new globalEventsThread(mm, event.getDataViewer()));
+    }
 
-        System.out.println("DS = "+event.getDatastore().toString());
+    @Subscribe
+    public void newDisplayEvent(NewDisplayEvent event) {
+        System.out.println("NEW DISPLAY EVENT ");
+        System.out.println("event = "+event.getDisplay().toString());
     }
     
 }
