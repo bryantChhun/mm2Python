@@ -7,18 +7,64 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e421f848-deba-43b3-bb31-6108bcbf8ca4" name="Default" comment="buffer writing&#10;more tests">
-      <change beforePath="$PROJECT_DIR$/.gradle/4.10.2/fileContent/fileContent.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10.2/fileContent/fileContent.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.10.2/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10.2/fileHashes/fileHashes.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.10.2/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10.2/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Constants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/mm2python/MPIMethod/Py4J/Py4J.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/mm2python/MPIMethod/Py4J/Py4J.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/mm2python/MPIMethod/Py4J/Py4JEntryPoint.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/mm2python/MPIMethod/Py4J/Py4JEntryPoint.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/mm2python/MPIMethod/zeroMQ/zeroMQ.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/mm2python/MPIMethod/zeroMQ/zeroMQ.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/mm2python/UI/pythonBridgeUI_dialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/mm2python/UI/pythonBridgeUI_dialog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/mm2python/mm2PythonPlugin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/mm2python/mm2PythonPlugin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/mm2python/mmEventHandler/datastoreEventsThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/mm2python/mmEventHandler/datastoreEventsThread.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/META-INF/json/org.scijava.plugin.Plugin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/DataStructures/Builders/MDSBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/DataStructures/Builders/MDSBuilderBase.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/DataStructures/Builders/MDSParamBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/DataStructures/Builders/MDSParamObject.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/DataStructures/Builders/MDSParameters.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/DataStructures/Constants.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/DataStructures/Exceptions/OSTypeException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/DataStructures/Maps/MDSMap.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/DataStructures/Maps/RegisteredDatastores.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/DataStructures/Maps/RegisteredGlobalEvents.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/DataStructures/MetaDataStore.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/DataStructures/Queues/DynamicMemMapReferenceQueue.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/DataStructures/Queues/FixedMemMapReferenceQueue.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/DataStructures/Queues/MDSQueue.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/MPIMethod/Py4J/Exceptions/Py4JListenerException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/MPIMethod/Py4J/Py4J.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/MPIMethod/Py4J/Py4JEntryPoint.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/MPIMethod/Py4J/Py4JListener.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/MPIMethod/Py4J/Py4JListenerInterface.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/MPIMethod/messengerInterface.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/MPIMethod/zeroMQ/zeroMQ.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/UI/mm2pythonGUIRunnable.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/UI/pythonBridgeUI_dialog$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/UI/pythonBridgeUI_dialog.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/UI/reporter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/UI/tempPathFlush.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/Utilities/MovingAverage.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/Utilities/MovingAverageWindow.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/mm2PythonPlugin.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/mmDataHandler/DataMapInterface.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/mmDataHandler/DataPathInterface.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/mmDataHandler/Exceptions/NoImageException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/mmDataHandler/memMapFromBuffer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/mmDataHandler/memMapImage.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/mmDataHandler/ramDisk/ramDiskConstructor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/mmDataHandler/ramDisk/ramDiskDestructor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/mmEventHandler/Exceptions/NotImplementedException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/mmEventHandler/Executor/MainExecutor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/mmEventHandler/datastoreEvents.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/mmEventHandler/datastoreEventsThread.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/mmEventHandler/displayEvents.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/mmEventHandler/displayEventsThread.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/mmEventHandler/globalEvents.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/mm2python/mmEventHandler/globalEventsThread.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/test/Tests/DynamicMemMapReferenceQueueTests.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/test/Tests/FixedMemMapReferenceQueueTests.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/test/Tests/MDSBuilderTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/test/Tests/MDSMapTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/test/Tests/MDSParamBuilderTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/test/Tests/MDSParamObjectTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/test/Tests/MDSQueueTests.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/test/Tests/mmDataHandlerTests.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/libs/mm2python_v0.0.2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/publications/MyPublication/pom-default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/test-results/test/binary/output.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/test-results/test/binary/output.bin.idx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/tmp/jar/MANIFEST.MF" beforeDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.gradle/" />
     <ignored path="$PROJECT_DIR$/build/" />
@@ -97,7 +143,80 @@
     </system>
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/build.gradle">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="218">
+              <caret line="124" column="5" selection-start-line="124" selection-start-column="5" selection-end-line="124" selection-end-column="5" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="pythonBridgeUI_dialog.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/UI/pythonBridgeUI_dialog.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="3255">
+              <caret line="217" column="23" selection-start-line="217" selection-start-column="23" selection-end-line="217" selection-end-column="23" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="mm2PythonPlugin.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/mm2PythonPlugin.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="615">
+              <caret line="41" selection-start-line="41" selection-end-line="41" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="datastoreEventsThread.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/mmEventHandler/datastoreEventsThread.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="829">
+              <caret line="83" column="61" selection-start-line="83" selection-start-column="61" selection-end-line="83" selection-end-column="61" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="datastoreEvents.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/mmEventHandler/datastoreEvents.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="175">
+              <caret line="58" selection-start-line="58" selection-end-line="58" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="globalEvents.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/mmEventHandler/globalEvents.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="162">
+              <caret line="60" column="46" selection-start-line="60" selection-start-column="46" selection-end-line="60" selection-end-column="46" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="globalEventsThread.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/mmEventHandler/globalEventsThread.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="120">
+              <caret line="12" column="3" lean-forward="true" selection-start-line="12" selection-start-column="3" selection-end-line="12" selection-end-column="3" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="GlobalEventsThreadTests.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test/java/Tests/EventHandlerTests/GlobalEventsThreadTests.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="246">
+              <caret line="33" column="39" selection-start-line="33" selection-start-column="39" selection-end-line="33" selection-end-column="39" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -704,110 +823,6 @@
             <path>
               <item name="mm2PythonBridge" type="b2602c69:ProjectViewProjectNode" />
               <item name="mm2PythonBridge" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-            </path>
-            <path>
-              <item name="mm2PythonBridge" type="b2602c69:ProjectViewProjectNode" />
-              <item name="mm2PythonBridge" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="build" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="mm2PythonBridge" type="b2602c69:ProjectViewProjectNode" />
-              <item name="mm2PythonBridge" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="build" type="462c0819:PsiDirectoryNode" />
-              <item name="libs" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="mm2PythonBridge" type="b2602c69:ProjectViewProjectNode" />
-              <item name="mm2PythonBridge" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="examples" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="mm2PythonBridge" type="b2602c69:ProjectViewProjectNode" />
-              <item name="mm2PythonBridge" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="mm2PythonBridge" type="b2602c69:ProjectViewProjectNode" />
-              <item name="mm2PythonBridge" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-            </path>
-            <path>
-              <item name="mm2PythonBridge" type="b2602c69:ProjectViewProjectNode" />
-              <item name="mm2PythonBridge" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="mm2PythonBridge" type="b2602c69:ProjectViewProjectNode" />
-              <item name="mm2PythonBridge" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="mm2python" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="mm2PythonBridge" type="b2602c69:ProjectViewProjectNode" />
-              <item name="mm2PythonBridge" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="mm2python" type="462c0819:PsiDirectoryNode" />
-              <item name="mmDataHandler" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="mm2PythonBridge" type="b2602c69:ProjectViewProjectNode" />
-              <item name="mm2PythonBridge" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="mm2python" type="462c0819:PsiDirectoryNode" />
-              <item name="MPIMethod" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="mm2PythonBridge" type="b2602c69:ProjectViewProjectNode" />
-              <item name="mm2PythonBridge" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="mm2python" type="462c0819:PsiDirectoryNode" />
-              <item name="MPIMethod" type="462c0819:PsiDirectoryNode" />
-              <item name="Py4J" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="mm2PythonBridge" type="b2602c69:ProjectViewProjectNode" />
-              <item name="mm2PythonBridge" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="mm2python" type="462c0819:PsiDirectoryNode" />
-              <item name="UI" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="mm2PythonBridge" type="b2602c69:ProjectViewProjectNode" />
-              <item name="mm2PythonBridge" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-            </path>
-            <path>
-              <item name="mm2PythonBridge" type="b2602c69:ProjectViewProjectNode" />
-              <item name="mm2PythonBridge" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="mm2PythonBridge" type="b2602c69:ProjectViewProjectNode" />
-              <item name="mm2PythonBridge" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="Tests" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="mm2PythonBridge" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
             </path>
           </expand>
           <select />
@@ -1515,31 +1530,56 @@
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info id="UI Designer" order="3" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.37257823" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.37108794" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.15478615" />
       <window_info anchor="bottom" id="Messages" order="12" weight="0.28614008" />
       <window_info anchor="right" id="Palette&#9;" order="7" />
       <window_info id="Image Layers" order="7" />
       <window_info anchor="right" id="Capture Analysis" order="4" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.47550586" visible="true" weight="0.21907601" />
-      <window_info anchor="bottom" id="Version Control" order="10" weight="0.06184799" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.47550586" weight="0.33457527" />
+      <window_info anchor="bottom" id="Version Control" order="10" weight="0.10357675" />
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.32983193" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.13383637" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.16004765" />
       <window_info anchor="bottom" id="sbt-shell-toolwindow" order="7" />
       <window_info anchor="bottom" id="Find" order="1" sideWeight="0.49893504" weight="0.23004201" />
       <window_info id="Learn" order="6" />
       <window_info anchor="right" id="Gradle" order="6" weight="0.41391942" />
       <window_info anchor="right" id="Theme Preview" order="8" />
       <window_info id="Favorites" order="5" side_tool="true" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.47550586" visible="true" weight="0.21907601" />
+      <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.5244942" side_tool="true" weight="0.74745417" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.13383637" />
+      <window_info id="Learn" order="6" />
+      <window_info id="Favorites" order="5" side_tool="true" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="bottom" id="sbt-shell-toolwindow" order="7" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="right" id="Palette" order="3" />
+      <window_info anchor="right" id="Palette&#9;" order="7" />
+      <window_info anchor="right" id="Maven Projects" order="5" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.24980143" />
+      <window_info anchor="right" id="sbt" order="9" weight="0.32962668" />
+      <window_info anchor="right" id="Coverage" order="10" side_tool="true" weight="0.24305004" />
+      <window_info anchor="right" id="Theme Preview" order="8" />
+      <window_info id="Capture Tool" order="4" />
+      <window_info id="Image Layers" order="7" />
+      <window_info anchor="bottom" id="Version Control" order="10" weight="0.06184799" />
+      <window_info anchor="right" id="Capture Analysis" order="4" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.15478615" />
+      <window_info anchor="bottom" id="Find" order="1" sideWeight="0.49893504" weight="0.23004201" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.24980143" />
-      <window_info anchor="right" id="Coverage" order="10" side_tool="true" weight="0.24305004" />
+      <window_info id="UI Designer" order="3" />
+      <window_info anchor="bottom" id="Terminal" order="8" weight="0.32983193" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.37257823" />
+      <window_info anchor="bottom" id="Build" order="9" sideWeight="0.7305644" weight="0.299389" />
+      <window_info anchor="bottom" id="Messages" order="12" weight="0.28614008" />
+      <window_info anchor="right" id="Gradle" order="6" weight="0.41391942" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info id="Designer" order="2" />
     </layout>
     <layout-to-restore>
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="Build" order="9" sideWeight="0.7305644" weight="0.21907601" />
       <window_info id="Designer" order="2" />
       <window_info anchor="right" id="Palette" order="3" />
@@ -1548,7 +1588,7 @@
       <window_info id="Image Layers" order="7" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.47603834" visible="true" weight="0.18032786" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="right" id="Coverage" order="10" side_tool="true" weight="0.29864973" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info id="UI Designer" order="3" />
       <window_info id="Favorites" order="5" side_tool="true" />
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.32983193" />
@@ -1569,6 +1609,7 @@
       <window_info anchor="right" id="Theme Preview" order="8" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="right" id="Coverage" order="10" side_tool="true" weight="0.29864973" />
       <window_info anchor="bottom" id="Find" order="1" sideWeight="0.49893504" weight="0.3152012" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.37257823" />
     </layout-to-restore>
@@ -1718,8 +1759,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/mmEventHandler/datastoreEvents.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="607">
-          <caret line="129" column="21" selection-start-line="129" selection-start-column="21" selection-end-line="129" selection-end-column="21" />
+        <state relative-caret-position="175">
+          <caret line="58" selection-start-line="58" selection-end-line="58" />
         </state>
       </provider>
     </entry>
@@ -1739,8 +1780,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/Tests/EventHandlerTests/GlobalEventsThreadTests.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
-          <caret line="39" column="45" lean-forward="true" selection-start-line="39" selection-start-column="45" selection-end-line="39" selection-end-column="45" />
+        <state relative-caret-position="246">
+          <caret line="33" column="39" selection-start-line="33" selection-start-column="39" selection-end-line="33" selection-end-column="39" />
         </state>
       </provider>
     </entry>
@@ -1753,8 +1794,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/mmEventHandler/globalEventsThread.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="40" selection-start-line="40" selection-end-line="40" />
+        <state relative-caret-position="120">
+          <caret line="12" column="3" lean-forward="true" selection-start-line="12" selection-start-column="3" selection-end-line="12" selection-end-column="3" />
         </state>
       </provider>
     </entry>
@@ -1784,8 +1825,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/mmEventHandler/globalEvents.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="915">
-          <caret line="73" column="72" selection-start-line="73" selection-start-column="72" selection-end-line="73" selection-end-column="72" />
+        <state relative-caret-position="162">
+          <caret line="60" column="46" selection-start-line="60" selection-start-column="46" selection-end-line="60" selection-end-column="46" />
         </state>
       </provider>
     </entry>
@@ -1803,20 +1844,8 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/examples/mm2python_snap_live_display.ipynb">
-      <provider selected="true" editor-type-id="ipnb-editor">
-        <state>
-          <selected id="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples/mm2python_basic.ipynb">
-      <provider selected="true" editor-type-id="ipnb-editor">
-        <state>
-          <selected id="0" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/examples/mm2python_snap_live_display.ipynb" />
+    <entry file="file://$PROJECT_DIR$/examples/mm2python_basic.ipynb" />
     <entry file="file://$PROJECT_DIR$/examples/python_basic.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="195">
@@ -1927,8 +1956,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/mm2PythonPlugin.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="603">
-          <caret line="49" column="40" lean-forward="true" selection-start-line="49" selection-start-column="40" selection-end-line="49" selection-end-column="40" />
+        <state relative-caret-position="615">
+          <caret line="41" selection-start-line="41" selection-end-line="41" />
         </state>
       </provider>
     </entry>
@@ -1962,18 +1991,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/mmEventHandler/datastoreEventsThread.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="805">
-          <caret line="83" column="70" lean-forward="true" selection-start-line="83" selection-start-column="70" selection-end-line="83" selection-end-column="70" />
+        <state relative-caret-position="829">
+          <caret line="83" column="61" selection-start-line="83" selection-start-column="61" selection-end-line="83" selection-end-column="61" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/UI/pythonBridgeUI_dialog.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1817">
-          <caret line="206" column="27" selection-start-line="206" selection-start-column="12" selection-end-line="206" selection-end-column="27" />
-          <folding>
-            <element signature="initializer##0;class#pythonBridgeUI_dialog#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="3255">
+          <caret line="217" column="23" selection-start-line="217" selection-start-column="23" selection-end-line="217" selection-end-column="23" />
         </state>
       </provider>
     </entry>
@@ -2007,8 +2033,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="11" column="42" lean-forward="true" selection-start-line="11" selection-start-column="42" selection-end-line="11" selection-end-column="42" />
+        <state relative-caret-position="218">
+          <caret line="124" column="5" selection-start-line="124" selection-start-column="5" selection-end-line="124" selection-end-column="5" />
         </state>
       </provider>
     </entry>
