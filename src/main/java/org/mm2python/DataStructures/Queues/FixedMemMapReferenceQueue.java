@@ -24,8 +24,12 @@ public class FixedMemMapReferenceQueue {
     private static Queue<MappedByteBuffer> mmap_buffer_queue = new ConcurrentLinkedDeque<>();
 
     public static void resetQueues() {
-        mmap_filename_queue.clear();
-        mmap_buffer_queue.clear();
+        if(mmap_filename_queue != null){
+            mmap_filename_queue.clear();
+        }
+        if(mmap_buffer_queue != null) {
+            mmap_buffer_queue.clear();
+        }
     }
 
     /**

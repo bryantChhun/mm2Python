@@ -1,14 +1,14 @@
 package org.mm2python.MPIMethod.zeroMQ;
 
-import org.mm2python.mmEventHandler.Executor.MainExecutor;
+import org.mm2python.UI.reporter;
 import org.zeromq.SocketType;
 import org.zeromq.ZMQ;
 import org.zeromq.ZContext;
+import org.zeromq.ZMQException;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.ShortBuffer;
-import java.util.concurrent.ExecutorService;
 
 public class zeroMQ {
 
@@ -21,12 +21,23 @@ public class zeroMQ {
      */
     public zeroMQ() {
 
-        ExecutorService executor = MainExecutor.getExecutor();
-        port = "5500";
-        context = new ZContext();
-        socket = context.createSocket(SocketType.PUSH);
-        socket.bind(String.format("tcp://*:%s", port));
+        try {
+            context = new ZContext();
+            socket = context.createSocket(SocketType.PUSH);
+            port = "5500";
+            socket.bind(String.format("tcp://*:%s", port));
+            reporter.set_report_area(String.format("creating zeroMQ bridge at tcp://*:%s", port));
+        } catch (ZMQException zmqe) {
+            reporter.set_report_area(String.format("zmq address at tcp://*:%s already exists.\n" +
+                    "Shut down then restart bridges", port));
+        }
+    }
 
+    public static void shutdown() {
+        if(context!=null) {
+            reporter.set_report_area("shutting down zeroMQ bridge");
+            context.destroy();
+        }
     }
 
     /**

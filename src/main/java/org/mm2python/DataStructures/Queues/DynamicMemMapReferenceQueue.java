@@ -32,7 +32,9 @@ public class DynamicMemMapReferenceQueue {
 
     public static void resetQueue() {
 //        current_buf.position(0);
-        positions.clear();
+        if(positions != null) {
+            positions.clear();
+        }
     }
 
     public static void resetAll() {

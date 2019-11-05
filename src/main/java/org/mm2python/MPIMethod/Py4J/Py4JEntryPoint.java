@@ -124,6 +124,11 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
         MDSMap.clearData();
     }
 
+    // TESTER METHOD
+    public String ping() {
+        return "ping from py4j";
+    }
+
     //============== zmq data retrieval methods ==================================//
 
     /**
@@ -131,6 +136,11 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
      */
     public void getLastImage() {
         MetaDataStore mds = this.getLastMeta();
+        Object rawpixels = mds.getImage();
+        zeroMQ.send(rawpixels);
+    }
+
+    public void getLastImage(MetaDataStore mds) {
         Object rawpixels = mds.getImage();
         zeroMQ.send(rawpixels);
     }
@@ -156,6 +166,17 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
     //== For retrieving MetaDataStore objects and Filenames ======================//
 
     // Map retrieval interface methods
+
+    public MetaDataStore getLastMeta() {
+        MDSQueue m = new MDSQueue();
+        return m.getLastMDS();
+    }
+
+    public MetaDataStore getFirstMeta() {
+        MDSQueue m = new MDSQueue();
+        return m.getFirstMDS();
+    }
+
     @Override
     public ArrayList<String> getFilesByChannelName(String channelName) throws IllegalAccessException{
         MDSParameters params = new MDSParamBuilder().channel_name(channelName).buildMDSParams();
@@ -311,15 +332,6 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
         m.removeFirstMDSByParam(params);
     }
 
-    public MetaDataStore getLastMeta() {
-        MDSQueue m = new MDSQueue();
-        return m.getLastMDS();
-    }
-
-    public MetaDataStore getFirstMeta() {
-        MDSQueue m = new MDSQueue();
-        return m.getFirstMDS();
-    }
 
     // ==============================================================
     // Methods to return metadatastores based on arbitrary parameters //

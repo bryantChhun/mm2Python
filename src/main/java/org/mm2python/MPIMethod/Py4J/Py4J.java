@@ -55,7 +55,9 @@ public class Py4J implements messengerInterface {
      */
     @Override
     public void stopConnection() {
+
         gatewayServer.shutdown();
+        gatewayServer = null;
         reporter.set_report_area(true, true, true, "Gateway at default port shut down");
     }
 

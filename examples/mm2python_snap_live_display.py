@@ -1,5 +1,6 @@
 from py4j.java_gateway import JavaGateway, CallbackServerParameters, GatewayParameters
 import numpy as np
+from PyQt5.QtCore import QRunnable, QThreadPool, QObject, pyqtSlot, pyqtSignal
 
 import napari
 

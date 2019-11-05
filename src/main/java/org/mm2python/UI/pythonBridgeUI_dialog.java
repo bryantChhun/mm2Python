@@ -185,6 +185,9 @@ public class pythonBridgeUI_dialog extends JFrame {
 
     private void shutdown_python_bridgeActionPerformed(ActionEvent evt) {
         gate.stopConnection();
+
+        // shutdown zeroMQ bridge if a context exists
+        zeroMQ.shutdown();
     }
 
     /**
@@ -217,20 +220,22 @@ public class pythonBridgeUI_dialog extends JFrame {
         new MDSMap();
         new MDSQueue();
 
-        //3
-        new FixedMemMapReferenceQueue();
-        new DynamicMemMapReferenceQueue();
+        if (!Constants.getZMQButton()) {
+            //3
+            new FixedMemMapReferenceQueue();
+            new DynamicMemMapReferenceQueue();
 
-        //4
-        if (Constants.getFixedMemMap()) {
-            // CREATE FIXED CIRCULAR REFERENCE
-            int num = Integer.parseInt(maxNumberOfFilesTextField.getText());
-            create_circular_map_reference(num);
-            reporter.set_report_area("creating fixed memory maps");
-        } else {
-            // CREATE DYNAMIC REFERENCE
-            create_dynamic_map_reference();
-            reporter.set_report_area("creating dynamic memory maps");
+            //4
+            if (Constants.getFixedMemMap()) {
+                // CREATE FIXED CIRCULAR REFERENCE
+                int num = Integer.parseInt(maxNumberOfFilesTextField.getText());
+                create_circular_map_reference(num);
+                reporter.set_report_area("creating fixed memory maps");
+            } else {
+                // CREATE DYNAMIC REFERENCE
+                create_dynamic_map_reference();
+                reporter.set_report_area("creating dynamic memory maps");
+            }
         }
 
         //5
