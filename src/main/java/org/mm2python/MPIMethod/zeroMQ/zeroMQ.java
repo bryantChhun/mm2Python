@@ -5,16 +5,21 @@ import org.zeromq.SocketType;
 import org.zeromq.ZMQ;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQException;
+//import zmq.Ctx;
+//import zmq.SocketBase;
+//import zmq.ZMQ;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.ShortBuffer;
 
+
+//https://github.com/zeromq/jeromq/blob/master/src/test/java/zmq/socket/pubsub/PubSubHwmTest.java
 public class zeroMQ {
 
     private static String port;
     private static ZContext context;
-    private static ZMQ.Socket socket;
+    public static ZMQ.Socket socket;
 
     /**
      * create zeroMQ context and sockets in a PUSH-PULL pattern
@@ -26,6 +31,7 @@ public class zeroMQ {
             socket = context.createSocket(SocketType.PUSH);
             port = "5500";
             socket.bind(String.format("tcp://*:%s", port));
+            socket.setHWM(1);
             reporter.set_report_area(String.format("creating zeroMQ bridge at tcp://*:%s", port));
         } catch (ZMQException zmqe) {
             reporter.set_report_area(String.format("zmq address at tcp://*:%s already exists.\n" +
@@ -45,8 +51,13 @@ public class zeroMQ {
      * @param rawpixels : Object.  Retrieved from micro-manager's Image data class
      */
     public static void send(Object rawpixels) {
+        long start = System.nanoTime();
         byte[] bytepixels = convertToByte(rawpixels);
-        socket.send(bytepixels);
+        socket.send(bytepixels, ZMQ.DONTWAIT);
+//        ByteBuffer pixelbuffer = convertToByteBuffer(rawpixels);
+//        socket.sendByteBuffer(pixelbuffer, ZMQ.DONTWAIT);
+        long stop = System.nanoTime();
+        reporter.set_report_area(String.format("Time to send to sockets (us): %d", (stop-start)/1000));
     }
 
     /**
@@ -55,6 +66,34 @@ public class zeroMQ {
      */
     public static String getPort() {
         return port;
+    }
+
+    private static ByteBuffer convertToByteBuffer(Object pixels) {
+        try
+        {
+            byte[] bytes;
+            ByteBuffer outbuf;
+            if (pixels instanceof byte[]) {
+                bytes = (byte[]) pixels;
+                outbuf = ByteBuffer.wrap(bytes);
+            }
+            else if (pixels instanceof short[]) {
+                ShortBuffer shortPixels = ShortBuffer.wrap((short[]) pixels);
+                ByteBuffer dest = ByteBuffer.allocate(2 * ((short[]) pixels).length).order(ByteOrder.nativeOrder());
+                ShortBuffer shortDest = dest.asShortBuffer();
+                shortDest.put(shortPixels);
+                bytes = dest.array();
+                outbuf = ByteBuffer.wrap(bytes);
+            }
+            else {
+                throw new UnsupportedOperationException("Image data is not of type byte[] or short[]");
+            }
+            return outbuf;
+        }
+        catch (Exception ex) {
+            System.out.println(ex);
+        }
+        return null;
     }
 
     /**

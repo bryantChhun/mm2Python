@@ -36,7 +36,7 @@ public class MDSQueue {
         }
     }
 
-    public static boolean isQueueEmpty() {
+    public boolean isQueueEmpty() {
         return mdsQueue.isEmpty();
     }
 

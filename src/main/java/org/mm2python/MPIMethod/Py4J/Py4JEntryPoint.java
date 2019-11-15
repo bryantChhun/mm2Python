@@ -12,10 +12,12 @@ import org.mm2python.DataStructures.Maps.MDSMap;
 import org.mm2python.DataStructures.MetaDataStore;
 import org.mm2python.DataStructures.Queues.MDSQueue;
 import org.mm2python.MPIMethod.zeroMQ.zeroMQ;
+import org.mm2python.UI.reporter;
 import org.mm2python.mmDataHandler.DataPathInterface;
 import org.mm2python.mmDataHandler.DataMapInterface;
 import mmcorej.CMMCore;
 import org.micromanager.Studio;
+import org.zeromq.ZMQ;
 
 import java.util.ArrayList;
 
@@ -97,7 +99,8 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
      * @return : boolean
      */
     public boolean isQueueEmpty(){
-        return MDSQueue.isQueueEmpty();
+        MDSQueue m = new MDSQueue();
+        return m.isQueueEmpty();
     }
 
     /**
@@ -133,16 +136,31 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
 
     /**
      * send the last image (as determined by MDS Queue) out via zeroMQ port
+     * todo: remove or refactor this.. remember, meta might not be available!
      */
-    public void getLastImage() {
-        MetaDataStore mds = this.getLastMeta();
-        Object rawpixels = mds.getImage();
-        zeroMQ.send(rawpixels);
+    public boolean getLastImage() {
+        try {
+            MetaDataStore mds = this.getLastMeta();
+            Object rawpixels = mds.getImage();
+            zeroMQ.send(rawpixels);
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
     }
 
-    public void getLastImage(MetaDataStore mds) {
-        Object rawpixels = mds.getImage();
-        zeroMQ.send(rawpixels);
+    /**
+     * send the image (as determined by supplied MDS) out via zeroMQ port
+     * @param mds
+     */
+    public boolean getImage(MetaDataStore mds) {
+        try {
+            Object rawpixels = mds.getImage();
+            zeroMQ.send(rawpixels);
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
     }
 
     /**
@@ -162,6 +180,10 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
         return zeroMQ.getPort();
     }
 
+    public ZMQ.Socket getSocket() {
+        return zeroMQ.socket;
+    }
+
     //============== Data Map interface methods ====================//
     //== For retrieving MetaDataStore objects and Filenames ======================//
 
@@ -169,10 +191,16 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
 
     public MetaDataStore getLastMeta() {
         MDSQueue m = new MDSQueue();
-        return m.getLastMDS();
+        if(m.isQueueEmpty()) {
+            return null;
+        }
+        MetaDataStore meta = m.getLastMDS();
+        reporter.set_report_area(String.format("\nLastMeta called (t, z): (%d, %d)", meta.getTime(), meta.getZ()));
+        return meta;
     }
 
     public MetaDataStore getFirstMeta() {
+        // todo: be sure meta exists
         MDSQueue m = new MDSQueue();
         return m.getFirstMDS();
     }
