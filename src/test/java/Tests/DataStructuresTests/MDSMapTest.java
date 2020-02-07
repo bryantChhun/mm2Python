@@ -349,10 +349,10 @@ class MDSMapTest {
         assertEquals(2, mdslist.size());
         assertEquals(1, mdslist.get(0).getPosition().intValue());
         assertEquals(1, mdslist.get(0).getChannel().intValue());
-        assertEquals(0, mdslist.get(0).getTime().intValue());
-        assertEquals(0, mdslist.get(0).getZ().intValue());
-        assertEquals(1, mdslist.get(1).getTime().intValue());
-        assertEquals(1, mdslist.get(1).getZ().intValue());
+        assertEquals(1, mdslist.get(0).getTime().intValue());
+        assertEquals(1, mdslist.get(0).getZ().intValue());
+        assertEquals(0, mdslist.get(1).getTime().intValue());
+        assertEquals(0, mdslist.get(1).getZ().intValue());
         clear();
     }
 

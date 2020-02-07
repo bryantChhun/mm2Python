@@ -17,6 +17,7 @@ import org.mm2python.mmDataHandler.DataPathInterface;
 import org.mm2python.mmDataHandler.DataMapInterface;
 import mmcorej.CMMCore;
 import org.micromanager.Studio;
+import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
 
 import java.util.ArrayList;
@@ -141,7 +142,9 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
     public boolean getLastImage() {
         try {
             MetaDataStore mds = this.getLastMeta();
-            Object rawpixels = mds.getImage();
+//            Object rawpixels = mds.getImage();
+            Object rawpixels = mds.getDataProvider().getImage(mds.getCoord()).getRawPixels();
+
             zeroMQ.send(rawpixels);
             return true;
         } catch (Exception ex) {
@@ -155,7 +158,9 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
      */
     public boolean getImage(MetaDataStore mds) {
         try {
-            Object rawpixels = mds.getImage();
+//            Object rawpixels = mds.getImage();
+            Object rawpixels = mds.getDataProvider().getImage(mds.getCoord()).getRawPixels();
+
             zeroMQ.send(rawpixels);
             return true;
         } catch (Exception ex) {
@@ -180,8 +185,12 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
         return zeroMQ.getPort();
     }
 
-    public ZMQ.Socket getSocket() {
+    public ZMQ.Socket getZMQSocket() {
         return zeroMQ.socket;
+    }
+
+    public ZContext getZMQContext() {
+        return zeroMQ.getContext();
     }
 
     //============== Data Map interface methods ====================//

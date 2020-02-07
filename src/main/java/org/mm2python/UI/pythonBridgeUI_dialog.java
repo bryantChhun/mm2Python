@@ -8,6 +8,7 @@ import com.intellij.uiDesigner.core.Spacer;
 
 // org.mm2python libraries
 import org.micromanager.data.DataProvider;
+import org.micromanager.display.DataViewer;
 import org.micromanager.events.AcquisitionStartedEvent;
 import org.mm2python.DataStructures.*;
 import org.mm2python.DataStructures.Maps.MDSMap;
@@ -28,6 +29,7 @@ import org.mm2python.mmEventHandler.globalEvents;
 import mmcorej.CMMCore;
 import org.micromanager.Studio;
 import org.micromanager.data.Datastore;
+import org.mm2python.mmEventHandler.globalEventsThread;
 
 // java libraries
 import javax.swing.*;
@@ -39,6 +41,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -175,12 +178,6 @@ public class pythonBridgeUI_dialog extends JFrame {
         reporter.set_report_area("creating python bridge");
         gate = new Py4J(mm);
         gate.startConnection();
-
-        // create zeroMQ bridge if button is selected
-        if (Constants.getZMQButton()) {
-            reporter.set_report_area("creating zeroMQ bridge");
-            new zeroMQ();
-        }
     }
 
     private void shutdown_python_bridgeActionPerformed(ActionEvent evt) {
@@ -192,7 +189,7 @@ public class pythonBridgeUI_dialog extends JFrame {
 
     /**
      * Startup procedure:
-     * 1) Check filepaths exist
+     * 1) Check filepaths exist, start ZMQ if selected
      * 2) create MDS Map/Queue instances
      * 3) create memmap queue instances
      * 4) create memmap files
@@ -210,8 +207,11 @@ public class pythonBridgeUI_dialog extends JFrame {
         Constants.width = mm.getCMMCore().getImageWidth();
 
         //1
-        if (defaultTempPath.exists() || defaultTempPath.mkdirs()) {
+        if ((defaultTempPath.exists() || defaultTempPath.mkdirs()) && !Constants.getZMQButton()) {
             reporter.set_report_area("tempPath created or already exists at " + Constants.tempFilePath);
+        } else if (Constants.getZMQButton()) {
+            reporter.set_report_area("creating zeroMQ bridge");
+            new zeroMQ();
         } else {
             reporter.set_report_area("WARNING: invalid temp path, no MMap files will be made");
         }
@@ -247,14 +247,21 @@ public class pythonBridgeUI_dialog extends JFrame {
             gevents = new globalEvents(mm);
         }
 
+        ExecutorService mmExecutor = MainExecutor.getExecutor();
+
+        //register all open windows for events
+        for (DataViewer dv : mm.getDisplayManager().getAllDataViewers()) {
+            mmExecutor.execute(new globalEventsThread(mm, dv));
+        }
+
         mm.events().registerForEvents(this);
         mm.getEventManager().registerForEvents(this);
     }
 
-    @Subscribe
-    private void testcls(AcquisitionStartedEvent evt) {
-        reporter.set_report_area(true, true, true, "testcls triggered");
-    }
+//    @Subscribe
+//    private void testcls(AcquisitionStartedEvent evt) {
+//        reporter.set_report_area(true, true, true, "testcls triggered");
+//    }
 
     /**
      * Shutdown procedure:
@@ -523,10 +530,11 @@ public class pythonBridgeUI_dialog extends JFrame {
         maxNumberOfFilesTextField.setText("100");
         Configuration.add(maxNumberOfFilesTextField, new GridConstraints(12, 2, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         memoryMappedFilesRadioButton = new JRadioButton();
-        memoryMappedFilesRadioButton.setSelected(true);
+        memoryMappedFilesRadioButton.setSelected(false);
         memoryMappedFilesRadioButton.setText("Memory Mapped Files");
         Configuration.add(memoryMappedFilesRadioButton, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         zeroMQRadioButton = new JRadioButton();
+        zeroMQRadioButton.setSelected(true);
         zeroMQRadioButton.setText("ZeroMQ");
         Configuration.add(zeroMQRadioButton, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label3 = new JLabel();

@@ -1,5 +1,8 @@
 package org.mm2python.DataStructures;
 
+import org.micromanager.data.Coords;
+import org.micromanager.data.DataProvider;
+
 import java.util.Objects;
 
 /**
@@ -23,14 +26,22 @@ public class MetaDataStore {
 
     private Object image;
 
+    private DataProvider dataprovider;
+
+    private Coords coord;
+
     // package private constructor
     public MetaDataStore(Integer z_, Integer pos_, Integer time_, Integer channel_,
                          Integer x_dim_, Integer y_dim_, Integer bitDepth_,
                          String channel_name_, String prefix_, String windowname_,
-                         String filepath_, Integer buffer_position_, Object image_)
+                         String filepath_, Integer buffer_position_,
+                         Object image_,
+                         DataProvider dataProvider_,
+                         Coords coord_)
     {
         // positivity check
-        if(
+        if
+                (
                 (z_!=null && z_<0) ||
                 (pos_!=null && pos_<0) ||
                 (time_!=null && time_<0) ||
@@ -58,6 +69,9 @@ public class MetaDataStore {
         if(filepath_!=null) {this.filepath = filepath_;}
         if(buffer_position_!=null) {this.buffer_position = buffer_position_;}
         if(image_!=null) {this.image = image_;}
+
+        if(dataProvider_ != null) {this.dataprovider = dataProvider_;}
+        if(coord_ != null) {this.coord = coord_;}
     }
 
     public Integer getZ() { return this.z;}
@@ -94,6 +108,10 @@ public class MetaDataStore {
 
     public Object getImage() {return this.image;}
 
+    public DataProvider getDataProvider() {return this.dataprovider;}
+
+    public Coords getCoord() {return this.coord;}
+
 
     /**
      * Must override equals for proper hash map population
@@ -108,7 +126,8 @@ public class MetaDataStore {
         return time == that.time &&
                 pos == that.pos &&
                 z == that.z &&
-                channel == that.channel;
+                channel == that.channel &&
+                dataprovider == that.dataprovider;
     }
 
     /**
@@ -118,7 +137,7 @@ public class MetaDataStore {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(z, pos, time, channel);
+        return Objects.hash(z, pos, time, channel, dataprovider);
     }
 
 

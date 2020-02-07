@@ -13,7 +13,9 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.ShortBuffer;
 
-
+//todo: enable multiple port connections
+//          easiest way is to provide access to this class's context --
+//              enable socket port/type declaration as well as other parameters
 //https://github.com/zeromq/jeromq/blob/master/src/test/java/zmq/socket/pubsub/PubSubHwmTest.java
 public class zeroMQ {
 
@@ -54,8 +56,6 @@ public class zeroMQ {
         long start = System.nanoTime();
         byte[] bytepixels = convertToByte(rawpixels);
         socket.send(bytepixels, ZMQ.DONTWAIT);
-//        ByteBuffer pixelbuffer = convertToByteBuffer(rawpixels);
-//        socket.sendByteBuffer(pixelbuffer, ZMQ.DONTWAIT);
         long stop = System.nanoTime();
         reporter.set_report_area(String.format("Time to send to sockets (us): %d", (stop-start)/1000));
     }
@@ -66,6 +66,14 @@ public class zeroMQ {
      */
     public static String getPort() {
         return port;
+    }
+
+    /**
+     * get the context.  Useful to check init
+     * @return : ZContext
+     */
+    public static ZContext getContext() {
+        return context;
     }
 
     private static ByteBuffer convertToByteBuffer(Object pixels) {

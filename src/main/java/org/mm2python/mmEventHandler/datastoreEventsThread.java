@@ -35,6 +35,8 @@ public class datastoreEventsThread implements Runnable {
     private final SummaryMetadata summary;
     private String channel_name;
 
+    private final DataProvider data;
+
     // variables for MetaDataStorage
     private final MetaDataStore mds;
     private final MDSMap fds;
@@ -72,6 +74,8 @@ public class datastoreEventsThread implements Runnable {
         channel_name = current_channel_;
         window_name = window_name_;
         prefix = prefix_;
+
+        data = data_;
 
         // queues
         fixed = new FixedMemMapReferenceQueue();
@@ -161,7 +165,11 @@ public class datastoreEventsThread implements Runnable {
                     .channel_name(channel_name)
                     .filepath(filename)
                     .buffer_position(buffer_position)
-                    .image(temp_img.getRawPixels())
+
+//                    .image(temp_img.getRawPixels())
+                    .dataprovider(data)
+                    .coord(coord)
+
                     .buildMDS();
         } catch(IllegalAccessException ilex){
             reporter.set_report_area(String.format("Fail to build MDS for c%d, z%d, p%d, t%d, filepath=%s",

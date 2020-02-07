@@ -5,6 +5,7 @@ import org.micromanager.LogManager;
 import org.micromanager.Studio;
 import org.micromanager.acquisition.AcquisitionManager;
 import org.micromanager.acquisition.SequenceSettings;
+import org.micromanager.data.DataProvider;
 import org.micromanager.data.Datastore;
 import org.micromanager.display.DisplayWindow;
 import org.mm2python.UI.reporter;
@@ -39,7 +40,10 @@ class GlobalEventsThreadTests {
 
         // mocking methods needed by testrunnable
         Datastore ds = mock(Datastore.class);
+        DataProvider dp = mock(DataProvider.class);
         when(dw.getDatastore()).thenReturn(ds);
+        when(dw.getDataProvider()).thenReturn(dp);
+
         SequenceSettings ss = mock(SequenceSettings.class);
         AcquisitionManager aq = mock(AcquisitionManager.class);
         when(mm.acquisitions()).thenReturn(aq);

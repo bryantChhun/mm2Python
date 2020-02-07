@@ -20,7 +20,11 @@ public class MDSBuilder extends MDSBuilderBase {
         return new MetaDataStore(z, pos, time, channel,
                 xRange, yRange, bitDepth,
                 channel_name, prefix, windowname,
-                filepath, buffer_position, image);
+                filepath, buffer_position,
+
+                image,
+                dataprovider,
+                coord);
     }
 
     /**
